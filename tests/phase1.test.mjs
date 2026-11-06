@@ -165,15 +165,17 @@ test('act samples negative windup, easing and exact hit-stop boundaries', () => 
 
 test('sword qi completes N fixed steps, obeys hit-stop and draws without advancing', () => {
   const fx = getFX('sword-qi-slash'), a = fx.create({ seed: 7 });
-  assert.equal(fx.meta.duration, .75); assert.equal(fx.act.windup, .4); assert.equal(fx.meta.droplets, 28);
+  assert.equal(fx.meta.duration, 1.3); assert.equal(fx.meta.actionDuration, .75); assert.equal(fx.act.windup, .4); assert.equal(fx.meta.droplets, 28);
   const n = Math.round(fx.meta.duration / WET_DT);
   for (let i = 0; i < n; i++) a.step();
-  assert.ok(Math.abs(a.t - .75) < 1e-10);
-  assert.ok(a.frame.pigment.some(x => x > .5));
-  assert.ok(a.frame.tint.some(x => x === 1));
-  const b = fx.create({ seed: 7 }); b.step(.75);
+  assert.ok(Math.abs(a.t - 1.3) < 1e-10);
+  const visible = fx.create({ seed: 7 }); visible.step(.75);
+  assert.ok(visible.frame.pigment.some(x => x > .5));
+  assert.ok(visible.frame.tint.some(x => x === 1));
+  assert.ok(a.frame.pigment.every(x => x === 0), 'PoC residual ink fades out by action .73s');
+  const b = fx.create({ seed: 7 }); b.step(1.3);
   for (const key of ['pigment', 'tint', 'wetness']) assert.deepEqual(a.frame[key], b.frame[key], key);
-  const frozen = fx.create({ seed: 7 }); frozen.step(.43);
+  const frozen = fx.create({ seed: 7 }); frozen.step(.45);
   const p = frozen.frame.pigment.slice(), wet = frozen.frame.wetness.slice();
   frozen.step(.1);
   assert.deepEqual(frozen.frame.pigment, p); assert.deepEqual(frozen.frame.wetness, wet);
@@ -251,7 +253,7 @@ test('CLI check exits nonzero for invalid effects and prints all default example
   process.exitCode = 0;
   await checkMain([], { log });
   assert.equal(process.exitCode, 0);
-  assert.equal(lines.filter(line => line.includes('PASS CHK-01')).length, 5);
+  assert.equal(lines.filter(line => line.includes('PASS CHK-01')).length, effects.length);
   await checkMain([await fixture(t)], { log });
   assert.equal(process.exitCode, 1);
 });
@@ -264,7 +266,7 @@ test('contact sheet includes endpoints, origin overlays and measured fill in JSO
   assert.equal(png.w, stats.sheet.w); assert.equal(png.h, stats.sheet.h);
   assert.equal(stats.sheet.selected[0], 0);
   assert.equal(stats.sheet.selected.at(-1), stats.frames.length - 1);
-  assert.equal(stats.frames[0].time, 0); assert.equal(stats.frames.at(-1).time, .75);
+  assert.equal(stats.frames[0].time, 0); assert.equal(stats.frames.at(-1).time, 1.3);
   assert.equal(stats.frames[0].fillRatio, 0, 'diagnostic overlays are excluded');
   assert.equal(stats.simulationHz, 120);
   const sampled = sampleFX(await loadFX(file), { seed: 42 });

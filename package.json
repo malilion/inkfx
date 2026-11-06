@@ -4,11 +4,15 @@
   "private": true,
   "type": "module",
   "description": "Deterministic procedural ink and wuxia effects on virtual rice paper.",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "test": "node --test",
     "check": "node tools/check.mjs",
     "render": "node tools/render.mjs",
-    "gallery": "node gallery/serve.mjs"
+    "gallery": "node gallery/serve.mjs",
+    "export": "node tools/export-sheet.mjs",
+    "review": "node tools/review.mjs"
   }
 }

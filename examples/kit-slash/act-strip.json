@@ -1,0 +1,342 @@
+{
+  "schemaVersion": 1,
+  "meta": {
+    "id": "sword-qi-slash",
+    "name": "劍氣斬",
+    "category": "sword",
+    "duration": 0.9,
+    "actionDuration": 0.75,
+    "defaultPalette": "zhusha",
+    "loop": false,
+    "w": 224,
+    "h": 224,
+    "ox": 112,
+    "oy": 112,
+    "droplets": 28,
+    "accentRatio": 0.15
+  },
+  "act": {
+    "windup": 0.4,
+    "poses": [
+      [
+        -0.4,
+        "SHEATH_CROUCH"
+      ],
+      [
+        -0.08,
+        "EYE_GLINT",
+        "snap"
+      ],
+      [
+        0,
+        "DRAW_CUT",
+        "snap"
+      ],
+      [
+        0.08,
+        "FOLLOW_HOLD"
+      ],
+      [
+        0.65,
+        "STAND_RECOVER"
+      ]
+    ],
+    "hits": [
+      {
+        "t": 0.04,
+        "freeze": 0.15,
+        "shakeAmp": 3,
+        "inkSplash": 24
+      }
+    ],
+    "recovery": 0
+  },
+  "timeline": {
+    "start": -0.4,
+    "end": 0.9,
+    "fixedFps": true
+  },
+  "seed": 42,
+  "requestedFps": 12,
+  "dt": 0.08333333333333333,
+  "simulationHz": null,
+  "effectOptions": {},
+  "hash": "3265e11f954a000894b5e8dd1c675d729d6954a6210e02ce4041c99d0f237a59",
+  "frameCount": 17,
+  "sheet": {
+    "w": 1568,
+    "h": 1016,
+    "columns": 6,
+    "cellW": 256,
+    "cellH": 312,
+    "headerH": 64,
+    "selected": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ]
+  },
+  "frames": [
+    {
+      "index": 0,
+      "time": -0.4,
+      "fillRatio": 0,
+      "edgeRatio": 0,
+      "bounds": null,
+      "phase": "WINDUP",
+      "pose": "SHEATH_CROUCH",
+      "fillPercent": 0,
+      "contactCell": 0
+    },
+    {
+      "index": 1,
+      "time": -0.3166666666666667,
+      "fillRatio": 0,
+      "edgeRatio": 0,
+      "bounds": null,
+      "phase": "WINDUP",
+      "pose": "SHEATH_CROUCH",
+      "fillPercent": 0,
+      "contactCell": 1
+    },
+    {
+      "index": 2,
+      "time": -0.23333333333333336,
+      "fillRatio": 0,
+      "edgeRatio": 0,
+      "bounds": null,
+      "phase": "WINDUP",
+      "pose": "SHEATH_CROUCH",
+      "fillPercent": 0,
+      "contactCell": 2
+    },
+    {
+      "index": 3,
+      "time": -0.15000000000000002,
+      "fillRatio": 0,
+      "edgeRatio": 0,
+      "bounds": null,
+      "phase": "WINDUP",
+      "pose": "SHEATH_CROUCH",
+      "fillPercent": 0,
+      "contactCell": 3
+    },
+    {
+      "index": 4,
+      "time": -0.06666666666666671,
+      "fillRatio": 0.00007971938775510203,
+      "edgeRatio": 0,
+      "bounds": {
+        "x": 68,
+        "y": 126,
+        "w": 3,
+        "h": 3
+      },
+      "phase": "WINDUP",
+      "pose": "EYE_GLINT",
+      "fillPercent": 0.007971938775510204,
+      "contactCell": 4
+    },
+    {
+      "index": 5,
+      "time": 0.016666666666666607,
+      "fillRatio": 0.0011160714285714285,
+      "edgeRatio": 0,
+      "bounds": {
+        "x": 68,
+        "y": 119,
+        "w": 14,
+        "h": 12
+      },
+      "phase": "ACTIVE",
+      "pose": "DRAW_CUT",
+      "fillPercent": 0.11160714285714285,
+      "contactCell": 5
+    },
+    {
+      "index": 6,
+      "time": 0.09999999999999998,
+      "fillRatio": 0.010722257653061224,
+      "edgeRatio": 0,
+      "bounds": {
+        "x": 68,
+        "y": 105,
+        "w": 39,
+        "h": 27
+      },
+      "phase": "FREEZE",
+      "pose": "FOLLOW_HOLD",
+      "fillPercent": 1.0722257653061225,
+      "contactCell": 6
+    },
+    {
+      "index": 7,
+      "time": 0.18333333333333324,
+      "fillRatio": 0.010722257653061224,
+      "edgeRatio": 0,
+      "bounds": {
+        "x": 68,
+        "y": 105,
+        "w": 39,
+        "h": 27
+      },
+      "phase": "FREEZE",
+      "pose": "FOLLOW_HOLD",
+      "fillPercent": 1.0722257653061225,
+      "contactCell": 7
+    },
+    {
+      "index": 8,
+      "time": 0.2666666666666666,
+      "fillRatio": 0.024693080357142856,
+      "edgeRatio": 0,
+      "bounds": {
+        "x": 68,
+        "y": 90,
+        "w": 103,
+        "h": 42
+      },
+      "phase": "ACTIVE",
+      "pose": "FOLLOW_HOLD",
+      "fillPercent": 2.4693080357142856,
+      "contactCell": 8
+    },
+    {
+      "index": 9,
+      "time": 0.35,
+      "fillRatio": 0.025908801020408163,
+      "edgeRatio": 0,
+      "bounds": {
+        "x": 68,
+        "y": 90,
+        "w": 103,
+        "h": 42
+      },
+      "phase": "ACTIVE",
+      "pose": "FOLLOW_HOLD",
+      "fillPercent": 2.5908801020408165,
+      "contactCell": 9
+    },
+    {
+      "index": 10,
+      "time": 0.43333333333333324,
+      "fillRatio": 0.02604830994897959,
+      "edgeRatio": 0,
+      "bounds": {
+        "x": 68,
+        "y": 90,
+        "w": 103,
+        "h": 42
+      },
+      "phase": "ACTIVE",
+      "pose": "FOLLOW_HOLD",
+      "fillPercent": 2.6048309948979593,
+      "contactCell": 10
+    },
+    {
+      "index": 11,
+      "time": 0.5166666666666666,
+      "fillRatio": 0.026028380102040817,
+      "edgeRatio": 0,
+      "bounds": {
+        "x": 68,
+        "y": 90,
+        "w": 103,
+        "h": 42
+      },
+      "phase": "ACTIVE",
+      "pose": "FOLLOW_HOLD",
+      "fillPercent": 2.602838010204082,
+      "contactCell": 11
+    },
+    {
+      "index": 12,
+      "time": 0.6,
+      "fillRatio": 0.02596859056122449,
+      "edgeRatio": 0,
+      "bounds": {
+        "x": 68,
+        "y": 90,
+        "w": 103,
+        "h": 42
+      },
+      "phase": "ACTIVE",
+      "pose": "FOLLOW_HOLD",
+      "fillPercent": 2.596859056122449,
+      "contactCell": 12
+    },
+    {
+      "index": 13,
+      "time": 0.6833333333333332,
+      "fillRatio": 0.02588887117346939,
+      "edgeRatio": 0,
+      "bounds": {
+        "x": 68,
+        "y": 90,
+        "w": 103,
+        "h": 42
+      },
+      "phase": "ACTIVE",
+      "pose": "STAND_RECOVER",
+      "fillPercent": 2.588887117346939,
+      "contactCell": 13
+    },
+    {
+      "index": 14,
+      "time": 0.7666666666666665,
+      "fillRatio": 0.025769292091836735,
+      "edgeRatio": 0,
+      "bounds": {
+        "x": 68,
+        "y": 90,
+        "w": 103,
+        "h": 42
+      },
+      "phase": "ACTIVE",
+      "pose": "STAND_RECOVER",
+      "fillPercent": 2.5769292091836737,
+      "contactCell": 14
+    },
+    {
+      "index": 15,
+      "time": 0.85,
+      "fillRatio": 0.02507174744897959,
+      "edgeRatio": 0,
+      "bounds": {
+        "x": 68,
+        "y": 90,
+        "w": 103,
+        "h": 41
+      },
+      "phase": "ACTIVE",
+      "pose": "STAND_RECOVER",
+      "fillPercent": 2.5071747448979593,
+      "contactCell": 15
+    },
+    {
+      "index": 16,
+      "time": 0.9,
+      "fillRatio": 0,
+      "edgeRatio": 0,
+      "bounds": null,
+      "phase": "RECOVERY",
+      "pose": "STAND_RECOVER",
+      "fillPercent": 0,
+      "contactCell": 16
+    }
+  ]
+}

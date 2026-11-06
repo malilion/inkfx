@@ -66,7 +66,13 @@ export function sampleFX(fx, { seed = 1, fps = 30, palette = 'songyan' } = {}) {
 }
 
 export async function withoutMathRandom(fn) {
-  const original = Math.random;
+  const original = Math.random, originalNow = Date.now;
+  const performanceNow = Object.getOwnPropertyDescriptor(performance, 'now');
   Math.random = () => { throw new Error('Math.random is forbidden; use mulberry32(seed)'); };
-  try { return await fn(); } finally { Math.random = original; }
+  Date.now = () => { throw new Error('Date.now is forbidden; use the effect clock'); };
+  Object.defineProperty(performance, 'now', { configurable: true, value: () => { throw new Error('performance.now is forbidden; use the effect clock'); } });
+  try { return await fn(); } finally {
+    Math.random = original; Date.now = originalNow;
+    if (performanceNow) Object.defineProperty(performance, 'now', performanceNow); else delete performance.now;
+  }
 }

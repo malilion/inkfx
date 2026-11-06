@@ -4,7 +4,7 @@ const cache = new WeakMap();
 export const hexRGB = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
 
 /** Transparent output by default; paper=true bakes in the seeded rice paper. */
-export function composite(frame, palette = 'songyan', { paper = false } = {}) {
+export function composite(frame, palette = 'songyan', { paper = false, grain = 1 } = {}) {
   if (typeof palette === 'string') palette = getPalette(palette);
   let colors = cache.get(palette);
   if (!colors) {
@@ -23,7 +23,7 @@ export function composite(frame, palette = 'songyan', { paper = false } = {}) {
     for (let channel = 0; channel < 3; channel++) {
       const ramp = colors.stops[stop][channel] + (colors.stops[stop + 1][channel] - colors.stops[stop][channel]) * fraction;
       const ink = accent ? ramp * 0.15 + accent[channel] * 0.85 : ramp;
-      const background = colors.stops[0][channel] - (frame.paperGrain[i] - 0.5) * 7;
+      const background = colors.stops[0][channel] - (frame.paperGrain[i] - 0.5) * 7 * grain;
       data[offset + channel] = paper ? ink * alpha + background * (1 - alpha) : ink;
     }
     data[offset + 3] = paper ? 255 : Math.round(alpha * 255);

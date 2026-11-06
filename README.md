@@ -1,38 +1,54 @@
 # inkfx
 
-**墨起，意隨。A gesture becomes a world.**
+**48 procedural ink FX. Four mineral palettes. Zero runtime dependencies.**
 
-水墨武俠程序化特效：用墨量、水分與宣紙纖維，畫出劍氣、飛白與水暈。每一筆由 seed 生成，無貼圖、無預錄動畫、零 npm 依賴。
+墨起，意隨。Seeded brushwork, flying-white sword trails, paper diffusion, talisman arrays, natural loops, impact bursts, transitions, and interface seals. Every effect is a small JavaScript module; no textures or prerecorded animation.
 
-Five gestures on virtual rice paper: 劍氣斬、十字劍氣、大筆橫掃、卷軸展開、墨點濺射。搭配松煙古墨、朱砂血墨、石青竹翠、泥金佛光四套礦物色盤，以 120Hz 模擬蓄力、出招、hit-stop 與殘墨。
+![24 studies from the 48-effect library](examples/grid.png)
 
-Node.js 20+，不需安裝套件。
+| Category | FX |
+| --- | ---: |
+| sword | 12 |
+| talisman | 7 |
+| zen | 7 |
+| ink-burst | 7 |
+| transitions | 8 |
+| ui | 7 |
+| **Total** | **48** |
+
+Node.js 20+; no package installation or build step.
 
 ```sh
 npm run gallery
-# Open http://127.0.0.1:8080/gallery/
+# http://127.0.0.1:8080/gallery/
 
-# Render one slash: annotated PNG + frame statistics
-node tools/render.mjs sword-qi-slash --seed 42 --palette songyan
-# → examples/out/sword-qi-slash/contact.png
-
-# Discover all gestures, or render the full collection
 node tools/render.mjs --list
-npm run render
+node tools/review.mjs sword-qi-slash --seed 42 --palette zhusha
+# Check → annotated contact.png + contact.json → inspect → refine
+
+node tools/export-sheet.mjs sword-qi-slash --seed 42 --palette zhusha
+# examples/out/sword-qi-slash/sheet.png + sheet.json (transparent)
+node tools/export-sheet.mjs bagua-array --background paper --fps 24 --columns 6
+
+npm test
+node tools/check.mjs --all
 ```
 
-![劍氣斬 — seeded ink on paper](examples/out/sword-qi-slash/contact.png)
-
-Gallery 可選招式、色盤與紙紋 seed，播放、拖曳時間，或儲存單幀 PNG。相同 seed 與時間得到相同墨跡；contact sheet 標示原點、幀號、秒數與填充率。
+The gallery plays cards only while visible. Its toolbar switches all four palettes, adjusts paper grain, shows an act practice dummy, and slows playback to 0.25×. Select a card to scrub its timeline, inspect React/Vue examples, copy its module path, or download a PNG sheet and matching JSON atlas. Downloads are baked locally in the browser with the current seed and palette; they also work on ordinary static hosting.
 
 ```js
-import { create } from './src/fx/sword/sword-qi-slash.js';
-import { composite } from './src/core/compositor.js';
+import { getFX, composite } from './src/index.js';
 
-const slash = create({ seed: 42 });
-slash.step(0.6);
-const rgba = composite(slash.frame, 'zhusha'); // Transparent Uint8ClampedArray
-// composite(slash.frame, 'zhusha', { paper: true }) includes rice paper.
+const fx = getFX('sword-qi-slash').create({ seed: 42 });
+fx.step(0.65); // display seconds, including windup and hit-stop
+const rgba = composite(fx.frame, 'zhusha'); // transparent Uint8ClampedArray
+// composite(fx.frame, 'zhusha', { paper: true, grain: 1 }) bakes rice paper.
 ```
 
-想寫自己的劍招，請看 [Authoring guide](docs/AUTHORING.md)。驗證：`npm test` 與 `node tools/check.mjs`。
+Effects support both InkFrame and straight-alpha RGBA draw targets. Single-file assets import shared helpers from `src/core`; copy those helpers too when moving an effect. Sim effects use a fixed 120 Hz pigment/wetness model; pure effects repaint a deterministic 120 Hz time sample. `draw` never advances time. Seven zen studies loop seamlessly.
+
+The slash follows the PRD PoC's five named poses, 28 forward droplets, 15% cinnabar accents, and hit at 0.04s with a 0.15s freeze. Its 0.75s action plus 0.40s windup and 0.15s hit-stop gives a **1.30s display timeline**.
+
+Sprite sheets contain clean, untrimmed cells without guides or preview actors. JSON uses Aseprite/Phaser-style hash frames (`frame`, `spriteSourceSize`, `sourceSize`, `duration` in milliseconds), with origin, seed, palette, loop, and exact hit timing in `meta.inkfx.act`. Godot users can use the same rectangles to build AtlasTextures/SpriteFrames; see the [export guide](docs/EXPORTING.md).
+
+Read [AUTHORING](docs/AUTHORING.md) for the check/render workflow and optional fx-skill-kit bridge, and [PRD gap tracking](docs/prd-gap.md) for the complete catalog and the remaining expansion from 48 toward 80.

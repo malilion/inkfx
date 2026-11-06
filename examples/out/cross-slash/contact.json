@@ -11,32 +11,28 @@
     "ox": 112,
     "oy": 112
   },
-  "seed": 1,
+  "seed": 42,
   "palette": "songyan",
   "fps": 30,
   "dt": 0.03333333333333333,
   "simulationHz": 120,
-  "hash": "99f013d0950af05fe7df02a871e86270a7d148f4a6dae1a02169f483353f875b",
+  "hash": "450bc90050c31eb5be3006a68a9bce2050062a090e7ef3090cebb911a1b573e8",
   "frameCount": 28,
   "sheet": {
     "w": 1040,
-    "h": 954,
+    "h": 664,
     "cellW": 252,
     "cellH": 290,
     "headerH": 68,
     "columns": 4,
     "selected": [
       0,
-      2,
-      5,
-      7,
-      10,
+      4,
+      8,
       12,
       15,
-      17,
-      20,
-      22,
-      25,
+      19,
+      23,
       27
     ]
   },
@@ -104,109 +100,109 @@
     {
       "index": 10,
       "time": 0.3333333333333333,
-      "fillRatio": 0.023895886479591837,
+      "fillRatio": 0.02578922193877551,
       "edgeRatio": 0
     },
     {
       "index": 11,
       "time": 0.36666666666666664,
-      "fillRatio": 0.04848931760204082,
+      "fillRatio": 0.04653619260204082,
       "edgeRatio": 0
     },
     {
       "index": 12,
       "time": 0.4,
-      "fillRatio": 0.06012834821428571,
+      "fillRatio": 0.054966517857142856,
       "edgeRatio": 0
     },
     {
       "index": 13,
       "time": 0.43333333333333335,
-      "fillRatio": 0.06012834821428571,
+      "fillRatio": 0.054966517857142856,
       "edgeRatio": 0
     },
     {
       "index": 14,
       "time": 0.4666666666666667,
-      "fillRatio": 0.06012834821428571,
+      "fillRatio": 0.054966517857142856,
       "edgeRatio": 0
     },
     {
       "index": 15,
       "time": 0.5,
-      "fillRatio": 0.06012834821428571,
+      "fillRatio": 0.054966517857142856,
       "edgeRatio": 0
     },
     {
       "index": 16,
       "time": 0.5333333333333333,
-      "fillRatio": 0.06040736607142857,
+      "fillRatio": 0.05540497448979592,
       "edgeRatio": 0
     },
     {
       "index": 17,
       "time": 0.5666666666666667,
-      "fillRatio": 0.06088568239795918,
+      "fillRatio": 0.055982940051020405,
       "edgeRatio": 0
     },
     {
       "index": 18,
       "time": 0.6,
-      "fillRatio": 0.06114477040816327,
+      "fillRatio": 0.05638153698979592,
       "edgeRatio": 0
     },
     {
       "index": 19,
       "time": 0.6333333333333333,
-      "fillRatio": 0.06174266581632653,
+      "fillRatio": 0.05678013392857143,
       "edgeRatio": 0
     },
     {
       "index": 20,
       "time": 0.6666666666666666,
-      "fillRatio": 0.0623405612244898,
+      "fillRatio": 0.05723852040816327,
       "edgeRatio": 0
     },
     {
       "index": 21,
       "time": 0.7,
-      "fillRatio": 0.06265943877551021,
+      "fillRatio": 0.057517538265306124,
       "edgeRatio": 0
     },
     {
       "index": 22,
       "time": 0.7333333333333333,
-      "fillRatio": 0.06293845663265306,
+      "fillRatio": 0.05775669642857143,
       "edgeRatio": 0
     },
     {
       "index": 23,
       "time": 0.7666666666666666,
-      "fillRatio": 0.0631576849489796,
+      "fillRatio": 0.057896205357142856,
       "edgeRatio": 0
     },
     {
       "index": 24,
       "time": 0.8,
-      "fillRatio": 0.06341677295918367,
+      "fillRatio": 0.05797592474489796,
       "edgeRatio": 0
     },
     {
       "index": 25,
       "time": 0.8333333333333334,
-      "fillRatio": 0.06357621173469388,
+      "fillRatio": 0.05805564413265306,
       "edgeRatio": 0
     },
     {
       "index": 26,
       "time": 0.8666666666666667,
-      "fillRatio": 0.06373565051020408,
+      "fillRatio": 0.05821508290816327,
       "edgeRatio": 0
     },
     {
       "index": 27,
       "time": 0.9,
-      "fillRatio": 0.06383529974489796,
+      "fillRatio": 0.058294802295918366,
       "edgeRatio": 0
     }
   ]
