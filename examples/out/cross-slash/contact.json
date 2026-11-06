@@ -1,0 +1,213 @@
+{
+  "schemaVersion": 1,
+  "meta": {
+    "id": "cross-slash",
+    "name": "十字劍氣",
+    "category": "sword",
+    "duration": 0.9,
+    "loop": false,
+    "w": 224,
+    "h": 224,
+    "ox": 112,
+    "oy": 112
+  },
+  "seed": 1,
+  "palette": "songyan",
+  "fps": 30,
+  "dt": 0.03333333333333333,
+  "simulationHz": 120,
+  "hash": "99f013d0950af05fe7df02a871e86270a7d148f4a6dae1a02169f483353f875b",
+  "frameCount": 28,
+  "sheet": {
+    "w": 1040,
+    "h": 954,
+    "cellW": 252,
+    "cellH": 290,
+    "headerH": 68,
+    "columns": 4,
+    "selected": [
+      0,
+      2,
+      5,
+      7,
+      10,
+      12,
+      15,
+      17,
+      20,
+      22,
+      25,
+      27
+    ]
+  },
+  "frames": [
+    {
+      "index": 0,
+      "time": 0,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 1,
+      "time": 0.03333333333333333,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 2,
+      "time": 0.06666666666666667,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 3,
+      "time": 0.1,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 4,
+      "time": 0.13333333333333333,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 5,
+      "time": 0.16666666666666666,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 6,
+      "time": 0.2,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 7,
+      "time": 0.23333333333333334,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 8,
+      "time": 0.26666666666666666,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 9,
+      "time": 0.3,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 10,
+      "time": 0.3333333333333333,
+      "fillRatio": 0.023895886479591837,
+      "edgeRatio": 0
+    },
+    {
+      "index": 11,
+      "time": 0.36666666666666664,
+      "fillRatio": 0.04848931760204082,
+      "edgeRatio": 0
+    },
+    {
+      "index": 12,
+      "time": 0.4,
+      "fillRatio": 0.06012834821428571,
+      "edgeRatio": 0
+    },
+    {
+      "index": 13,
+      "time": 0.43333333333333335,
+      "fillRatio": 0.06012834821428571,
+      "edgeRatio": 0
+    },
+    {
+      "index": 14,
+      "time": 0.4666666666666667,
+      "fillRatio": 0.06012834821428571,
+      "edgeRatio": 0
+    },
+    {
+      "index": 15,
+      "time": 0.5,
+      "fillRatio": 0.06012834821428571,
+      "edgeRatio": 0
+    },
+    {
+      "index": 16,
+      "time": 0.5333333333333333,
+      "fillRatio": 0.06040736607142857,
+      "edgeRatio": 0
+    },
+    {
+      "index": 17,
+      "time": 0.5666666666666667,
+      "fillRatio": 0.06088568239795918,
+      "edgeRatio": 0
+    },
+    {
+      "index": 18,
+      "time": 0.6,
+      "fillRatio": 0.06114477040816327,
+      "edgeRatio": 0
+    },
+    {
+      "index": 19,
+      "time": 0.6333333333333333,
+      "fillRatio": 0.06174266581632653,
+      "edgeRatio": 0
+    },
+    {
+      "index": 20,
+      "time": 0.6666666666666666,
+      "fillRatio": 0.0623405612244898,
+      "edgeRatio": 0
+    },
+    {
+      "index": 21,
+      "time": 0.7,
+      "fillRatio": 0.06265943877551021,
+      "edgeRatio": 0
+    },
+    {
+      "index": 22,
+      "time": 0.7333333333333333,
+      "fillRatio": 0.06293845663265306,
+      "edgeRatio": 0
+    },
+    {
+      "index": 23,
+      "time": 0.7666666666666666,
+      "fillRatio": 0.0631576849489796,
+      "edgeRatio": 0
+    },
+    {
+      "index": 24,
+      "time": 0.8,
+      "fillRatio": 0.06341677295918367,
+      "edgeRatio": 0
+    },
+    {
+      "index": 25,
+      "time": 0.8333333333333334,
+      "fillRatio": 0.06357621173469388,
+      "edgeRatio": 0
+    },
+    {
+      "index": 26,
+      "time": 0.8666666666666667,
+      "fillRatio": 0.06373565051020408,
+      "edgeRatio": 0
+    },
+    {
+      "index": 27,
+      "time": 0.9,
+      "fillRatio": 0.06383529974489796,
+      "edgeRatio": 0
+    }
+  ]
+}
