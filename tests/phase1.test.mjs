@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtemp, readFile, writeFile, rm } from 'node:fs/promises';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { inflateSync } from 'node:zlib';
 import { createInkFrame, clearInk } from '../src/core/frame.js';
@@ -281,6 +281,10 @@ test('invalid options, unknown effects, missing modules and bad metadata fail cl
   assert.throws(() => parseArgs(['--seed'], ['seed']), /Missing value/);
   assert.throws(() => numberOption({ seed: 'oops' }, 'seed', 1), /numeric/);
   assert.throws(() => getFX('missing'), /Unknown FX/);
+  assert.throws(() => parseArgs(['sword/not-an-effect'], []), /Unknown effect ID: "sword\/not-an-effect".*--list/);
+  assert.throws(() => parseArgs(['toString'], []), /Unknown effect ID/);
+  assert.deepEqual(parseArgs(['sword/sword-qi-slash'], []).files, parseArgs(['sword-qi-slash'], []).files);
+  assert.deepEqual(parseArgs(['custom.mjs'], []).files, [resolve('custom.mjs')]);
   assert.throws(() => sampleFX(effects[0], { seed: -1 }), /uint32/);
   assert.throws(() => sampleFX(effects[0], { fps: 0 }), /fps/);
   await assert.rejects(() => checkFX('missing.mjs', { edgeThreshold: 2 }), /threshold/);
