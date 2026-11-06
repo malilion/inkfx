@@ -59,7 +59,7 @@ Sprite sheets contain clean, untrimmed cells without guides or preview actors. J
 
 Read [AUTHORING](docs/AUTHORING.md) for the check/render workflow and optional fx-skill-kit bridge, and [PRD gap tracking](docs/prd-gap.md) for the release notes behind the 120-effect catalog.
 
-Private gallery deployment: [GitHub Pages](https://malilion.github.io/inkfx/gallery/). The workflow preserves `/gallery/`, `/src/`, documentation, and examples. Access is limited to authorized repository collaborators after GitHub sign-in; an anonymous 404 does not establish a deployment failure. Deployment status is visible in the repository’s Pages workflow.
+Gallery access: use `npm run gallery` locally. The current personal-account Pages configuration returns 404 and does not provide a usable private gallery; a successful workflow deployment does not establish private access. Repository visibility and Pages settings are unchanged.
 
 Not included: physical ESP32 flashing or hardware validation, a community demo video, or a launch blog. Hardware playback is outside this ink renderer’s verified scope.
 
