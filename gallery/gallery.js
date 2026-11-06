@@ -141,6 +141,7 @@ $('slow-toggle').addEventListener('change', event => { speed = event.target.chec
 for (const [category, count] of Object.entries(categoryCounts)) {
   const option = document.createElement('option'); option.value = category; option.textContent = `${category} (${count})`; $('category-filter').append(option);
 }
+$('visible-count').textContent = `${effects.length} effects`;
 $('category-filter').addEventListener('change', event => {
   let count = 0;
   for (const card of cards) {

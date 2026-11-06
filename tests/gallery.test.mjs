@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { effects } from '../src/fx/index.js';
+import { effects, categoryCounts } from '../src/fx/index.js';
 
 // Run the real browser module and real pixel renderer, controlling only DOM and visibility.
 test('gallery controls, visible-only playback, slow motion, actor, palette and filters', async t => {
@@ -73,7 +73,7 @@ test('gallery controls, visible-only playback, slow motion, actor, palette and f
   onIntersection([{ target: first, isIntersecting: false }]); nextAnimation(3200); nextAnimation(3250);
   assert.equal(first.dataset.time, stopped, 'offscreen playback pauses');
   get('category-filter').value = 'zen'; get('category-filter').dispatch('change');
-  assert.equal(get('fx-grid').children.filter(card => !card.hidden).length, 7);
-  assert.equal(get('visible-count').textContent, '7 effects');
+  assert.equal(get('fx-grid').children.filter(card => !card.hidden).length, categoryCounts.zen);
+  assert.equal(get('visible-count').textContent, `${categoryCounts.zen} effects`);
   get('next-seed').click(); assert.equal(get('seed').value, 43);
 });

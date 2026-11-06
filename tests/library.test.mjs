@@ -22,9 +22,9 @@ function decode(buffer) {
   return {w,h,rgba};
 }
 
-test('catalog contains >=40 unique single-file FX, >=15 sword/transitions, and every module', async () => {
-  assert.ok(effects.length >= 40); assert.ok(categoryCounts.sword + categoryCounts.transitions >= 15);
-  assert.deepEqual(categoryCounts, {'ink-burst':7,sword:12,talisman:7,transitions:8,ui:7,zen:7});
+test('catalog contains >=80 unique single-file FX, >=15 sword/transitions, and every module', async () => {
+  assert.ok(effects.length >= 80); assert.ok(categoryCounts.sword + categoryCounts.transitions >= 15);
+  assert.deepEqual(categoryCounts, {'ink-burst':12,sword:18,talisman:13,transitions:12,ui:12,zen:13});
   assert.equal(new Set(effects.map(fx=>fx.meta.id)).size,effects.length);
   const files=(await readdir(join(root,'src/fx'),{withFileTypes:true})).filter(e=>e.isDirectory());
   const discovered=[]; for(const category of files) for(const name of await readdir(join(root,'src/fx',category.name))) if(name.endsWith('.js'))discovered.push(`src/fx/${category.name}/${name}`);
