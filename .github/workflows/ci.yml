@@ -17,3 +17,45 @@ jobs:
           node-version: ${{ matrix.node }}
       - run: npm test
       - run: node tools/check.mjs
+  browser:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Validate the gallery in isolated Chrome
+        shell: bash
+        run: |
+          set -euo pipefail
+          chrome_bin=$(command -v google-chrome || command -v chromium || true)
+          test -n "$chrome_bin" || { echo 'Chrome is required on the runner'; exit 1; }
+          npm run gallery > "$RUNNER_TEMP/inkfx-gallery.log" 2>&1 &
+          gallery_pid=$!
+          "$chrome_bin" --headless --no-sandbox --disable-gpu --disable-dev-shm-usage \
+            --remote-debugging-port=9223 --user-data-dir="$RUNNER_TEMP/inkfx-chrome" \
+            about:blank > "$RUNNER_TEMP/inkfx-chrome.log" 2>&1 &
+          browser_pid=$!
+          trap 'kill "$gallery_pid" "$browser_pid" 2>/dev/null || true' EXIT
+          node --input-type=module <<'JS'
+          import { setTimeout as delay } from 'node:timers/promises';
+          let ready = false;
+          for (let i = 0; i < 200; i++) {
+            try {
+              const responses = await Promise.all([
+                fetch('http://127.0.0.1:8080/gallery/'),
+                fetch('http://127.0.0.1:9223/json/version')]);
+              if (responses.every(response => response.ok)) { ready = true; break; }
+            } catch {}
+            await delay(100);
+          }
+          if (!ready) throw new Error('Gallery or Chrome did not become ready');
+          JS
+          node tools/browser-smoke.mjs
+      - uses: actions/upload-artifact@v7.0.2
+        if: always()
+        with:
+          name: browser-validation
+          path: artifacts/browser/
+          if-no-files-found: ignore
+          retention-days: 7

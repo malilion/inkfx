@@ -29,21 +29,32 @@ export function benchmarkFX(entry, { steps = 300, warmup = 120, seed = 42 } = {}
     p95Ms: samples[Math.ceil(steps * .95) - 1], maxMs: samples.at(-1) };
 }
 
-export async function main(args = process.argv.slice(2)) {
-  const { files, options } = parseArgs(args, ['steps', 'warmup', 'seed', 'out']);
-  if (options.help) return console.log('Usage: node tools/benchmark.mjs [FX-ID ...] [--steps 300] [--warmup 120] [--seed 42] [--out report.json]');
+export async function main(args = process.argv.slice(2), { log = console.log } = {}) {
+  const { files, options } = parseArgs(args, ['steps', 'warmup', 'seed', 'out', 'width', 'height']);
+  if (options.help) return console.log('Usage: node tools/benchmark.mjs [FX-ID ...] [--steps 300] [--warmup 120] [--seed 42] [--width 320 --height 180] [--out report.json]');
   if (options.list) return listFX();
+  const resized = options.width !== undefined || options.height !== undefined;
+  const width = numberOption(options, 'width', NaN), height = numberOption(options, 'height', NaN);
+  if (resized && (![width, height].every(n => Number.isInteger(n) && n >= 2 && n <= 1024))) {
+    throw new RangeError('Provide both width and height as integers in 2..1024');
+  }
   const results = [];
-  for (const file of files.length ? files : examples) results.push(benchmarkFX(await loadFX(file), {
-    steps: numberOption(options, 'steps', 300), warmup: numberOption(options, 'warmup', 120), seed: numberOption(options, 'seed', 42) }));
+  for (const file of files.length ? files : examples) {
+    // loadFX imports a fresh module URL. Dimension changes are confined to this
+    // benchmark instance; the public catalog and authored files stay unchanged.
+    const entry = await loadFX(file);
+    if (resized) Object.assign(entry.meta, { w: width, h: height, ox: width / 2, oy: height / 2 });
+    results.push(benchmarkFX(entry, { steps: numberOption(options, 'steps', 300),
+      warmup: numberOption(options, 'warmup', 120), seed: numberOption(options, 'seed', 42) }));
+  }
   const report = { schemaVersion: 1, node: process.version, cpu: cpus()[0]?.model,
     clock: 'performance.now', simulationHz: 120, paper: false,
-    scope: 'Native FX dimensions, not the PRD 320x180 reference laptop. Creation and I/O excluded; no portable performance guarantee.',
+    scope: `${resized ? 'Requested canvas; artwork retains authored coordinates around the new center' : 'Native FX dimensions'}. Creation and I/O excluded; this cloud machine does not certify the reference-laptop budget.`,
     results };
   if (options.out) {
     const out = resolve(options.out); await mkdir(dirname(out), { recursive: true });
     await writeFile(out, JSON.stringify(report, null, 2) + '\n');
   }
-  console.log(JSON.stringify(report, null, 2));
+  log(JSON.stringify(report, null, 2));
 }
 if (isMain(import.meta.url)) main().catch(error => { console.error(error.message); process.exitCode = 1; });

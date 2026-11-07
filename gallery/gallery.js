@@ -193,8 +193,9 @@ function animate(now) {
     last = now; display();
     if (!fx.meta.loop && effect.t >= fx.meta.duration - 1e-8) setPlaying(false);
   }
-  // Thumbnails run at 24fps; offscreen cards never allocate or advance an effect.
-  if (!document.hidden && (!gridLast || now - gridLast >= 1000 / 24)) {
+  // Follow the display's animation frames; offscreen cards never allocate or
+  // advance an effect. Fixed 120Hz simulation keeps timing independent of RAF.
+  if (!document.hidden) {
     const dt = gridLast ? Math.min((now - gridLast) / 1000, .1) * speed : 0; gridLast = now;
     for (const card of visible) {
       if (!card.instance) card.instance = card.entry.create({ seed, palette });

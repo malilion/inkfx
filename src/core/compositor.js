@@ -15,17 +15,35 @@ export function composite(frame, palette = 'songyan', { paper = false, grain = 1
   for (let i = 0; i < frame.pigment.length; i++) {
     const p = Math.max(0, Math.min(1, frame.pigment[i]));
     const offset = i * 4;
+    if (p === 0 && frame.tint[i] === 0) {
+      const noise = paper ? (frame.paperGrain[i] - 0.5) * 7 * grain : 0;
+      data[offset] = colors.stops[0][0] - noise;
+      data[offset + 1] = colors.stops[0][1] - noise;
+      data[offset + 2] = colors.stops[0][2] - noise;
+      data[offset + 3] = paper ? 255 : 0;
+      continue;
+    }
     let stop = 0;
     while (stop < 4 && p > levels[stop + 1]) stop++;
     const fraction = (p - levels[stop]) / (levels[stop + 1] - levels[stop]);
     const accent = frame.tint[i] === 1 ? colors.accent : frame.tint[i] === 2 ? colors.highlight : null;
     const alpha = p < 0.004 ? 0 : Math.min(1, p * 3.5);
-    for (let channel = 0; channel < 3; channel++) {
-      const ramp = colors.stops[stop][channel] + (colors.stops[stop + 1][channel] - colors.stops[stop][channel]) * fraction;
-      const ink = accent ? ramp * 0.15 + accent[channel] * 0.85 : ramp;
-      const background = colors.stops[0][channel] - (frame.paperGrain[i] - 0.5) * 7 * grain;
-      data[offset + channel] = paper ? ink * alpha + background * (1 - alpha) : ink;
+    const low = colors.stops[stop], high = colors.stops[stop + 1];
+    let r = low[0] + (high[0] - low[0]) * fraction;
+    let g = low[1] + (high[1] - low[1]) * fraction;
+    let b = low[2] + (high[2] - low[2]) * fraction;
+    if (accent) {
+      r = r * 0.15 + accent[0] * 0.85;
+      g = g * 0.15 + accent[1] * 0.85;
+      b = b * 0.15 + accent[2] * 0.85;
     }
+    if (paper) {
+      const noise = (frame.paperGrain[i] - 0.5) * 7 * grain;
+      r = r * alpha + (colors.stops[0][0] - noise) * (1 - alpha);
+      g = g * alpha + (colors.stops[0][1] - noise) * (1 - alpha);
+      b = b * alpha + (colors.stops[0][2] - noise) * (1 - alpha);
+    }
+    data[offset] = r; data[offset + 1] = g; data[offset + 2] = b;
     data[offset + 3] = paper ? 255 : Math.round(alpha * 255);
   }
   return data;

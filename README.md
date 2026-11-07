@@ -73,9 +73,9 @@ The [inkfx-author Skill](skills/inkfx-author/SKILL.md) covers catalog discovery,
 
 ## Validation and performance
 
-`npm test` exercises renderer behavior, gallery controls, export bytes/timing, and all registered effects at multiple seed/palette combinations. `npm run check` validates the 120-effect catalog. The gallery's natural loops continue across cycles; one-shot gestures stop after recovery.
+`npm test` exercises renderer behavior, gallery controls, export bytes/timing, and all registered effects at multiple seed/palette combinations. `npm run check` validates the 120-effect catalog. The [real-browser harness](docs/BROWSER.md) verifies desktop/mobile layout, controls, clipboard, downloads, loops, and visibility pausing; CI includes this browser check. Visible thumbnails now advance on every animation frame, with offscreen cards paused. The gallery's natural loops continue across cycles; one-shot gestures stop after recovery.
 
-Run `node tools/benchmark.mjs --out artifacts/benchmark.json` for warmed-up native-size `step + draw + composite` timings. Creation and I/O are excluded. Measurements depend on the machine; they do not certify the PRD's 320×180 reference-laptop budget or 60fps browser playback. Full-frame procedural transitions can exceed the interactive frame budget; bake them into sprite sheets for constrained clients. See [PRD delivery status](docs/prd-gap.md) for verified scope and remaining release checks.
+Run `node tools/benchmark.mjs --out artifacts/benchmark.json` for warmed-up native-size `step + draw + composite` timings. Add `--width 320 --height 180` to measure a centered effect on the PRD canvas size without editing its source. Creation and I/O are excluded. Measurements depend on the machine; they do not certify the PRD's 320×180 reference-laptop budget or 60fps browser playback. Full-frame procedural transitions can exceed the interactive frame budget; bake them into sprite sheets for constrained clients. See [PRD delivery status](docs/prd-gap.md) for verified scope and remaining release checks.
 
 A shareable 60fps MP4 is included; community publication and a launch blog remain release work. Physical ESP32 flashing belongs to the separate oledfx PRD, not this ink renderer.
 
