@@ -1,6 +1,32 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { effects, categoryCounts } from '../src/fx/index.js';
+import { drawActor } from '../gallery/actor.js';
+
+test('practice dummy samples impact, hit-stop and recovery from the display clock', () => {
+  const slash = effects.find(fx => fx.meta.id === 'sword-qi-slash');
+  const [hit] = slash.act.hits, impact = slash.act.windup + hit.t;
+  function frame(time, seed = 42) {
+    const droplets = [], rotations = [];
+    const context = {
+      save() {}, restore() {}, beginPath() {}, moveTo() {}, lineTo() {}, stroke() {}, fill() {}, translate() {}, fillText() {},
+      arc(x, y, radius) { droplets.push([x, y, radius]); },
+      rotate(angle) { rotations.push(angle); },
+    };
+    const shake = drawActor(context, slash, time, seed);
+    return { droplets, angle: rotations[0], shake };
+  }
+  assert.deepEqual(frame(impact - .01), { droplets: [], angle: 0, shake: 0 });
+  const first = frame(impact + .01), held = frame(impact + .06);
+  assert.equal(first.droplets.length, hit.inkSplash);
+  assert.deepEqual(held.droplets, first.droplets);
+  assert.equal(held.angle, first.angle);
+  assert.notEqual(held.shake, first.shake);
+  assert.ok(first.angle > 0 && Math.abs(first.shake) <= hit.shakeAmp);
+  assert.notDeepEqual(frame(impact + .01, 43).droplets, first.droplets);
+  assert.notDeepEqual(frame(impact + hit.freeze + .08).droplets, first.droplets);
+  assert.deepEqual(frame(impact + hit.freeze + .35), { droplets: [], angle: 0, shake: 0 });
+});
 
 // Run the real browser module and real pixel renderer, controlling only DOM and visibility.
 test('gallery controls, visible-only playback, slow motion, actor, palette and filters', async t => {
@@ -11,7 +37,7 @@ test('gallery controls, visible-only playback, slow motion, actor, palette and f
   }));
   let rendered, nextAnimation, observed = [], onIntersection, actorCalls = 0, copied;
   const ctx = { putImageData(image) { rendered = image; }, save() { actorCalls++; }, restore() {}, beginPath() {},
-    arc() {}, moveTo() {}, lineTo() {}, stroke() {}, fillText() {} };
+    arc() {}, moveTo() {}, lineTo() {}, stroke() {}, fillText() {}, translate() {}, rotate() {}, fill() {} };
   class Element {
     children = []; events = {}; attributes = {}; dataset = {}; value = ''; textContent = ''; innerHTML = ''; checked = false; hidden = false;
     classList = { toggle() {} }; style = { setProperty() {} };
@@ -57,21 +83,24 @@ test('gallery controls, visible-only playback, slow motion, actor, palette and f
   const { readFile } = await import('node:fs/promises');
   const source = await readFile(new URL('../src/fx/sword/sword-qi-slash.js', import.meta.url), 'utf8');
   globalThis.fetch = async path => {
-    assert.equal(path, '../src/fx/sword/sword-qi-slash.js');
+    assert.equal(path, './standalone/sword-qi-slash.mjs');
     return { ok: true, text: async () => source };
   };
   await get('copy-source').click(); assert.equal(copied, source);
-  assert.match(get('status').textContent, /keep imports/);
+  assert.match(get('status').textContent, /standalone ES module/);
+  assert.equal(get('source-link').download, 'sword-qi-slash.mjs');
   globalThis.fetch = async () => ({ ok: false, status: 404 });
   await get('copy-source').click(); assert.match(get('status').textContent, /HTTP 404/);
   globalThis.fetch = async () => ({ ok: true, text: async () => source });
   navigator.clipboard.writeText = async () => { throw new Error('Clipboard permission denied'); };
-  await get('copy-source').click(); assert.match(get('status').textContent, /View single-file JS/);
+  await get('copy-source').click(); assert.match(get('status').textContent, /Download standalone JS/);
   get('play').click(); assert.equal(get('timeline').value, 0);
   nextAnimation(1000); nextAnimation(1040); assert.ok(get('timeline').value > 0);
   get('play').click(); assert.equal(get('play').attributes['aria-label'], 'Play effect');
   get('timeline').value = '.625'; get('timeline').dispatch('input'); const scrubbed = rendered.data.slice();
   get('timeline').dispatch('input'); assert.deepEqual(rendered.data, scrubbed);
+  get('next-frame').click(); assert.equal(get('timeline').value, 76 / 120);
+  get('prev-frame').click(); assert.equal(get('timeline').value, .625);
   get('replay').click(); get('slow-toggle').checked = true; get('slow-toggle').dispatch('change');
   nextAnimation(1100); nextAnimation(1140); assert.ok(Math.abs(get('timeline').value - .01) < 1e-8);
   get('slow-toggle').checked = false; get('slow-toggle').dispatch('change');
@@ -99,4 +128,12 @@ test('gallery controls, visible-only playback, slow motion, actor, palette and f
   assert.equal(get('play').attributes['aria-label'], 'Pause effect', 'loop preview keeps playing');
   assert.ok(Number(loopCard.dataset.time) > duration, 'loop thumbnails advance without a blank hold');
   assert.ok(Number(get('timeline').value) < duration, 'loop timeline wraps');
+  const elapsed = get('timeline').value;
+  get('play').click(); get('play').click();
+  assert.equal(get('timeline').value, elapsed, 'resuming a later cycle preserves time');
+  get('next-seed').click();
+  assert.equal(get('timeline').value, elapsed, 'changing seed preserves the visible loop phase');
+  get('timeline').value = 0; get('timeline').dispatch('input');
+  get('prev-frame').click(); assert.equal(get('timeline').value, (duration * 120 - 1) / 120);
+  get('next-frame').click(); assert.equal(get('timeline').value, 0);
 });

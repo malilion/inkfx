@@ -15,6 +15,7 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node }}
+      - run: npm ci
       - run: npm test
       - run: node tools/check.mjs
   browser:
@@ -24,6 +25,7 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 22
+      - run: npm ci
       - name: Validate the gallery in isolated Chrome
         shell: bash
         run: |

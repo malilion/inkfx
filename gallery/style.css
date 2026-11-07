@@ -11,3 +11,5 @@
   box-shadow: 0 1px 0 rgba(0,0,0,0.08);
 }
 .brand { display: inline-flex; align-items: center; gap: 0.15rem; }
+
+.frame-controls{display:flex;flex-shrink:0}.frame-controls .icon-button{min-width:32px;min-height:40px;padding:0 5px}

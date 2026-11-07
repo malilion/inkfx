@@ -56,6 +56,33 @@ export async function browserSmoke({ port = 9223, url = 'http://127.0.0.1:8080/g
     const { data } = await send('Page.captureScreenshot', { format: 'png' });
     await writeFile(join(output, name), Buffer.from(data, 'base64'));
   };
+  const samplePlayback = async (width, height, mobile, category) => {
+    await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile });
+    await evaluate(`(() => {
+      const filter = document.querySelector('#category-filter');
+      filter.value = ${JSON.stringify(category)};
+      filter.dispatchEvent(new Event('change'));
+      document.querySelector('.fx-card:not([hidden])').scrollIntoView();
+    })()`);
+    await delay(300);
+    const visible = await evaluate(`[...document.querySelectorAll('.fx-card:not([hidden])')].filter(card => {
+      const bounds = card.getBoundingClientRect();
+      return Math.min(bounds.bottom, innerHeight) - Math.max(bounds.top, 0) >= bounds.height * .05;
+    }).length`);
+    const deltas = await evaluate(`new Promise(resolve => {
+      const times = []; let last;
+      function frame(now) {
+        if (last) times.push(now - last);
+        last = now;
+        if (times.length === 120) resolve(times); else requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    })`);
+    deltas.sort((a, b) => a - b);
+    return { width, height, category, visible, frames: deltas.length,
+      p95Ms: deltas[Math.ceil(deltas.length * .95) - 1], maxMs: deltas.at(-1),
+      meanMs: deltas.reduce((sum, n) => sum + n, 0) / deltas.length };
+  };
   try {
     await send('Runtime.enable'); await send('Network.enable');
     await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false });
@@ -80,10 +107,43 @@ export async function browserSmoke({ port = 9223, url = 'http://127.0.0.1:8080/g
     const withoutActor = await evaluate(pixels);
     await evaluate(`document.querySelector('#act-toggle').checked=true;document.querySelector('#act-toggle').dispatchEvent(new Event('change'))`);
     assert.notEqual(await evaluate(pixels), withoutActor, 'actor renders on canvas');
+    const beforeImpactScrub = await evaluate(`(() => {
+      const timeline = document.querySelector('#timeline');
+      const previous = timeline.value;
+      timeline.value = '.45';
+      timeline.dispatchEvent(new Event('input'));
+      return previous;
+    })()`);
+    assert.match(await evaluate(`document.querySelector('#canvas').style.transform`), /^translateX\(/, 'hit shakes the preview');
+    const atImpact = await evaluate(pixels);
+    await evaluate(`document.querySelector('.workbench').scrollIntoView({ block: 'center' })`);
+    await screenshot('act-hit.png');
+    await evaluate(`const toggle = document.querySelector('#act-toggle'); toggle.checked = false; toggle.dispatchEvent(new Event('change'))`);
+    assert.equal(await evaluate(`document.querySelector('#canvas').style.transform`), '', 'disabling act clears shake');
+    assert.notEqual(await evaluate(pixels), atImpact, 'disabling act removes the hit overlay');
+    await evaluate(`const timeline = document.querySelector('#timeline'); timeline.value = ${JSON.stringify(beforeImpactScrub)}; timeline.dispatchEvent(new Event('input'))`);
     await evaluate(`document.querySelector('#seed').value=42;document.querySelector('#seed').dispatchEvent(new Event('change'));document.querySelector('#copy-source').click()`);
     await waitFor(`document.querySelector('#status').textContent.startsWith('Copied')`);
-    assert.equal(await evaluate('navigator.clipboard.readText()'),
-      await readFile(new URL('../src/fx/sword/sword-qi-slash.js', import.meta.url), 'utf8'));
+    assert.equal(await evaluate(`(async () => {
+      const source = await navigator.clipboard.readText();
+      const response = await fetch(document.querySelector('#source-link').href);
+      if (!response.ok || source !== await response.text()) return false;
+      const url = URL.createObjectURL(new Blob([source], { type: 'text/javascript' }));
+      try {
+        const { create, meta, act } = await import(url);
+        const instance = create({ seed: 42, palette: 'shiqing' });
+        instance.step(act.windup + .24);
+        const pixels = new ImageData(meta.w, meta.h);
+        const rendered = instance.draw(pixels);
+        return rendered === pixels && meta.id === 'sword-qi-slash' && pixels.data.some((n, i) => i % 4 === 3 && n > 0);
+      } finally { URL.revokeObjectURL(url); }
+    })()`), true, 'clipboard produces a standalone module with visible output');
+    const frameTime = await evaluate(`(() => {
+      document.querySelector('#next-frame').click();
+      return Number(document.querySelector('#timeline').value);
+    })()`);
+    assert.ok(Math.abs(frameTime - 77 / 120) < .001, 'steps one fixed simulation frame');
+    await evaluate(`document.querySelector('#act-toggle').click()`);
     let pngSize;
     for (const [id, suffix] of [['sheet-link', '.png'], ['atlas-link', '.json']]) {
       await evaluate(`document.querySelector('#${id}').click()`);
@@ -98,8 +158,28 @@ export async function browserSmoke({ port = 9223, url = 'http://127.0.0.1:8080/g
       if (suffix === '.png') {
         assert.equal(bytes.subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
         pngSize = { w: bytes.readUInt32BE(16), h: bytes.readUInt32BE(20) };
-        const decoded = await evaluate(`(async()=>{const bitmap=await createImageBitmap(await(await fetch(document.querySelector('#sheet-link').href)).blob());const c=document.createElement('canvas');c.width=bitmap.width;c.height=bitmap.height;const ctx=c.getContext('2d');ctx.drawImage(bitmap,0,0);const d=ctx.getImageData(0,0,c.width,c.height).data;let visible=0,empty=0;for(let i=3;i<d.length;i+=4){if(d[i])visible++;else empty++}return {w:c.width,h:c.height,visible,empty}})()`);
+        const decoded = await evaluate(`(async () => {
+          const png = await fetch(document.querySelector('#sheet-link').href);
+          const bitmap = await createImageBitmap(await png.blob());
+          const canvas = document.createElement('canvas');
+          canvas.width = bitmap.width;
+          canvas.height = bitmap.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(bitmap, 0, 0);
+          const decoded = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+          const [{ buildSheet }, effect] = await Promise.all([
+            import('../src/core/sheet.js'), import('../src/fx/sword/sword-qi-slash.js')
+          ]);
+          const { data: expected } = buildSheet(effect, { seed: 42, palette: 'shiqing', grain: 3 });
+          let visible = 0, empty = 0, differentAlpha = 0;
+          for (let i = 3; i < decoded.length; i += 4) {
+            if (decoded[i]) visible++; else empty++;
+            if (decoded[i] !== expected[i]) differentAlpha++;
+          }
+          return { w: canvas.width, h: canvas.height, visible, empty, differentAlpha };
+        })()`);
         assert.ok(decoded.visible > 0 && decoded.empty > 0, 'decoded PNG has ink and transparency');
+        assert.equal(decoded.differentAlpha, 0, 'downloaded PNG excludes the enabled actor overlay');
         assert.deepEqual({ w: decoded.w, h: decoded.h }, pngSize);
       }
       else {
@@ -147,13 +227,9 @@ export async function browserSmoke({ port = 9223, url = 'http://127.0.0.1:8080/g
     const stopped = await evaluate(`document.querySelector('.fx-card:not([hidden])').dataset.time`);
     await delay(250);
     assert.equal(await evaluate(`document.querySelector('.fx-card:not([hidden])').dataset.time`), stopped, 'offscreen card pauses');
-    await evaluate(`document.querySelector('#category-filter').value='all';document.querySelector('#category-filter').dispatchEvent(new Event('change'));document.querySelector('.fx-card').scrollIntoView()`);
-    await delay(300);
-    const deltas = await evaluate(`new Promise(resolve=>{const times=[];let last;function frame(now){if(last)times.push(now-last);last=now;if(times.length===120)resolve(times);else requestAnimationFrame(frame)}requestAnimationFrame(frame)})`);
-    deltas.sort((a, b) => a - b);
-    const timing = { frames: deltas.length, p95Ms: deltas[Math.ceil(deltas.length * .95) - 1], maxMs: deltas.at(-1),
-      meanMs: deltas.reduce((sum, n) => sum + n, 0) / deltas.length };
-    await send('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 1, mobile: true });
+    const timing = await samplePlayback(1440, 1000, false, 'all');
+    const transitionsTiming = await samplePlayback(1920, 1440, false, 'transitions');
+    const mobileTiming = await samplePlayback(390, 844, true, 'all');
     await evaluate('scrollTo(0,0)'); await delay(200);
     assert.equal(await evaluate('document.documentElement.scrollWidth <= innerWidth'), true, 'mobile horizontal overflow');
     await screenshot('mobile.png');
@@ -162,8 +238,9 @@ export async function browserSmoke({ port = 9223, url = 'http://127.0.0.1:8080/g
       .map(event => ({ url: event.params.response.url, status: event.params.response.status }));
     assert.deepEqual(exceptions, [], 'uncaught browser errors'); assert.deepEqual(failedResponses, [], 'failed browser resources');
     const report = { browser: (await send('Browser.getVersion')).product, url,
-      checks: [`${effects.length} cards and rendered previews`, 'desktop/mobile layout', 'four palettes/grain/actor pixels', 'source clipboard', 'decoded PNG and matching JSON downloads', 'slow motion', 'continuous loop', 'category filter', 'offscreen pause', 'no JS/resource errors'],
-      timing, screenshots: ['desktop.png', 'collection.png', 'mobile.png'] };
+      checks: [`${effects.length} cards and rendered previews`, 'desktop/mobile layout', 'four palettes and grain', 'act impact overlay and camera shake', 'standalone module from clipboard', 'decoded PNG and matching JSON downloads', 'slow motion and 120 Hz stepping', 'continuous loop', 'category filter', 'offscreen pause', 'no JS/resource errors'],
+      timing, viewportTimings: [timing, transitionsTiming, mobileTiming],
+      screenshots: ['desktop.png', 'act-hit.png', 'collection.png', 'mobile.png'] };
     await writeFile(join(output, 'report.json'), JSON.stringify(report, null, 2) + '\n');
     return report;
   } finally { browser.close(); }

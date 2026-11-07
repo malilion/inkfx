@@ -21,9 +21,10 @@ For web storytellers, 2D game developers, and creative coders building ink and w
 | ui | 19 |
 | **Total** | **126** |
 
-Node.js 20+; no package installation or build step.
+Use Node.js 20+. Install the pinned development bundler for the gallery's standalone downloads and the full test suite. The runtime, CLI checks, render, and sprite export work without package installation.
 
 ```sh
+npm ci
 npm test
 npm run check
 node tools/check.mjs sword-qi-slash --seed 42
@@ -42,7 +43,9 @@ node tools/export-sheet.mjs sword-qi-slash --seed 42 --palette zhusha
 node tools/export-sheet.mjs bagua-array --background paper --fps 24 --columns 6
 ```
 
-The gallery plays cards only while visible. Its toolbar switches all four palettes, adjusts paper grain, shows an act practice dummy, and slows playback to 0.25×. Select a card to scrub its timeline, inspect React/Vue examples, copy its JavaScript source or module path, or download a PNG sheet and matching JSON atlas. Downloads are baked locally in the browser with the current seed and palette; they also work on ordinary static hosting.
+The gallery plays cards only while visible. Its toolbar switches all four palettes, adjusts paper grain, shows an act practice dummy, and slows playback to 0.25×. Select a card to scrub or step through its 120 Hz timeline, inspect React/Vue examples, copy a standalone ES module or the original module path, or download a PNG sheet and matching JSON atlas. PNG and JSON downloads are baked locally in the browser with the current seed and palette.
+
+Save **Copy Single-File JS** as `<effect-id>.mjs` or use **Download standalone JS**. It includes the runtime helpers it uses and can be imported into another project by itself.
 
 ```js
 import { getFX, composite } from './src/index.js';
@@ -53,7 +56,7 @@ const rgba = composite(fx.frame, 'zhusha'); // transparent Uint8ClampedArray
 // composite(fx.frame, 'zhusha', { paper: true, grain: 1 }) bakes rice paper.
 ```
 
-Effects support both InkFrame and straight-alpha RGBA draw targets. Single-file assets import shared helpers from `src/core`; copy those helpers too when moving an effect. Sim effects use a fixed 120 Hz pigment/wetness model; pure effects repaint a deterministic 120 Hz time sample. `draw` never advances time. Twenty-one zen studies loop seamlessly.
+Effects draw into InkFrame, browser ImageData, or a straight-alpha RGBA target. Authored modules in `src/fx` import shared helpers. The gallery's standalone downloads bundle those imports. Sim effects use a fixed 120 Hz pigment/wetness model, and Pure effects repaint a deterministic 120 Hz sample. `draw` leaves the playback clock at its current time. Twenty-one zen studies loop seamlessly.
 
 The slash follows the PRD PoC's five named poses, 28 forward droplets, 15% cinnabar accents, and hit at 0.04s with a 0.15s freeze. Its 0.75s action plus 0.40s windup and 0.15s hit-stop gives a **1.30s display timeline**.
 
@@ -63,9 +66,9 @@ Read [AUTHORING](docs/AUTHORING.md) for the check/render workflow and optional f
 
 ## Gallery hosting
 
-The repository stays **private**; the GitHub Pages gallery is intended to be **public**. Public hosting exposes the JavaScript, docs, and examples needed by the gallery, not repository history or private repository access. The Pages workflow checks that the repository remains private and the site is public, then deploys only `gallery/`, `src/`, `docs/`, and `examples/`.
+The repository stays **private**, and the Gallery has its own public GitHub Pages URL. The Pages workflow checks both visibility settings, builds the standalone modules, and deploys the browser code, docs, and examples.
 
-Expected Pages address: `https://malilion.github.io/inkfx/` (currently returns HTTP 404; public access has not been delivered). Enable **Settings → Pages → Build and deployment → GitHub Actions** and choose public site visibility if available. The deployment token cannot change site visibility (GitHub returns 403), so a repository administrator must configure public site access. Private-repository Pages requires an eligible GitHub plan; keep the repository private if the account cannot enable it. See [Pages setup and verification](docs/PAGES.md).
+Open the [InkFX Gallery](https://malilion.github.io/inkfx/) or watch the demonstration clip from the Gallery footer. See [Pages setup and verification](docs/PAGES.md) for deployment checks.
 
 ## Agent authoring
 
@@ -77,7 +80,7 @@ The [inkfx-author Skill](skills/inkfx-author/SKILL.md) covers catalog discovery,
 
 Run `node tools/benchmark.mjs --out artifacts/benchmark.json` for warmed-up native-size `step + draw + composite` timings. Add `--width 320 --height 180` to measure a centered effect on the PRD canvas size without editing its source. Creation and I/O are excluded. Measurements depend on the machine; they do not certify the PRD's 320×180 reference-laptop budget or 60fps browser playback. Full-frame procedural transitions can exceed the interactive frame budget; bake them into sprite sheets for constrained clients. See [PRD delivery status](docs/prd-gap.md) for verified scope and remaining release checks.
 
-A shareable 60fps MP4 is included; community publication and a launch blog remain release work. Physical ESP32 flashing belongs to the separate oledfx PRD, not this ink renderer.
+The Gallery links to the shareable 60 FPS demonstration clip in `examples/demo.mp4`.
 
 If a command fails, use Node.js 20+ and run it from the repository root. Unknown IDs can be listed with `node tools/render.mjs --list`. If port 8080 is in use, run `PORT=8081 npm run gallery` on macOS/Linux and open http://127.0.0.1:8081/gallery/ (PowerShell: `$env:PORT=8081; npm run gallery`).
 

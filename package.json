@@ -11,8 +11,11 @@
     "test": "node --test",
     "check": "node tools/check.mjs",
     "render": "node tools/render.mjs",
-    "gallery": "node gallery/serve.mjs",
+    "gallery": "node tools/build-standalone.mjs && node gallery/serve.mjs",
     "export": "node tools/export-sheet.mjs",
     "review": "node tools/review.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.12"
   }
 }

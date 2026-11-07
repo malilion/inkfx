@@ -1,18 +1,22 @@
 import { createInkFrame, clearInk } from './frame.js';
-import { composite } from './compositor.js';
+import { drawInto } from './compositor.js';
 import { actionTime } from './act.js';
 
 /** Stateless paint at a fixed 120 Hz time. Seeking and display FPS agree exactly. */
 export function createPureEffect(meta, act, paint, { seed = 1, palette = 'songyan' } = {}) {
   const frame = createInkFrame(meta.w, meta.h, { ...meta, seed });
-  let t = 0, painted = -1;
+  let t = 0, paintedTick = -1, paintedTime;
   function render() {
     const tick = Math.floor((t + 1e-10) * 120);
-    if (painted !== tick) {
-      clearInk(frame);
+    if (paintedTick !== tick) {
       const time = meta.loop ? (tick / 120) % meta.duration : Math.min(meta.duration, tick / 120);
-      paint(frame, actionTime(act, time - act.windup));
-      painted = tick;
+      const action = actionTime(act, time - act.windup);
+      if (paintedTime !== action) {
+        clearInk(frame);
+        paint(frame, action);
+        paintedTime = action;
+      }
+      paintedTick = tick;
     }
     return frame;
   }
@@ -25,12 +29,7 @@ export function createPureEffect(meta, act, paint, { seed = 1, palette = 'songya
     },
     draw(target) {
       render();
-      if (!target) return frame;
-      if (target.w !== meta.w || target.h !== meta.h) throw new Error('draw target dimensions must match meta');
-      if (target.pigment) for (const key of ['pigment', 'wetness', 'tint', 'paperGrain']) target[key].set(frame[key]);
-      else if (target.data) target.data.set(composite(frame, palette));
-      else throw new Error('draw expects InkFrame or RGBA frame');
-      return target;
+      return target ? drawInto(frame, target, palette) : frame;
     },
   };
 }

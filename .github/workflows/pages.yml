@@ -9,6 +9,9 @@ on:
       - "docs/**"
       - "examples/**"
       - "README.md"
+      - "tools/build-standalone.mjs"
+      - "tools/cli.mjs"
+      - "package*.json"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -29,6 +32,9 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
       - name: Require private repository
         env:
           GH_TOKEN: ${{ github.token }}
@@ -45,10 +51,13 @@ jobs:
             exit 1
           fi
           test "$(gh api 'repos/${{ github.repository }}/pages' --jq .public)" = true
-      - name: Stage browser assets without a build
+      - run: npm ci
+      - name: Stage browser assets and standalone modules
         run: |
           mkdir -p _site
           cp -R gallery src docs examples _site/
+          rm _site/gallery/serve.mjs _site/src/core/{run,png,overlay}.js
+          node tools/build-standalone.mjs _site/gallery/standalone
           cat > _site/index.html <<'HTML'
           <!doctype html>
           <html lang="en">

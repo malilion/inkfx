@@ -20,7 +20,18 @@ test('compositor optimization preserves original palette, alpha and paper bytes'
     }
     const hash = createHash('sha256');
     for (const palette of ['songyan', 'zhusha', 'shiqing', 'nijin']) {
-      for (const paper of [false, true]) for (const grain of [0, 1, 3]) hash.update(composite(frame, palette, { paper, grain }));
+      for (const paper of [false, true]) for (const grain of [0, 1, 3]) {
+        const expected = composite(frame, palette, { paper, grain });
+        const storage = new Uint8ClampedArray(expected.length + 5).fill(255);
+        for (const offset of [1, 4]) {
+          const target = storage.subarray(offset, offset + expected.length);
+          assert.equal(composite(frame, palette, { paper, grain }, target), target);
+          assert.deepEqual(target, expected);
+        }
+        assert.equal(storage[0], 255);
+        assert.equal(storage.at(-1), 255);
+        hash.update(expected);
+      }
     }
     assert.equal(hash.digest('hex'), expected);
   }

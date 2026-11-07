@@ -4,6 +4,7 @@ import { resolve, extname, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
+  '.mjs': 'text/javascript; charset=utf-8',
   '.md': 'text/plain; charset=utf-8', '.png': 'image/png', '.json': 'application/json', '.mp4': 'video/mp4',
   '.svg': 'image/svg+xml', '.ico': 'image/vnd.microsoft.icon' };
 const port = Number(process.env.PORT ?? 8080);
@@ -13,9 +14,10 @@ const server = createServer(async (request, response) => {
     let path = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
     if (path === '/') path = '/gallery/';
     if (path.endsWith('/')) path += 'index.html';
-    const file = resolve(root, `.${path}`);
+    const asset = path.match(/^\/gallery\/standalone\/([a-z0-9-]+\.mjs)$/);
+    const file = asset ? resolve(root, 'artifacts/standalone', asset[1]) : resolve(root, `.${path}`);
     if (!file.startsWith(root.endsWith(sep) ? root : root + sep) ||
-        !/^\/(gallery|src|examples|docs)\//.test(path) || !types[extname(file)]) {
+        !/^\/(gallery|src|examples|docs)\//.test(path) || !types[extname(file)] || (!asset && extname(file) === '.mjs')) {
       response.writeHead(404).end('Not found'); return;
     }
     const data = await readFile(file);

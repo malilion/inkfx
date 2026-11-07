@@ -5,11 +5,11 @@ description: Find, integrate, export, or create deterministic ink and wuxia effe
 
 # Inkfx author
 
-Work from the repository root with Node.js 20+. No dependency installation or build is needed. Read `docs/AUTHORING.md` for the rendering contract and `docs/EXPORTING.md` for atlas timing. This skill authorizes local authoring and validation, not remote publication.
+Work from the repository root with Node.js 20+. Use `npm ci` for the gallery and the full test suite. Read `docs/AUTHORING.md` for the rendering contract and `docs/EXPORTING.md` for atlas timing. This skill authorizes local authoring and validation, not remote publication.
 
 ## Find and use an effect
 
-Run `node tools/render.mjs --list` before creating a new motif. Import an individual module from `src/fx/<category>/<id>.js` when bundle size matters; `src/index.js` imports the whole catalog. Copy its shared `src/core` and `src/palettes` imports too. Gallery **Copy JS** copies the actual module; **Copy path** copies its repository location.
+Run `node tools/render.mjs --list` before creating a new motif. Import an individual module from `src/fx/<category>/<id>.js` when bundle size matters. `src/index.js` imports the whole catalog. Gallery **Copy JS** copies a portable ES module with its helpers bundled. **Copy path** copies its repository location.
 
 Use `create({ seed, palette })`, advance with `step(dt)`, and composite `instance.frame`. Drawing must never advance time. Sim effects use fixed 120 Hz ticks; Pure effects repaint fixed samples. Use seeded randomness only: no Math.random, Date.now, performance.now, or shared mutable animation state.
 
@@ -27,6 +27,6 @@ Never overwrite committed examples during exploration: always set `--out artifac
 
 `act.poses` and `act.hits` use impact-relative time, with negative windup. The public display clock begins at zero and includes windup and hit-stop. Keep freeze windows ordered and nonoverlapping. The exported sheet already contains the freeze; consumers should not add it again.
 
-Use `node tools/export-sheet.mjs <id> --seed 42 --palette zhusha --out artifacts/export/<id>` for transparent PNG and JSON, or `--background paper` for baked paper. Verify actual output and timing, not file existence alone. Do not promise a self-contained single file: effects import shared helpers.
+Use `node tools/export-sheet.mjs <id> --seed 42 --palette zhusha --out artifacts/export/<id>` for transparent PNG and JSON, or `--background paper` for baked paper. Verify actual output and timing, not file existence alone.
 
 The optional `tools/skill-kit.mjs` bridge requires a separately available fx-skill-kit checkout. Local CHK-01–04 do not enforce its performance or domain budgets. Do not claim 60fps, bundle budgets, engine integration, public hosting, or publication without measured evidence. See `docs/prd-gap.md` for the current release status.

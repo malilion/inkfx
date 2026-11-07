@@ -1,6 +1,6 @@
 import { createInkFrame } from './frame.js';
 import { stepWet, WET_DT } from './diffusion.js';
-import { composite } from './compositor.js';
+import { drawInto } from './compositor.js';
 import { actionTime, hitStopAt } from './act.js';
 
 /** Fixed-tick state shared by browser previews, CLI sampling, and direct consumers. */
@@ -28,14 +28,7 @@ export function createEffect(meta, act, paint, { seed = 1, palette = 'songyan' }
       return frame;
     },
     draw(target) {
-      if (!target) return frame;
-      if (target.w !== frame.w || target.h !== frame.h) throw new Error('draw target dimensions must match meta');
-      if (target.pigment) {
-        for (const key of ['pigment', 'wetness', 'tint', 'paperGrain']) target[key].set(frame[key]);
-      } else if (target.data) {
-        target.data.set(composite(frame, palette));
-      } else throw new Error('draw expects InkFrame or RGBA frame');
-      return target;
+      return target ? drawInto(frame, target, palette) : frame;
     },
   };
 }

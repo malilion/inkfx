@@ -11,44 +11,44 @@ This repository implements **inkfx (PRD 01)** from the master suite. The OLED/ES
 | P2: ≥80 distinct FX | 126 | 20 ink-burst, 26 sword, 21 talisman, 19 transitions, 19 UI, 21 zen |
 | PoC sword action | Implemented | 28 droplets; five named poses; .04s hit/.15s freeze; 1.30s display clock |
 | Agent creation and visual feedback loop | Implemented | `skills/inkfx-author/SKILL.md`, local plugin manifest, check/render/review tooling |
-| Gallery controls and visible-only playback | Implemented | Palette/grain/actor/slow-motion/scrubbing/copy controls tested with real renderer and DOM fixture; loops continue without the one-shot hold |
-| Copy Single-File JS | Implemented | Fetches actual module source; clipboard and HTTP failures show a fallback; shared imports are still required |
-| Transparent/paper sprites and JSON atlas | Implemented | Shared browser/CLI builder; all-FX atlas test; hit timing, transparency, PNG CRC and scanlines tested |
-| Core gzip <4 KB / average FX source <1.8 KB | Measured within target | Renderer-only `src/runtime.js`: 3,769 gzip bytes with esbuild 0.25.12; mean FX source: 919.143 bytes |
-| Single effect <1.2ms at 320×180 on a reference laptop | **Not accepted** | Cloud native-size benchmark identifies slower effects; no reference-laptop certification |
-| Browser gallery at 60fps | Real-browser functionality verified; viewport timing measured | Chrome 156: desktop/mobile screenshots, all controls, clipboard, real decoded downloads, loops, and visibility tests pass; ~60fps observed in the tested desktop viewport, not a universal device guarantee |
-| Public gallery from private repo | Blocked by GitHub site-visibility permissions | Owner permits public website, requires private repo; see [Pages setup](PAGES.md) |
-| Community demonstration video/publication | Offline MP4 delivered; community publication pending | `examples/demo.mp4`: 6×4 effects, four palettes, H.264, 60fps, 240 decoded frames / 4 seconds; not a browser performance recording |
+| Gallery controls and visible-only playback | Implemented | Palette, grain, slow motion, scrubbing, 120 Hz frame stepping, and loop resume verified. The practice dummy uses authored hit-stop, recoil, camera shake, and seeded ink splash |
+| Copy Single-File JS | Implemented | Clipboard and download provide the same self-contained ES module. All 126 modules run independently and reproduce the authored output |
+| Transparent/paper sprites and JSON atlas | Implemented | All-FX atlas checks plus real import and playback in Phaser 3.90.0 and Godot 4.6.3. Aseprite import steps are documented |
+| Core gzip <4 KB / average FX source <1.8 KB | Measured within target | Renderer-only `src/runtime.js`: 3,952 gzip bytes with esbuild 0.25.12. Mean authored FX source: 937 bytes |
+| Single effect <1.2ms at 320×180 on a reference laptop | Apple M1, reusable RGBA | The catalog averages were below 1.2ms in both modes. Transparent p95 was below target for the full run. Paper p95 and the slowest individual frames still varied above target |
+| Browser gallery at 60fps | Verified on the reference browser | Chrome 156 measured 16.7ms p95 across desktop (12 cards), wide transitions (16 cards) and mobile (6 cards). Worst intervals were 33.3–50ms |
+| Public gallery from private repo | Public site configured | Pages reports `public: true`; repository metadata reports `private: true`. Use the [deployment checks](PAGES.md) to verify the current release |
+| Community demonstration video | Linked from the gallery | `examples/demo.mp4` shows 24 effects across four palettes, with 240 decoded H.264 frames over four seconds |
 
 ## Validation
 
-The latest full run completed all **35 tests** with no failures or skips and all **126/126** local effect checks. This includes gallery copy/loop behavior, the renderer-only entry, benchmarks, extreme brush radii, cached animation regression tests, original compositor-byte preservation, and isolated canvas-size benchmark overrides. A separate real-Chrome harness verifies the gallery end to end; see [browser acceptance](BROWSER.md). The full test suite exercises all effects at four seed/palette combinations and can take several minutes.
+The latest local run passed 37/37 tests and 126/126 effect checks. The standalone test loads every effect from a temporary directory and compares its rendered bytes with the original module. Chrome 156 passed against the staged site at the `/inkfx/gallery/` path. The copied effect drew into native ImageData, and the downloaded PNG's alpha matched the clean renderer with Act enabled in the preview. See [browser acceptance](BROWSER.md).
 
 Contact rendering and transparent atlas export were run for `sword-qi-slash`, seed 42, zhusha, into ignored `artifacts/onboarding/`. PNG signatures/dimensions and JSON frame data were verified and the contact sheet visually inspected. These are CPU-generated artifacts, not browser screenshots. Historical optional fx-skill-kit results do not establish that an external kit is installed in a fresh environment.
 
 ## Reproduce measurements
 
-The project has no runtime dependencies. esbuild below is an optional, pinned measurement tool, not a runtime or build prerequisite:
+The project has no runtime dependencies. The pinned development bundler builds the gallery's single-file downloads and also measures the core bundle.
 
 ```sh
 mkdir -p artifacts/size
-npm exec --yes --package=esbuild@0.25.12 -- esbuild src/runtime.js --bundle --minify --format=esm --outfile=artifacts/size/runtime.js
+npm ci
+npm exec -- esbuild src/runtime.js --bundle --minify --format=esm --outfile=artifacts/size/runtime.js
 node --input-type=module -e "import {readFileSync} from 'node:fs'; import {gzipSync} from 'node:zlib'; console.log(gzipSync(readFileSync('artifacts/size/runtime.js')).length)"
 node tools/benchmark.mjs --out artifacts/benchmark.json
-node tools/benchmark.mjs sword-qi-slash --width 320 --height 180 --out artifacts/benchmark-320x180.json
+node tools/benchmark.mjs --width 320 --height 180 --buffer reuse --out artifacts/benchmark-320x180.json
+node tools/benchmark.mjs --width 320 --height 180 --buffer reuse --background paper --out artifacts/benchmark-paper-320x180.json
 ```
 
 The renderer entry includes Sim/Pure, frame, seed, brushes, compositor, timing, diffusion, and palettes. It excludes the FX registry, motif library, PNG encoder, and sprite exporter. `src/index.js` deliberately imports the complete catalog; use individual FX modules and `src/runtime.js` when bundle size matters. Source average is measured on the 126 registered effect files before minification. These figures were refreshed after the brush and geometry refinements.
 
-The benchmark warms up each effect, then measures 300 fixed steps including draw/composite at its native dimensions, replaying finite effects. Creation, PNG encoding, and file I/O are excluded. The initial cloud run (with other validation running) recorded `petal-veil` p95 around 36ms and `realm-breakthrough` around 20ms at 224×224. These observations identify optimization work, not portable thresholds. Profile full-frame geometry and overlapping brush work, remeasure without concurrent workloads, and use baked sheets on constrained clients. Do not claim the PRD performance budget has passed.
+The benchmark warms up each effect for 120 ticks, then measures 300 steps including draw and composite. Creation, PNG encoding, and file I/O are excluded. On an Apple M1 with Node 26.7.0 at 320×180, paired paper-mode runs lowered the mean for `enso-breath` from 1.25 to 1.10ms and for `mountain-mist` from 1.20 to 1.03ms. A 900-frame spot check measured p95 at 1.19ms for `petal-veil` with its compact bloom cache and 1.22ms for `enso-breath`. The round-sweep, paper-burn, and cloud-curtain geometry optimizations matched their original hashes at every 120 Hz tick across two seeds and three canvas sizes.
 
-## Remote release prerequisites
+## Remote release
 
-Git and repository/Actions API access work through the platform proxy after the network policy update. The repo is confirmed private and remote CI passes. Both the agent's Pages-settings read and the workflow's site-visibility update return GitHub integration-permission errors (403). The public URL currently returns 404. See [Pages diagnostics and administrator action](PAGES.md); publishing the cloud environment does not fix GitHub account permissions.
+The Pages workflow checks both the private repository and the public site before staging the browser files, standalone modules, docs, and examples. See [Pages setup and verification](PAGES.md) for the URL and the checks for the deployed commit.
 
-The Pages workflow retains the private-repository guard and removes the obsolete requirement that the website itself be private. It verifies public site visibility through the Pages API, stages only browser assets, and uses GitHub's Pages actions. Site visibility must be configured by an administrator because the workflow token cannot change it (403). Enabling Pages and plan eligibility remain repository/account settings. Verify the exact deployed commit and public logged-out access before marking the public gallery delivered. Never change repository visibility to resolve a Pages restriction.
-
-## Performance refinement
+## Earlier performance refinement
 
 `petal-veil` now precomputes its seed-independent flower geometry once per module and reuses immutable lookups across instances. A sequential same-machine comparison reduced p95 from 26.53ms to 1.81ms at 224×224, excluding creation as in the benchmark contract. The cache retains about 8.1MB and adds one-time initialization work; it trades memory/cold-start cost for lower playback latency. Three seeds × four palettes produced exactly the original full-animation channel/RGBA hashes; two contact sheets were rendered and visually inspected.
 
@@ -58,7 +58,7 @@ The shared dry-brush primitive uses direct squared distance at ordinary canvas s
 
 `node tools/demo.mjs` optionally uses ffmpeg/libx264 to encode a 24-effect, four-palette 6×4 grid. Default output is ignored `artifacts/inkfx-demo.mp4`; the curated copy is `examples/demo.mp4`. ffprobe verified H.264, 946×720, 60/1 FPS, 240 decoded frames, and exactly 4 seconds. The entire video was decoded without errors and an extracted frame visually inspected. It is offline procedural animation, not a browser screen capture or evidence of interactive 60fps. Publishing it to a community account remains outside the completed release work.
 
-## Final browser and compositor refinement
+## Earlier browser and compositor refinement
 
 The compositor now handles empty pixels directly and computes RGB channels without the inner channel loop. Golden-byte tests preserve the original output across four palettes, paper/transparent modes, three grain settings, ramp knots, and clamped/invalid input. Shared brush bounds and row distances are computed once per dab/row. In a sequential native-size comparison, the slash p95 fell from 1.39ms to 0.91ms.
 

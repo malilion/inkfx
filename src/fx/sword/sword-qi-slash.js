@@ -11,6 +11,7 @@ export const meta = { id: 'sword-qi-slash', name: '劍氣斬', category: 'sword'
 export const act = { windup: .4,
   poses: [[-.4, 'SHEATH_CROUCH'], [-.08, 'EYE_GLINT', 'snap'], [0, 'DRAW_CUT', 'snap'],
     [.08, 'FOLLOW_HOLD'], [.65, 'STAND_RECOVER']],
+  target: { x: -20, y: -4 },
   hits: [{ t: .04, freeze: .15, shakeAmp: 3, inkSplash: 24 }], recovery: .1 };
 export function create({ seed = 1024, ...options } = {}) {
   const random = mulberry32(seed);

@@ -12,17 +12,30 @@ let grain = 1, actEnabled = false, speed = 1, gridLast = 0;
 const categoryNames = { sword: 'SWORD / 劍', transitions: 'TRANSITION / 卷', 'ink-burst': 'IMPACT / 墨',
   talisman: 'TALISMAN / 符', zen: 'ZEN / 禪', ui: 'UI / 印' };
 const cards = [], visible = new Set();
+const previewBuffers = new Map();
+const standalonePath = entry => `./standalone/${entry.meta.id}.mjs`;
 
 function paint(ctx, entry, instance) {
-  ctx.putImageData(new ImageData(composite(instance.frame, palette, { paper: true, grain }), entry.meta.w, entry.meta.h), 0, 0);
-  if (actEnabled) drawActor(ctx, entry, instance.t);
+  const { w, h } = entry.meta, size = `${w}x${h}`;
+  let pixels = previewBuffers.get(size);
+  if (!pixels) {
+    pixels = new ImageData(new Uint8ClampedArray(w * h * 4), w, h);
+    previewBuffers.set(size, pixels);
+  }
+  composite(instance.frame, palette, { paper: true, grain }, pixels.data);
+  ctx.putImageData(pixels, 0, 0);
+  const shake = actEnabled ? drawActor(ctx, entry, displayTime(entry, instance), seed) : 0;
+  if (ctx === context) canvas.style.transform = shake ? `translateX(${shake}px)` : '';
+}
+function displayTime(entry = fx, instance = effect) {
+  return entry.meta.loop ? instance.t % entry.meta.duration : Math.min(instance.t, entry.meta.duration);
 }
 function display() {
   paint(context, fx, effect);
-  const time = fx.meta.loop ? effect.t % fx.meta.duration : Math.min(effect.t, fx.meta.duration);
+  const time = displayTime();
   $('timeline').value = time;
   $('time').textContent = `${time.toFixed(3)} / ${fx.meta.duration.toFixed(3)}s`;
-  $('pose').textContent = samplePose(fx.act, actionTime(fx.act, effect.t - fx.act.windup)).poseId;
+  $('pose').textContent = samplePose(fx.act, actionTime(fx.act, time - fx.act.windup)).poseId;
 }
 function seek(time) {
   effect = fx.create({ seed, palette }); effect.step(time); display();
@@ -32,8 +45,59 @@ function setPlaying(value) {
   $('play').innerHTML = value ? 'Ⅱ <span>Pause gesture</span>' : '▶ <span>Play gesture</span>';
   $('play').setAttribute('aria-label', value ? 'Pause effect' : 'Play effect');
 }
+function stepFrame(direction) {
+  const time = displayTime();
+  const tick = direction > 0 ? Math.floor(time * 120 + 1e-8) + 1 : Math.ceil(time * 120 - 1e-8) - 1;
+  const count = Math.ceil(fx.meta.duration * 120);
+  const next = (fx.meta.loop ? (tick + count) % count : Math.max(0, tick)) / 120;
+  preview = false;
+  setPlaying(false);
+  seek(Math.min(fx.meta.duration, next));
+}
 function componentExamples() {
-  return `// React (useEffect cleanup stops playback)\nimport React from 'react';\nimport { create } from '../${effectPaths[fx.meta.id]}';\nimport { composite } from '../src/core/compositor.js';\nfunction Ink({ seed = 1 }) {\n  const ref = React.useRef(null);\n  React.useEffect(() => {\n    const fx = create({ seed }); let raf, last;\n    const draw = now => {\n      if (last) fx.step(Math.min((now-last)/1000, .05));\n      last = now; const f = fx.frame;\n      ref.current.getContext('2d').putImageData(\n        new ImageData(composite(f, '${palette}'), f.w, f.h), 0, 0);\n      raf = requestAnimationFrame(draw);\n    };\n    raf = requestAnimationFrame(draw);\n    return () => cancelAnimationFrame(raf);\n  }, [seed]);\n  return <canvas ref={ref} width={${fx.meta.w}} height={${fx.meta.h}} />;\n}\n\n<!-- Vue 3: use the same create/composite imports and draw loop. -->\n<script setup>\nimport { ref, onMounted, onUnmounted } from 'vue';\nimport { create } from '../${effectPaths[fx.meta.id]}';\nimport { composite } from '../src/core/compositor.js';\nconst canvas = ref(null); let raf;\nonMounted(() => {\n  const fx = create({ seed: 1 }); let last;\n  const draw = now => {\n    if (last) fx.step(Math.min((now-last)/1000, .05));\n    last = now; const f = fx.frame;\n    canvas.value.getContext('2d').putImageData(\n      new ImageData(composite(f, '${palette}'), f.w, f.h), 0, 0);\n    raf = requestAnimationFrame(draw);\n  };\n  raf = requestAnimationFrame(draw);\n});\nonUnmounted(() => cancelAnimationFrame(raf));\n</script>\n<template><canvas ref="canvas" width="${fx.meta.w}" height="${fx.meta.h}" /></template>`;
+  const player = `import { create, meta } from './${fx.meta.id}.mjs';
+
+function mountInk(canvas, seed) {
+  const ctx = canvas.getContext('2d');
+  const fx = create({ seed, palette: '${palette}' });
+  const pixels = new ImageData(meta.w, meta.h);
+  let last, raf;
+  function draw(now) {
+    if (last !== undefined) {
+      const dt = Math.min((now - last) / 1000, .05);
+      fx.step(meta.loop ? dt : Math.min(dt, meta.duration - fx.t));
+    }
+    last = now;
+    ctx.putImageData(fx.draw(pixels), 0, 0);
+    if (meta.loop || fx.t < meta.duration) raf = requestAnimationFrame(draw);
+  }
+  raf = requestAnimationFrame(draw);
+  return () => cancelAnimationFrame(raf);
+}`;
+  return `// React / Ink.jsx
+import { useEffect, useRef } from 'react';
+${player}
+
+export default function Ink({ seed = ${seed} }) {
+  const canvas = useRef(null);
+  useEffect(() => mountInk(canvas.current, seed), [seed]);
+  return <canvas ref={canvas} width={meta.w} height={meta.h} />;
+}
+
+<!-- Vue 3 / Ink.vue -->
+<script setup>
+import { ref, watchPostEffect } from 'vue';
+${player}
+
+const props = defineProps({ seed: { type: Number, default: ${seed} } });
+const canvas = ref(null);
+watchPostEffect(onCleanup => {
+  if (canvas.value) onCleanup(mountInk(canvas.value, props.seed));
+});
+</script>
+<template>
+  <canvas ref="canvas" :width="meta.w" :height="meta.h" />
+</template>`;
 }
 function selectEffect(index) {
   fx = effects[index]; setPlaying(false);
@@ -44,7 +108,8 @@ function selectEffect(index) {
   $('figure').textContent = String(index + 1).padStart(2, '0');
   $('windup').textContent = `${fx.act.windup.toFixed(2)}s`;
   $('freeze').textContent = `${fx.act.hits.reduce((sum, hit) => sum + hit.freeze, 0).toFixed(2)}s`;
-  $('source-link').href = `../${effectPaths[fx.meta.id]}`;
+  $('source-link').href = standalonePath(fx);
+  $('source-link').download = `${fx.meta.id}.mjs`;
   $('sheet-link').href = `../examples/out/${fx.meta.id}/sheet.png`;
   $('atlas-link').href = `../examples/out/${fx.meta.id}/sheet.json`;
   $('component-examples').textContent = componentExamples();
@@ -59,14 +124,20 @@ async function copyPath(entry) {
   catch { $('status').textContent = `Copy path: ${path}`; }
 }
 async function copySource(entry) {
-  try {
-    const response = await fetch(`../${effectPaths[entry.meta.id]}`);
+  async function load() {
+    const response = await fetch(standalonePath(entry));
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const source = await response.text();
-    await navigator.clipboard.writeText(source);
-    $('status').textContent = `Copied ${entry.meta.name} JS; keep imports alongside src/core and src/palettes.`;
+    return response.text();
+  }
+  try {
+    const clipboard = navigator.clipboard;
+    if (clipboard?.write && typeof ClipboardItem === 'function') {
+      const source = load().then(text => new Blob([text], { type: 'text/plain' }));
+      await Promise.all([source, clipboard.write([new ClipboardItem({ 'text/plain': source })])]);
+    } else await clipboard.writeText(await load());
+    $('status').textContent = `Copied ${entry.meta.name} as a standalone ES module. Save it as ${entry.meta.id}.mjs.`;
   } catch (error) {
-    $('status').textContent = `Copy failed: ${error.message}. Use View single-file JS to copy the source.`;
+    $('status').textContent = `Copy failed: ${error.message}. Use Download standalone JS for this effect.`;
   }
 }
 const blobURLs = new Map();
@@ -81,13 +152,14 @@ async function downloadSheet(event, entry, atlasOnly = false) {
   event.preventDefault();
   const link = event.currentTarget;
   if (link.dataset.busy) return;
+  const options = { seed, palette, grain };
+  const stem = `${entry.meta.id}-${options.palette}-seed${options.seed}`;
   link.dataset.busy = 'true'; link.setAttribute('aria-busy', 'true');
   $('status').textContent = `Baking ${entry.meta.name}…`;
   // Yield so the busy state paints before baking a large atlas.
   await new Promise(resolve => requestAnimationFrame(resolve));
   try {
-    const sheet = buildSheet(entry, { seed, palette, grain });
-    const stem = `${entry.meta.id}-${palette}-seed${seed}`;
+    const sheet = buildSheet(entry, options);
     sheet.atlas.meta.image = `${stem}.png`;
     if (atlasOnly) downloadBlob(new Blob([JSON.stringify(sheet.atlas, null, 2)], { type: 'application/json' }), `${stem}.json`, link);
     else {
@@ -149,7 +221,11 @@ for (const [id, entry] of Object.entries(palettes)) {
 $('toolbar-palette').value = palette;
 $('toolbar-palette').addEventListener('change', event => setPalette(event.target.value));
 $('grain').addEventListener('input', event => { grain = Number(event.target.value); $('grain-value').textContent = grain.toFixed(1); display(); for (const card of visible) if (card.instance) paint(card.context, card.entry, card.instance); });
-$('act-toggle').addEventListener('change', event => { actEnabled = event.target.checked; display(); });
+$('act-toggle').addEventListener('change', event => {
+  actEnabled = event.target.checked;
+  display();
+  for (const card of visible) if (card.instance) paint(card.context, card.entry, card.instance);
+});
 $('slow-toggle').addEventListener('change', event => { speed = event.target.checked ? .25 : 1; last = gridLast = 0; });
 for (const [category, count] of Object.entries(categoryCounts)) {
   const option = document.createElement('option'); option.value = category; option.textContent = `${category} (${count})`; $('category-filter').append(option);
@@ -173,16 +249,19 @@ $('atlas-link').href = '../examples/out/sword-qi-slash/sheet.json';
 $('sheet-link').addEventListener('click', event => downloadSheet(event, fx));
 $('atlas-link').addEventListener('click', event => downloadSheet(event, fx, true));
 $('play').addEventListener('click', () => {
-  if (!playing && (preview || effect.t >= fx.meta.duration - .001)) { seek(0); preview = false; }
+  if (!playing && (preview || (!fx.meta.loop && effect.t >= fx.meta.duration - .001))) { seek(0); preview = false; }
   setPlaying(!playing);
 });
 $('replay').addEventListener('click', () => { preview = false; seek(0); setPlaying(true); });
+$('prev-frame').addEventListener('click', () => stepFrame(-1));
+$('next-frame').addEventListener('click', () => stepFrame(1));
 $('timeline').addEventListener('input', event => { preview = false; setPlaying(false); seek(Number(event.target.value)); });
 function changeSeed() {
   const next = Number($('seed').value);
   if (!Number.isInteger(next) || next < 0 || next > 0xffffffff) { $('status').textContent = 'Seed must be an integer from 0 to 4294967295.'; return; }
   seed = next; $('status').textContent = 'Deterministic by nature.';
-  seek(Math.min(effect.t, fx.meta.duration)); resetCards();
+  $('component-examples').textContent = componentExamples();
+  seek(displayTime()); resetCards();
 }
 $('seed').addEventListener('change', changeSeed);
 $('next-seed').addEventListener('click', () => { $('seed').value = (seed + 1) >>> 0; changeSeed(); });
@@ -204,7 +283,8 @@ function animate(now) {
       if (card.entry.meta.loop) card.instance.step(dt);
       else if (card.instance.t >= card.entry.meta.duration) {
         card.hold += dt;
-        if (card.hold > .25) { card.instance = card.entry.create({ seed, palette }); card.hold = 0; }
+        if (card.hold <= .25) continue;
+        card.instance = card.entry.create({ seed, palette }); card.hold = 0;
       } else card.instance.step(Math.min(dt, card.entry.meta.duration - card.instance.t));
       paint(card.context, card.entry, card.instance);
       card.element.dataset.time = card.instance.t.toFixed(3);

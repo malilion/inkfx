@@ -23,7 +23,11 @@ test('renderer-only entry runs both engines without importing catalog or Node mo
   for (const create of [createEffect, createPureEffect]) {
     const instance = create(meta, act, frame => { frame.pigment[36] = .8; });
     instance.step(1 / 120);
-    assert.ok(composite(instance.draw())[36 * 4 + 3] > 0);
+    const nativeDimensions = { width: 8, height: 8, data: new Uint8ClampedArray(8 * 8 * 4) };
+    assert.equal(instance.draw(nativeDimensions), nativeDimensions);
+    const expected = composite(instance.draw());
+    assert.ok(expected[36 * 4 + 3] > 0);
+    assert.deepEqual(nativeDimensions.data, expected);
   }
 });
 

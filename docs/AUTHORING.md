@@ -2,7 +2,20 @@
 
 The installable authoring guide is [inkfx-author](../skills/inkfx-author/SKILL.md). Use `src/runtime.js` for a renderer-only entry without loading the FX catalog.
 
-inkfx is pure ESM. Browser modules use no Node APIs; PNG encoding and tooling use Node built-ins. Every effect is one module importing only inkfx core helpers. Copy those helpers with an effect when using it outside this repository.
+InkFX runtime modules use browser-compatible ESM. Each authored effect imports shared helpers. To use an effect outside this repository, get the bundled `.mjs` from **Copy Single-File JS** or **Download standalone JS** in the gallery. `npm ci && node tools/build-standalone.mjs` generates those modules locally under `artifacts/standalone/`.
+
+```js
+import { create, meta, act } from './sword-qi-slash.mjs';
+
+const effect = create({ seed: 42, palette: 'zhusha' });
+effect.step(act.windup + .24);
+const pixels = new ImageData(meta.w, meta.h);
+effect.draw(pixels);
+const canvas = document.querySelector('canvas');
+canvas.width = meta.w;
+canvas.height = meta.h;
+canvas.getContext('2d').putImageData(pixels, 0, 0);
+```
 
 ## InkFrame contract
 
@@ -27,17 +40,17 @@ inkfx is pure ESM. Browser modules use no Node APIs; PNG encoding and tooling us
 
 Palette IDs: `songyan`, `zhusha`, `shiqing`, `nijin`. Each exports `id`, `name`, six light-to-dark hex `stops`, `accent`, `accentRGB`, and `highlight`. The compositor uses nonlinear pigment knots `[0, .07, .22, .45, .73, 1]`. Tint 1 selects the mineral accent; tint 2 selects the highlight.
 
-`composite(frame, paletteId, { paper: false })` returns straight-alpha `Uint8ClampedArray` RGBA. Pigment below .004 is invisible; alpha rises with deposit. `{ paper: true }` bakes in seeded paper and always returns opaque pixels. Checks and fill statistics use the transparent output, so paper does not count as spill. PNG: `encodePNG({ w, h, data: rgba })` from `src/core/png.js`.
+`composite(frame, paletteId, { paper: false })` returns straight-alpha `Uint8ClampedArray` RGBA. Pigment below .004 is invisible, and alpha rises with deposit. `{ paper: true }` bakes in seeded paper and returns opaque pixels. To reuse storage, pass a `Uint8ClampedArray` of length `w * h * 4` as the fourth argument. Checks and fill statistics use transparent output. Encode PNGs with `encodePNG({ w, h, data: rgba })` from `src/core/png.js`.
 
 ## Act timing
 
 Every module exports `meta`, `act`, and `create({ seed, palette })`. `meta` contains `id`, `name`, `category`, `duration`, `loop`, `w`, `h`, `ox`, `oy`. Duration includes windup, hit-stop, and recovery; sword, talisman, impact, UI and transition effects are one-shot gestures; the zen studies are periodic Pure effects.
 
-`act.windup` is a positive duration. Pose and hit times use an impact-relative clock, starting at `-act.windup`. A pose is `[time, poseId, easing]`, where easing is `snap`, `linear`, or `easeOut`. `samplePose(act, t)` returns `poseId`, `nextPoseId`, and eased `progress`. A hit is `{ t, freeze, shakeAmp, inkSplash }`; `hitStopAt(act, t)` uses half-open windows `[t, t + freeze)`. `actionTime` subtracts elapsed freeze windows. Keep windows ordered and nonoverlapping. Shake and splash are choreography metadata; shake belongs to the consuming scene's camera.
+`act.windup` is a positive duration. Pose and hit times use an impact-relative clock, starting at `-act.windup`. A pose is `[time, poseId, easing]`, where easing is `snap`, `linear`, or `easeOut`. `samplePose(act, t)` returns `poseId`, `nextPoseId`, and eased `progress`. A hit is `{ t, freeze, shakeAmp, inkSplash }`. `hitStopAt(act, t)` uses half-open windows `[t, t + freeze)`, and `actionTime` subtracts elapsed freeze windows. Keep windows ordered and nonoverlapping. The gallery uses shake and splash for its practice dummy. An optional `act.target = { x, y }` anchors the dummy's crossbar relative to the effect origin.
 
 The PoC sword has a .75-second action, .4-second windup and .15-second hit-stop, for a 1.30-second display duration. Its arc sweeps over .12 action seconds, with a hit at .04s, freeze .15s, shakeAmp 3 and inkSplash 24. It emits 28 directional droplets, with four (approximately 15%) using tint 1. Named poses match PRD 01: SHEATH_CROUCH, EYE_GLINT, DRAW_CUT, FOLLOW_HOLD and STAND_RECOVER.
 
-`createEffect` owns an InkFrame and exposes `{ t, frame, step(dt), draw(target) }`. `t` starts at 0. The paint callback receives `(frame, actionTime, previousActionTime)`. It runs on a fixed 120Hz grid independent of render FPS. Hit-stop pauses painting, water, and fading. `draw()` returns the InkFrame; `draw(InkFrame)` copies all channels; `draw({ w, h, data })` composites transparent RGBA, allowing fx-skill-kit-style consumers. Calling draw never advances simulation. Create a fresh instance to replay or seek backwards.
+`createEffect` owns an InkFrame and exposes `{ t, frame, step(dt), draw(target) }`. `t` starts at 0. The paint callback receives `(frame, actionTime, previousActionTime)`. It runs on a fixed 120 Hz grid independent of render FPS. Hit-stop pauses painting, water, and fading. `draw()` returns the InkFrame, and `draw(InkFrame)` copies all channels. `draw(ImageData)` and `draw({ w, h, data })` composite transparent RGBA. Calling draw leaves the simulation clock at its current time. Create a fresh instance to replay or seek backwards.
 
 ## Add a sword effect
 

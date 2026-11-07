@@ -16,14 +16,15 @@ export function path(f, points, width = 3, alpha = .7, tint = 0) {
   if (alpha <= 0) return;
   const lengths = points.slice(1).map((p, i) => Math.hypot(p[0] - points[i][0], p[1] - points[i][1]));
   const total = lengths.reduce((a, b) => a + b, 0) || 1;
+  const strength = Math.min(1, alpha / .7);
+  const brush = { pigment: alpha, wetness: .04 * strength, dryFactor: 1.1 * strength, tint };
   let traveled = 0;
   for (let i = 1; i < points.length; i++) {
     const start = points[i - 1], end = points[i], length = lengths[i - 1], steps = Math.max(1, Math.ceil(length * 1.8));
     for (let j = 0; j <= steps; j++) {
       const v = j / steps, u = (traveled + length * v) / total;
       stamp(f, f.ox + start[0] + (end[0] - start[0]) * v, f.oy + start[1] + (end[1] - start[1]) * v,
-        width * (.18 + .82 * Math.sin(Math.PI * u)), { pigment: alpha, wetness: .04 * Math.min(1, alpha / .7),
-          dryFactor: 1.1 * Math.min(1, alpha / .7), tint });
+        width * (.18 + .82 * Math.sin(Math.PI * u)), brush);
     }
     traveled += length;
   }
