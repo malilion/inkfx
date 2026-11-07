@@ -154,6 +154,8 @@ $('slow-toggle').addEventListener('change', event => { speed = event.target.chec
 for (const [category, count] of Object.entries(categoryCounts)) {
   const option = document.createElement('option'); option.value = category; option.textContent = `${category} (${count})`; $('category-filter').append(option);
 }
+for (const id of ['catalog-count', 'explore-count', 'collection-count']) $(id).textContent = effects.length;
+$('catalog-edition').textContent = [...String(effects.length)].map(digit => '〇一二三四五六七八九'[Number(digit)]).join('') + '式';
 $('visible-count').textContent = `${effects.length} effects`;
 $('category-filter').addEventListener('change', event => {
   let count = 0;

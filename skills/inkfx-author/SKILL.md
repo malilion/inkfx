@@ -19,7 +19,7 @@ Use `create({ seed, palette })`, advance with `step(dt)`, and composite `instanc
 2. Run `node tools/check.mjs <id> --seed 42`. Investigate every failing determinism, boundary, loop, visibility, or channel check; do not weaken checks to pass an asset.
 3. Run `node tools/render.mjs <id> --seed 42 --out artifacts/review/<id>/round-1`. Open the resulting `contact.png` with an image tool and read `contact.json`. A passing hash is not a visual review.
 4. Identify the weakest frames by their time labels. Inspect burst timing, dry-brush negative space, pale washes around dense ink, origin placement, and gradual fading. For attacks, the silhouette should emerge within the first 15% of action time after windup. Check zen loops across the seam. Improve a specific weakness, rerun check/render into `round-2`, and inspect again. Perform at least two visual review rounds for new artwork; if the first is already satisfactory, compare another seed/palette rather than make a cosmetic edit merely to count a round.
-5. Test seed 0, 42, and 4294967295 and the four palettes. Use `--fps 120` for one-tick glitches. Run `npm test` and `npm run check` before delivery (several minutes for 120 effects).
+5. Test seed 0, 42, and 4294967295 and the four palettes. Use `--fps 120` for one-tick glitches. Run `npm test` and `npm run check` before delivery (several minutes for the full catalog).
 
 Never overwrite committed examples during exploration: always set `--out artifacts/...` or a temporary directory. Update curated examples deliberately only after inspection.
 

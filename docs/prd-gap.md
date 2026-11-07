@@ -1,20 +1,20 @@
 # PRD 01 delivery and release status
 
-This repository implements **inkfx (PRD 01)** from the master suite. The OLED/ESP32 compiler and fx-skill-kit product are separate projects. The runtime has 120 registered effects across all six categories; the previous 48-effect progress report is superseded.
+This repository implements **inkfx (PRD 01)** from the master suite. The OLED/ESP32 compiler and fx-skill-kit product are separate projects. The runtime has 126 registered effects across all six categories; the previous 48-effect progress report is superseded.
 
 | Requirement | Current delivery | Evidence / remaining work |
 | --- | --- | --- |
 | Pigment/wetness, seeded paper, dry brush, diffusion/fringe | Implemented | Renderer tests exercise channel ranges, transport, paper, and PNG bytes |
 | Four mineral palettes | Implemented | songyan, zhusha, shiqing, nijin; multi-seed/palette checks |
 | Fixed 120 Hz Sim and Pure engines | Implemented | FPS independence, determinism guards, hit-stop, draw without advance |
-| P1: ≥15 sword/transition FX | 43 | 25 swords + 18 transitions |
-| P2: ≥80 distinct FX | 120 | 19 ink-burst, 25 sword, 20 talisman, 18 transitions, 18 UI, 20 zen |
+| P1: ≥15 sword/transition FX | 45 | 26 swords + 19 transitions |
+| P2: ≥80 distinct FX | 126 | 20 ink-burst, 26 sword, 21 talisman, 19 transitions, 19 UI, 21 zen |
 | PoC sword action | Implemented | 28 droplets; five named poses; .04s hit/.15s freeze; 1.30s display clock |
 | Agent creation and visual feedback loop | Implemented | `skills/inkfx-author/SKILL.md`, local plugin manifest, check/render/review tooling |
 | Gallery controls and visible-only playback | Implemented | Palette/grain/actor/slow-motion/scrubbing/copy controls tested with real renderer and DOM fixture; loops continue without the one-shot hold |
 | Copy Single-File JS | Implemented | Fetches actual module source; clipboard and HTTP failures show a fallback; shared imports are still required |
 | Transparent/paper sprites and JSON atlas | Implemented | Shared browser/CLI builder; all-FX atlas test; hit timing, transparency, PNG CRC and scanlines tested |
-| Core gzip <4 KB / average FX source <1.8 KB | Measured within target | Renderer-only `src/runtime.js`: 3,769 gzip bytes with esbuild 0.25.12; mean FX source: 904.083 bytes |
+| Core gzip <4 KB / average FX source <1.8 KB | Measured within target | Renderer-only `src/runtime.js`: 3,769 gzip bytes with esbuild 0.25.12; mean FX source: 919.143 bytes |
 | Single effect <1.2ms at 320×180 on a reference laptop | **Not accepted** | Cloud native-size benchmark identifies slower effects; no reference-laptop certification |
 | Browser gallery at 60fps | Real-browser functionality verified; viewport timing measured | Chrome 156: desktop/mobile screenshots, all controls, clipboard, real decoded downloads, loops, and visibility tests pass; ~60fps observed in the tested desktop viewport, not a universal device guarantee |
 | Public gallery from private repo | Blocked by GitHub site-visibility permissions | Owner permits public website, requires private repo; see [Pages setup](PAGES.md) |
@@ -22,7 +22,7 @@ This repository implements **inkfx (PRD 01)** from the master suite. The OLED/ES
 
 ## Validation
 
-The latest full run completed all **32 tests** with no failures or skips and all **120/120** local effect checks. This includes gallery copy/loop behavior, the renderer-only entry, benchmarks, extreme brush radii, cached animation regression tests, original compositor-byte preservation, and isolated canvas-size benchmark overrides. A separate real-Chrome harness verifies the gallery end to end; see [browser acceptance](BROWSER.md). The full test suite exercises all effects at four seed/palette combinations and can take several minutes.
+The latest full run completed all **35 tests** with no failures or skips and all **126/126** local effect checks. This includes gallery copy/loop behavior, the renderer-only entry, benchmarks, extreme brush radii, cached animation regression tests, original compositor-byte preservation, and isolated canvas-size benchmark overrides. A separate real-Chrome harness verifies the gallery end to end; see [browser acceptance](BROWSER.md). The full test suite exercises all effects at four seed/palette combinations and can take several minutes.
 
 Contact rendering and transparent atlas export were run for `sword-qi-slash`, seed 42, zhusha, into ignored `artifacts/onboarding/`. PNG signatures/dimensions and JSON frame data were verified and the contact sheet visually inspected. These are CPU-generated artifacts, not browser screenshots. Historical optional fx-skill-kit results do not establish that an external kit is installed in a fresh environment.
 
@@ -38,7 +38,7 @@ node tools/benchmark.mjs --out artifacts/benchmark.json
 node tools/benchmark.mjs sword-qi-slash --width 320 --height 180 --out artifacts/benchmark-320x180.json
 ```
 
-The renderer entry includes Sim/Pure, frame, seed, brushes, compositor, timing, diffusion, and palettes. It excludes the FX registry, motif library, PNG encoder, and sprite exporter. `src/index.js` deliberately imports the complete catalog; use individual FX modules and `src/runtime.js` when bundle size matters. Source average is measured on the 120 registered effect files before minification. These figures were refreshed after the brush and geometry refinements.
+The renderer entry includes Sim/Pure, frame, seed, brushes, compositor, timing, diffusion, and palettes. It excludes the FX registry, motif library, PNG encoder, and sprite exporter. `src/index.js` deliberately imports the complete catalog; use individual FX modules and `src/runtime.js` when bundle size matters. Source average is measured on the 126 registered effect files before minification. These figures were refreshed after the brush and geometry refinements.
 
 The benchmark warms up each effect, then measures 300 fixed steps including draw/composite at its native dimensions, replaying finite effects. Creation, PNG encoding, and file I/O are excluded. The initial cloud run (with other validation running) recorded `petal-veil` p95 around 36ms and `realm-breakthrough` around 20ms at 224×224. These observations identify optimization work, not portable thresholds. Profile full-frame geometry and overlapping brush work, remeasure without concurrent workloads, and use baked sheets on constrained clients. Do not claim the PRD performance budget has passed.
 
@@ -65,3 +65,11 @@ The compositor now handles empty pixels directly and computes RGB channels witho
 `realm-breakthrough` replaces overlapping broad petals with two ink rings and eight fine curved rays. Three visual review rounds plus an alternate palette/seed were inspected; its curated contact sheet was refreshed. On the requested 320×180 canvas, the final cloud run measured slash mean 0.82ms / p95 1.04ms, and realm mean 1.08ms / p95 1.34ms. Max timings were 3.18ms and 1.44ms respectively. These observations are progress, not a claim that every frame or the full catalog meets 1.2ms on the PRD reference laptop. That hardware-level acceptance remains open.
 
 The gallery no longer throttles thumbnails to 24fps: visible cards follow requestAnimationFrame, while offscreen cards do not allocate or advance. The Chrome 156 harness checks real pixels, source clipboard content, decoded PNG transparency, matching JSON, a complete loop crossing, slow motion, and desktop/mobile layouts. The tested viewport was approximately 60fps, with p95 RAF intervals around 16.8ms; results are machine/viewport dependent. Browser CI saves screenshots and current-run download artifacts for review. The local server also now serves the brand SVG and ICO files with their correct MIME types.
+
+## Six-study expansion: 126 effects
+
+The new `scabbard-parry`, `red-thread-knot`, `tea-steam`, `meteor-crater`, `rain-pool-wipe`, and `jade-pendant` add one distinct study per category. They reuse the existing fixed-tick Pure renderer and mineral palettes without new runtime dependencies. Gallery headings, the browser harness, and demo headings now derive their count from the registry.
+
+All six passed 72 combinations (three seeds × four palettes). Initial contact sheets were inspected at seed 42/zhusha, then alternate sheets at seed 0/shiqing. Refinement added actual over/under cord bridges with connected tassels, upward ballistic meteor debris and ground cracks, and seeded position/arrival differences for the rain pools. Final curated contact sheets are committed under `examples/out/<id>/`.
+
+Behavior tests cover full-cycle seeded steam, meteor approach and hit-stop, and monotonic rain-pool coverage ending at a fully covered canvas. The real-Chrome harness additionally opens and verifies every registered canvas preview, instead of checking only the card count; all 126 previews and actual downloads passed. This run measured mean RAF interval 17.64ms / p95 33.2ms after scanning the whole catalog. It is functional acceptance, not a universal 60fps certification.

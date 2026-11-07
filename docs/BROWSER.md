@@ -24,7 +24,7 @@ node tools/browser-smoke.mjs --out artifacts/browser
 
 The tool connects directly to DevTools rather than waiting for a `--dump-dom` or command-line screenshot process to exit. It tests:
 
-- All 120 cards and successful loading of images/modules.
+- All registered cards, each real canvas preview, and successful loading of images/modules.
 - Desktop (1440×1000) and mobile (390×844) layout without page overflow.
 - All four palettes, paper grain, and the actor toggle changing real canvas pixels.
 - The actual JS module copied to the browser clipboard.

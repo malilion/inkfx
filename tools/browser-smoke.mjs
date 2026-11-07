@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { effects, categoryCounts } from '../src/fx/index.js';
 import { mkdir, mkdtemp, readFile, writeFile, rm } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
@@ -61,7 +62,7 @@ export async function browserSmoke({ port = 9223, url = 'http://127.0.0.1:8080/g
     await send('Browser.grantPermissions', { origin: new URL(url).origin, permissions: ['clipboardReadWrite', 'clipboardSanitizedWrite'] });
     await send('Browser.setDownloadBehavior', { behavior: 'allow', downloadPath: downloads });
     await send('Page.navigate', { url }); await send('Page.bringToFront');
-    await waitFor('document.querySelectorAll(".fx-card").length === 120');
+    await waitFor(`document.querySelectorAll(".fx-card").length === ${effects.length}`);
     await waitFor('[...document.images].every(image => image.complete && image.naturalWidth > 0)');
     assert.equal(await evaluate('document.documentElement.scrollWidth <= innerWidth'), true, 'desktop horizontal overflow');
     await screenshot('desktop.png');
@@ -122,8 +123,24 @@ export async function browserSmoke({ port = 9223, url = 'http://127.0.0.1:8080/g
     await evaluate(`new Promise((resolve,reject)=>{let previous=0,peak=0;const duration=Number(document.querySelector('#timeline').max),deadline=performance.now()+8000;function frame(){const time=Number(document.querySelector('#timeline').value);peak=Math.max(peak,time);if(peak>duration*.75&&time<previous-.5)return resolve(true);if(performance.now()>deadline)return reject(new Error('Loop did not wrap'));previous=time;requestAnimationFrame(frame)}requestAnimationFrame(frame)})`);
     assert.equal(await evaluate(`document.querySelector('#play').getAttribute('aria-label')`), 'Pause effect', 'loop continues beyond one cycle');
     await evaluate(`document.querySelector('#play').click();document.querySelector('#act-toggle').checked=false;document.querySelector('#act-toggle').dispatchEvent(new Event('change'));document.querySelector('#grain').value=1;document.querySelector('#grain').dispatchEvent(new Event('input'))`);
+    const previews = await evaluate(`(async()=>{
+      document.querySelector('#grain').value=0;document.querySelector('#grain').dispatchEvent(new Event('input'));
+      const {palettes}=await import('../src/palettes/index.js');
+      const hex=palettes[document.querySelector('#toolbar-palette').value].stops[0];
+      const paper=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)),blank=[];
+      const buttons=[...document.querySelectorAll('#effects button')];
+      for(let n=0;n<buttons.length;n++){
+        buttons[n].click();const c=document.querySelector('#canvas'),data=c.getContext('2d').getImageData(0,0,c.width,c.height).data;
+        let ink=false;for(let i=0;i<data.length;i+=4)if(Math.abs(data[i]-paper[0])+Math.abs(data[i+1]-paper[1])+Math.abs(data[i+2]-paper[2])>8){ink=true;break}
+        if(!ink)blank.push(buttons[n].querySelector('small').textContent);
+        if(n%12===0)await new Promise(requestAnimationFrame);
+      }
+      document.querySelector('#grain').value=1;document.querySelector('#grain').dispatchEvent(new Event('input'));
+      return {count:buttons.length,blank};
+    })()`);
+    assert.equal(previews.count, effects.length); assert.deepEqual(previews.blank, [], 'every real canvas preview contains ink');
     await evaluate(`document.querySelector('#category-filter').value='zen';document.querySelector('#category-filter').dispatchEvent(new Event('change'));document.querySelector('.fx-card:not([hidden])').scrollIntoView()`);
-    assert.equal(await evaluate('document.querySelectorAll(".fx-card:not([hidden])").length'), 20);
+    assert.equal(await evaluate('document.querySelectorAll(".fx-card:not([hidden])").length'), categoryCounts.zen);
     await waitFor(`Number(document.querySelector('.fx-card:not([hidden])').dataset.time)>0`);
     await screenshot('collection.png');
     await evaluate('scrollTo(0,0)'); await delay(200);
@@ -145,7 +162,7 @@ export async function browserSmoke({ port = 9223, url = 'http://127.0.0.1:8080/g
       .map(event => ({ url: event.params.response.url, status: event.params.response.status }));
     assert.deepEqual(exceptions, [], 'uncaught browser errors'); assert.deepEqual(failedResponses, [], 'failed browser resources');
     const report = { browser: (await send('Browser.getVersion')).product, url,
-      checks: ['120 cards', 'desktop/mobile layout', 'four palettes/grain/actor pixels', 'source clipboard', 'decoded PNG and matching JSON downloads', 'slow motion', 'continuous loop', 'category filter', 'offscreen pause', 'no JS/resource errors'],
+      checks: [`${effects.length} cards and rendered previews`, 'desktop/mobile layout', 'four palettes/grain/actor pixels', 'source clipboard', 'decoded PNG and matching JSON downloads', 'slow motion', 'continuous loop', 'category filter', 'offscreen pause', 'no JS/resource errors'],
       timing, screenshots: ['desktop.png', 'collection.png', 'mobile.png'] };
     await writeFile(join(output, 'report.json'), JSON.stringify(report, null, 2) + '\n');
     return report;

@@ -38,6 +38,7 @@ test('gallery controls, visible-only playback, slow motion, actor, palette and f
   await import('../gallery/gallery.js');
   assert.equal(get('effects').children.length, effects.length);
   assert.equal(get('fx-grid').children.length, effects.length);
+  for (const id of ['catalog-count', 'explore-count', 'collection-count']) assert.equal(get(id).textContent, effects.length);
   assert.equal(observed.length, effects.length);
   assert.equal(get('palettes').children.length, 4);
   const initial = rendered.data.slice();

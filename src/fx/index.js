@@ -118,7 +118,13 @@ import * as fx116 from './zen/sakura-fall.js';
 import * as fx117 from './zen/stone-lantern.js';
 import * as fx118 from './zen/waterfall-thread.js';
 import * as fx119 from './zen/willow-curtain.js';
-export const effects = [fx0, fx1, fx2, fx3, fx4, fx5, fx6, fx7, fx8, fx9, fx10, fx11, fx12, fx13, fx14, fx15, fx16, fx17, fx18, fx19, fx20, fx21, fx22, fx23, fx24, fx25, fx26, fx27, fx28, fx29, fx30, fx31, fx32, fx33, fx34, fx35, fx36, fx37, fx38, fx39, fx40, fx41, fx42, fx43, fx44, fx45, fx46, fx47, fx48, fx49, fx50, fx51, fx52, fx53, fx54, fx55, fx56, fx57, fx58, fx59, fx60, fx61, fx62, fx63, fx64, fx65, fx66, fx67, fx68, fx69, fx70, fx71, fx72, fx73, fx74, fx75, fx76, fx77, fx78, fx79, fx80, fx81, fx82, fx83, fx84, fx85, fx86, fx87, fx88, fx89, fx90, fx91, fx92, fx93, fx94, fx95, fx96, fx97, fx98, fx99, fx100, fx101, fx102, fx103, fx104, fx105, fx106, fx107, fx108, fx109, fx110, fx111, fx112, fx113, fx114, fx115, fx116, fx117, fx118, fx119];
+import * as scabbardParry from './sword/scabbard-parry.js';
+import * as redThreadKnot from './talisman/red-thread-knot.js';
+import * as teaSteam from './zen/tea-steam.js';
+import * as meteorCrater from './ink-burst/meteor-crater.js';
+import * as rainPoolWipe from './transitions/rain-pool-wipe.js';
+import * as jadePendant from './ui/jade-pendant.js';
+export const effects = [fx0, fx1, fx2, fx3, fx4, fx5, fx6, fx7, fx8, fx9, fx10, fx11, fx12, fx13, fx14, fx15, fx16, fx17, fx18, fx19, fx20, fx21, fx22, fx23, fx24, fx25, fx26, fx27, fx28, fx29, fx30, fx31, fx32, fx33, fx34, fx35, fx36, fx37, fx38, fx39, fx40, fx41, fx42, fx43, fx44, fx45, fx46, fx47, fx48, fx49, fx50, fx51, fx52, fx53, fx54, fx55, fx56, fx57, fx58, fx59, fx60, fx61, fx62, fx63, fx64, fx65, fx66, fx67, fx68, fx69, fx70, fx71, fx72, fx73, fx74, fx75, fx76, fx77, fx78, fx79, fx80, fx81, fx82, fx83, fx84, fx85, fx86, fx87, fx88, fx89, fx90, fx91, fx92, fx93, fx94, fx95, fx96, fx97, fx98, fx99, fx100, fx101, fx102, fx103, fx104, fx105, fx106, fx107, fx108, fx109, fx110, fx111, fx112, fx113, fx114, fx115, fx116, fx117, fx118, fx119, scabbardParry, redThreadKnot, teaSteam, meteorCrater, rainPoolWipe, jadePendant];
 export const effectPaths = Object.fromEntries(effects.map(fx => [fx.meta.id,
   `src/fx/${fx.meta.category}/${fx.meta.id}.js`]));
 export const categoryCounts = Object.fromEntries([...new Set(effects.map(fx => fx.meta.category))].map(category =>

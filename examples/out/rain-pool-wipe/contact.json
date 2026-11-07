@@ -1,0 +1,264 @@
+{
+  "schemaVersion": 1,
+  "meta": {
+    "id": "rain-pool-wipe",
+    "name": "雨池暈場",
+    "category": "transitions",
+    "duration": 1.2,
+    "loop": false,
+    "mode": "pure",
+    "w": 224,
+    "h": 224,
+    "ox": 112,
+    "oy": 112
+  },
+  "seed": 42,
+  "palette": "zhusha",
+  "fps": 30,
+  "dt": 0.03333333333333333,
+  "simulationHz": 120,
+  "hash": "e9beb4d80480d6b4fa51e88d04cefecabd7001b5a702af11d39a5c01ca8d382e",
+  "frameCount": 37,
+  "sheet": {
+    "w": 1040,
+    "h": 664,
+    "cellW": 252,
+    "cellH": 290,
+    "headerH": 68,
+    "columns": 4,
+    "selected": [
+      0,
+      5,
+      10,
+      15,
+      21,
+      26,
+      31,
+      36
+    ]
+  },
+  "frames": [
+    {
+      "index": 0,
+      "time": 0,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 1,
+      "time": 0.03333333333333333,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 2,
+      "time": 0.06666666666666667,
+      "fillRatio": 0.0003587372448979592,
+      "edgeRatio": 0
+    },
+    {
+      "index": 3,
+      "time": 0.1,
+      "fillRatio": 0.004803093112244898,
+      "edgeRatio": 0
+    },
+    {
+      "index": 4,
+      "time": 0.13333333333333333,
+      "fillRatio": 0.013731664540816327,
+      "edgeRatio": 0
+    },
+    {
+      "index": 5,
+      "time": 0.16666666666666666,
+      "fillRatio": 0.03318319515306122,
+      "edgeRatio": 0
+    },
+    {
+      "index": 6,
+      "time": 0.2,
+      "fillRatio": 0.07047193877551021,
+      "edgeRatio": 0
+    },
+    {
+      "index": 7,
+      "time": 0.23333333333333334,
+      "fillRatio": 0.12902582908163265,
+      "edgeRatio": 0
+    },
+    {
+      "index": 8,
+      "time": 0.26666666666666666,
+      "fillRatio": 0.19838169642857142,
+      "edgeRatio": 0
+    },
+    {
+      "index": 9,
+      "time": 0.3,
+      "fillRatio": 0.2786192602040816,
+      "edgeRatio": 0
+    },
+    {
+      "index": 10,
+      "time": 0.3333333333333333,
+      "fillRatio": 0.37015704719387754,
+      "edgeRatio": 0.023542600896860985
+    },
+    {
+      "index": 11,
+      "time": 0.36666666666666664,
+      "fillRatio": 0.4689891581632653,
+      "edgeRatio": 0.06390134529147982
+    },
+    {
+      "index": 12,
+      "time": 0.4,
+      "fillRatio": 0.5738799426020408,
+      "edgeRatio": 0.10201793721973094
+    },
+    {
+      "index": 13,
+      "time": 0.43333333333333335,
+      "fillRatio": 0.6811224489795918,
+      "edgeRatio": 0.14798206278026907
+    },
+    {
+      "index": 14,
+      "time": 0.4666666666666667,
+      "fillRatio": 0.7858737244897959,
+      "edgeRatio": 0.27466367713004486
+    },
+    {
+      "index": 15,
+      "time": 0.5,
+      "fillRatio": 0.8731863839285714,
+      "edgeRatio": 0.4013452914798206
+    },
+    {
+      "index": 16,
+      "time": 0.5333333333333333,
+      "fillRatio": 0.932975924744898,
+      "edgeRatio": 0.594170403587444
+    },
+    {
+      "index": 17,
+      "time": 0.5666666666666667,
+      "fillRatio": 0.9677933673469388,
+      "edgeRatio": 0.7320627802690582
+    },
+    {
+      "index": 18,
+      "time": 0.6,
+      "fillRatio": 0.9874242665816326,
+      "edgeRatio": 0.8576233183856502
+    },
+    {
+      "index": 19,
+      "time": 0.6333333333333333,
+      "fillRatio": 0.9952367665816326,
+      "edgeRatio": 0.922645739910314
+    },
+    {
+      "index": 20,
+      "time": 0.6666666666666666,
+      "fillRatio": 0.9982860331632653,
+      "edgeRatio": 0.9641255605381166
+    },
+    {
+      "index": 21,
+      "time": 0.7,
+      "fillRatio": 0.9994220344387755,
+      "edgeRatio": 0.984304932735426
+    },
+    {
+      "index": 22,
+      "time": 0.7333333333333333,
+      "fillRatio": 0.9999003507653061,
+      "edgeRatio": 0.9955156950672646
+    },
+    {
+      "index": 23,
+      "time": 0.7666666666666666,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    },
+    {
+      "index": 24,
+      "time": 0.8,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    },
+    {
+      "index": 25,
+      "time": 0.8333333333333334,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    },
+    {
+      "index": 26,
+      "time": 0.8666666666666667,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    },
+    {
+      "index": 27,
+      "time": 0.9,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    },
+    {
+      "index": 28,
+      "time": 0.9333333333333333,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    },
+    {
+      "index": 29,
+      "time": 0.9666666666666667,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    },
+    {
+      "index": 30,
+      "time": 1,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    },
+    {
+      "index": 31,
+      "time": 1.0333333333333332,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    },
+    {
+      "index": 32,
+      "time": 1.0666666666666667,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    },
+    {
+      "index": 33,
+      "time": 1.1,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    },
+    {
+      "index": 34,
+      "time": 1.1333333333333333,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    },
+    {
+      "index": 35,
+      "time": 1.1666666666666667,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    },
+    {
+      "index": 36,
+      "time": 1.2,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    }
+  ]
+}

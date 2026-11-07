@@ -3,23 +3,23 @@
 <p align="center"><img src="docs/brand/icon-512.png" alt="inkfx mark — mineral ink stroke" width="160" height="160"></p>
 
 
-**120 procedural ink FX. Four mineral palettes. Zero runtime dependencies. Built-in Agent Skill.**
+**126 procedural ink FX. Four mineral palettes. Zero runtime dependencies. Built-in Agent Skill.**
 
 For web storytellers, 2D game developers, and creative coders building ink and wuxia scenes. 墨起，意隨。Seeded brushwork, flying-white sword trails, paper diffusion, talisman arrays, natural loops, impact bursts, transitions, and interface seals. Every effect is a small JavaScript module; no textures or prerecorded animation.
 
-![24 studies from the 120-effect library](examples/grid.png)
+![24 studies from the 126-effect library](examples/grid.png)
 
 [Watch the 6×4 demo — 4 seconds, 60fps](examples/demo.mp4). This is an offline render, not a browser performance recording.
 
 | Category | FX |
 | --- | ---: |
-| sword | 25 |
-| talisman | 20 |
-| zen | 20 |
-| ink-burst | 19 |
-| transitions | 18 |
-| ui | 18 |
-| **Total** | **120** |
+| sword | 26 |
+| talisman | 21 |
+| zen | 21 |
+| ink-burst | 20 |
+| transitions | 19 |
+| ui | 19 |
+| **Total** | **126** |
 
 Node.js 20+; no package installation or build step.
 
@@ -53,13 +53,13 @@ const rgba = composite(fx.frame, 'zhusha'); // transparent Uint8ClampedArray
 // composite(fx.frame, 'zhusha', { paper: true, grain: 1 }) bakes rice paper.
 ```
 
-Effects support both InkFrame and straight-alpha RGBA draw targets. Single-file assets import shared helpers from `src/core`; copy those helpers too when moving an effect. Sim effects use a fixed 120 Hz pigment/wetness model; pure effects repaint a deterministic 120 Hz time sample. `draw` never advances time. Twenty zen studies loop seamlessly.
+Effects support both InkFrame and straight-alpha RGBA draw targets. Single-file assets import shared helpers from `src/core`; copy those helpers too when moving an effect. Sim effects use a fixed 120 Hz pigment/wetness model; pure effects repaint a deterministic 120 Hz time sample. `draw` never advances time. Twenty-one zen studies loop seamlessly.
 
 The slash follows the PRD PoC's five named poses, 28 forward droplets, 15% cinnabar accents, and hit at 0.04s with a 0.15s freeze. Its 0.75s action plus 0.40s windup and 0.15s hit-stop gives a **1.30s display timeline**.
 
 Sprite sheets contain clean, untrimmed cells without guides or preview actors. JSON uses Aseprite/Phaser-style hash frames (`frame`, `spriteSourceSize`, `sourceSize`, `duration` in milliseconds), with origin, seed, palette, loop, and exact hit timing in `meta.inkfx.act`. Godot users can use the same rectangles to build AtlasTextures/SpriteFrames; see the [export guide](docs/EXPORTING.md).
 
-Read [AUTHORING](docs/AUTHORING.md) for the check/render workflow and optional fx-skill-kit bridge, and [PRD gap tracking](docs/prd-gap.md) for the release notes behind the 120-effect catalog.
+Read [AUTHORING](docs/AUTHORING.md) for the check/render workflow and optional fx-skill-kit bridge, and [PRD gap tracking](docs/prd-gap.md) for the release notes behind the 126-effect catalog.
 
 ## Gallery hosting
 
@@ -73,7 +73,7 @@ The [inkfx-author Skill](skills/inkfx-author/SKILL.md) covers catalog discovery,
 
 ## Validation and performance
 
-`npm test` exercises renderer behavior, gallery controls, export bytes/timing, and all registered effects at multiple seed/palette combinations. `npm run check` validates the 120-effect catalog. The [real-browser harness](docs/BROWSER.md) verifies desktop/mobile layout, controls, clipboard, downloads, loops, and visibility pausing; CI includes this browser check. Visible thumbnails now advance on every animation frame, with offscreen cards paused. The gallery's natural loops continue across cycles; one-shot gestures stop after recovery.
+`npm test` exercises renderer behavior, gallery controls, export bytes/timing, and all registered effects at multiple seed/palette combinations. `npm run check` validates the 126-effect catalog. The [real-browser harness](docs/BROWSER.md) verifies desktop/mobile layout, controls, clipboard, downloads, loops, and visibility pausing; CI includes this browser check. Visible thumbnails now advance on every animation frame, with offscreen cards paused. The gallery's natural loops continue across cycles; one-shot gestures stop after recovery.
 
 Run `node tools/benchmark.mjs --out artifacts/benchmark.json` for warmed-up native-size `step + draw + composite` timings. Add `--width 320 --height 180` to measure a centered effect on the PRD canvas size without editing its source. Creation and I/O are excluded. Measurements depend on the machine; they do not certify the PRD's 320×180 reference-laptop budget or 60fps browser playback. Full-frame procedural transitions can exceed the interactive frame budget; bake them into sprite sheets for constrained clients. See [PRD delivery status](docs/prd-gap.md) for verified scope and remaining release checks.
 
@@ -89,3 +89,24 @@ node tools/demo.mjs --out artifacts/inkfx-demo.mp4 --seconds 4 --fps 60
 ```
 
 This renders 24 representative effects and four palettes into a 6×4 grid. It does not change the committed demo unless you explicitly replace that file.
+
+
+## New studies: 120 → 126
+
+![Six new ink studies](examples/new-studies.png)
+
+| ID | Category | Gesture |
+| --- | --- | --- |
+| `scabbard-parry` | sword | 鞘返 — guarded scabbard, deflected arc, seeded sparks |
+| `red-thread-knot` | talisman | 結界繩結 — interlaced cords, over/under bridges, attached tassels |
+| `tea-steam` | zen | 茶煙 — seeded, seamlessly looping steam above a teacup |
+| `meteor-crater` | ink-burst | 隕墨墜 — incoming meteor, hit-stop, ejecta and ground cracks |
+| `rain-pool-wipe` | transitions | 雨池暈場 — staggered ink pools growing to full coverage |
+| `jade-pendant` | ui | 玉佩呈印 — suspended carved jade with a swinging cord and tassels |
+
+Each study has an inspected contact sheet under `examples/out/<id>/`. All six work with the four mineral palettes and the existing gallery/export tools:
+
+```sh
+node tools/review.mjs scabbard-parry --seed 42 --palette nijin --out artifacts/parry
+node tools/export-sheet.mjs jade-pendant --seed 42 --palette shiqing --out artifacts/jade
+```

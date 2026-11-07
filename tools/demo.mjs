@@ -35,7 +35,7 @@ export async function renderDemo({ out = 'artifacts/inkfx-demo.mp4', fps = 60, s
     for (let index = 0; index < count; index++) {
       const data = new Uint8ClampedArray(w * h * 4), surface = { w, h, data };
       for (let i = 0; i < w * h; i++) data.set([244, 239, 230, 255], i * 4);
-      drawText(surface, 'INKFX / 120 GESTURES / FOUR MINERAL PALETTES', 18, 14, [40, 48, 38, 255], 2);
+      drawText(surface, `INKFX / ${effects.length} GESTURES / FOUR MINERAL PALETTES`, 18, 14, [40, 48, 38, 255], 2);
       for (const [cell, entry] of selected.entries()) {
         let instance = instances[cell];
         if (index) {
