@@ -14,15 +14,15 @@ This repository implements **inkfx (PRD 01)** from the master suite. The OLED/ES
 | Gallery controls and visible-only playback | Implemented | Palette/grain/actor/slow-motion/scrubbing/copy controls tested with real renderer and DOM fixture; loops continue without the one-shot hold |
 | Copy Single-File JS | Implemented | Fetches actual module source; clipboard and HTTP failures show a fallback; shared imports are still required |
 | Transparent/paper sprites and JSON atlas | Implemented | Shared browser/CLI builder; all-FX atlas test; hit timing, transparency, PNG CRC and scanlines tested |
-| Core gzip <4 KB / average FX source <1.8 KB | Measured within target | Renderer-only `src/runtime.js`: 3,607 gzip bytes with esbuild 0.25.12; mean FX source: 892.775 bytes |
+| Core gzip <4 KB / average FX source <1.8 KB | Measured within target | Renderer-only `src/runtime.js`: 3,642 gzip bytes with esbuild 0.25.12; mean FX source: 902.033 bytes |
 | Single effect <1.2ms at 320×180 on a reference laptop | **Not accepted** | Cloud native-size benchmark identifies slower effects; no reference-laptop certification |
 | Browser gallery at 60fps | **Not accepted** | HTTP and DOM integration pass; headless Chromium timed out without a DOM or screenshot; no browser frame-rate claim |
-| Public gallery from private repo | Workflow prepared; remote verification pending | Owner permits public website, requires private repo; see [Pages setup](PAGES.md) |
-| Community demonstration video/publication | Not delivered | Requires a verified browser capture and publication; do not substitute a contact-sheet image for a video |
+| Public gallery from private repo | Blocked by GitHub site-visibility permissions | Owner permits public website, requires private repo; see [Pages setup](PAGES.md) |
+| Community demonstration video/publication | Offline MP4 delivered; community publication pending | `examples/demo.mp4`: 6×4 effects, four palettes, H.264, 60fps, 240 decoded frames / 4 seconds; not a browser performance recording |
 
 ## Validation
 
-The onboarding baseline completed all **26 tests** with no failures or skips and all **120/120** local effect checks. Subsequent gallery copy/loop changes and renderer-entry/benchmark behavior are covered by focused tests. The full test suite exercises all effects at four seed/palette combinations and can take several minutes.
+The latest full run completed all **30 tests** with no failures or skips and all **120/120** local effect checks. This includes gallery copy/loop behavior, the renderer-only entry, benchmarks, extreme brush radii, and cached animation regression tests. The full test suite exercises all effects at four seed/palette combinations and can take several minutes.
 
 Contact rendering and transparent atlas export were run for `sword-qi-slash`, seed 42, zhusha, into ignored `artifacts/onboarding/`. PNG signatures/dimensions and JSON frame data were verified and the contact sheet visually inspected. These are CPU-generated artifacts, not browser screenshots. Historical optional fx-skill-kit results do not establish that an external kit is installed in a fresh environment.
 
@@ -37,12 +37,22 @@ node --input-type=module -e "import {readFileSync} from 'node:fs'; import {gzipS
 node tools/benchmark.mjs --out artifacts/benchmark.json
 ```
 
-The renderer entry includes Sim/Pure, frame, seed, brushes, compositor, timing, diffusion, and palettes. It excludes the FX registry, motif library, PNG encoder, and sprite exporter. `src/index.js` deliberately imports the complete catalog; use individual FX modules and `src/runtime.js` when bundle size matters. Source average is measured on the 120 registered effect files before minification.
+The renderer entry includes Sim/Pure, frame, seed, brushes, compositor, timing, diffusion, and palettes. It excludes the FX registry, motif library, PNG encoder, and sprite exporter. `src/index.js` deliberately imports the complete catalog; use individual FX modules and `src/runtime.js` when bundle size matters. Source average is measured on the 120 registered effect files before minification. These figures were refreshed after the brush and geometry refinements.
 
 The benchmark warms up each effect, then measures 300 fixed steps including draw/composite at its native dimensions, replaying finite effects. Creation, PNG encoding, and file I/O are excluded. The initial cloud run (with other validation running) recorded `petal-veil` p95 around 36ms and `realm-breakthrough` around 20ms at 224×224. These observations identify optimization work, not portable thresholds. Profile full-frame geometry and overlapping brush work, remeasure without concurrent workloads, and use baked sheets on constrained clients. Do not claim the PRD performance budget has passed.
 
 ## Remote release prerequisites
 
-Git read access works through the platform proxy. The initial GitHub API calls were blocked by cloud destination policy. `api.github.com` and `malilion.github.io` were saved as additive custom domains in the environment draft; the running policy must apply those changes before API/website verification can resume. A saved draft does not itself apply runtime networking or publish a website.
+Git and repository/Actions API access work through the platform proxy after the network policy update. The repo is confirmed private and remote CI passes. Both the agent's Pages-settings read and the workflow's site-visibility update return GitHub integration-permission errors (403). The public URL currently returns 404. See [Pages diagnostics and administrator action](PAGES.md); publishing the cloud environment does not fix GitHub account permissions.
 
-The Pages workflow retains the private-repository guard and removes the obsolete requirement that the website itself be private. It ensures public site visibility through the Pages API, stages only browser assets, and uses GitHub's Pages actions. Enabling Pages and plan eligibility remain repository/account settings. Verify the exact deployed commit and public logged-out access before marking the public gallery delivered. Never change repository visibility to resolve a Pages restriction.
+The Pages workflow retains the private-repository guard and removes the obsolete requirement that the website itself be private. It verifies public site visibility through the Pages API, stages only browser assets, and uses GitHub's Pages actions. Site visibility must be configured by an administrator because the workflow token cannot change it (403). Enabling Pages and plan eligibility remain repository/account settings. Verify the exact deployed commit and public logged-out access before marking the public gallery delivered. Never change repository visibility to resolve a Pages restriction.
+
+## Performance refinement
+
+`petal-veil` now precomputes its seed-independent flower geometry once per module and reuses immutable lookups across instances. A sequential same-machine comparison reduced p95 from 26.53ms to 1.81ms at 224×224, excluding creation as in the benchmark contract. The cache retains about 8.1MB and adds one-time initialization work; it trades memory/cold-start cost for lower playback latency. Three seeds × four palettes produced exactly the original full-animation channel/RGBA hashes; two contact sheets were rendered and visually inspected.
+
+The shared dry-brush primitive uses direct squared distance at ordinary canvas scales, retaining `Math.hypot` for radii that could overflow/underflow. At seed 42, all 120 full-animation hashes matched the pre-change renderer. Dedicated tests protect extreme radii and cached petal output. These improvements do not certify the PRD's reference-laptop budget: the native-size `realm-breakthrough` measurement still exceeded it. Browser capture also remains unverified: even an isolated Chromium blank-page probe timed out both inside and outside the agent sandbox.
+
+## Presentation clip
+
+`node tools/demo.mjs` optionally uses ffmpeg/libx264 to encode a 24-effect, four-palette 6×4 grid. Default output is ignored `artifacts/inkfx-demo.mp4`; the curated copy is `examples/demo.mp4`. ffprobe verified H.264, 946×720, 60/1 FPS, 240 decoded frames, and exactly 4 seconds. The entire video was decoded without errors and an extracted frame visually inspected. It is offline procedural animation, not a browser screen capture or evidence of interactive 60fps. Publishing it to a community account remains outside the completed release work.

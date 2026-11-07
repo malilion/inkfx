@@ -9,6 +9,8 @@ For web storytellers, 2D game developers, and creative coders building ink and w
 
 ![24 studies from the 120-effect library](examples/grid.png)
 
+[Watch the 6×4 demo — 4 seconds, 60fps](examples/demo.mp4). This is an offline render, not a browser performance recording.
+
 | Category | FX |
 | --- | ---: |
 | sword | 25 |
@@ -61,9 +63,9 @@ Read [AUTHORING](docs/AUTHORING.md) for the check/render workflow and optional f
 
 ## Gallery hosting
 
-The repository stays **private**; the GitHub Pages gallery is intended to be **public**. Public hosting exposes the JavaScript, docs, and examples needed by the gallery, not repository history or private repository access. The Pages workflow checks that the repository remains private and deploys only `gallery/`, `src/`, `docs/`, and `examples/`.
+The repository stays **private**; the GitHub Pages gallery is intended to be **public**. Public hosting exposes the JavaScript, docs, and examples needed by the gallery, not repository history or private repository access. The Pages workflow checks that the repository remains private and the site is public, then deploys only `gallery/`, `src/`, `docs/`, and `examples/`.
 
-Expected Pages address: `https://malilion.github.io/inkfx/` (deployment and public reachability must be verified; this is not a claim that the site is live). Enable **Settings → Pages → Build and deployment → GitHub Actions** and choose public site visibility if available. Private-repository Pages requires an eligible GitHub plan; keep the repository private if the account cannot enable it. See [Pages setup and verification](docs/PAGES.md).
+Expected Pages address: `https://malilion.github.io/inkfx/` (currently returns HTTP 404; public access has not been delivered). Enable **Settings → Pages → Build and deployment → GitHub Actions** and choose public site visibility if available. The deployment token cannot change site visibility (GitHub returns 403), so a repository administrator must configure public site access. Private-repository Pages requires an eligible GitHub plan; keep the repository private if the account cannot enable it. See [Pages setup and verification](docs/PAGES.md).
 
 ## Agent authoring
 
@@ -75,6 +77,15 @@ The [inkfx-author Skill](skills/inkfx-author/SKILL.md) covers catalog discovery,
 
 Run `node tools/benchmark.mjs --out artifacts/benchmark.json` for warmed-up native-size `step + draw + composite` timings. Creation and I/O are excluded. Measurements depend on the machine; they do not certify the PRD's 320×180 reference-laptop budget or 60fps browser playback. Full-frame procedural transitions can exceed the interactive frame budget; bake them into sprite sheets for constrained clients. See [PRD delivery status](docs/prd-gap.md) for verified scope and remaining release checks.
 
-Community video publication and a launch blog remain release work. Physical ESP32 flashing belongs to the separate oledfx PRD, not this ink renderer.
+A shareable 60fps MP4 is included; community publication and a launch blog remain release work. Physical ESP32 flashing belongs to the separate oledfx PRD, not this ink renderer.
 
 If a command fails, use Node.js 20+ and run it from the repository root. Unknown IDs can be listed with `node tools/render.mjs --list`. If port 8080 is in use, run `PORT=8081 npm run gallery` on macOS/Linux and open http://127.0.0.1:8081/gallery/ (PowerShell: `$env:PORT=8081; npm run gallery`).
+
+
+To regenerate the presentation clip (optional development dependency: ffmpeg with libx264):
+
+```sh
+node tools/demo.mjs --out artifacts/inkfx-demo.mp4 --seconds 4 --fps 60
+```
+
+This renders 24 representative effects and four palettes into a 6×4 grid. It does not change the committed demo unless you explicitly replace that file.

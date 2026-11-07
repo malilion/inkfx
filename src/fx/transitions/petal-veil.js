@@ -3,22 +3,47 @@ export const meta = { id: 'petal-veil', name: '花帷', category: 'transitions',
   loop: false, mode: 'pure', w: 224, h: 224, ox: 112, oy: 112 };
 export const act = rhythm(0.12, false);
 const blooms = [[0, 0], [-76, -76], [76, -76], [-76, 76], [76, 76], [0, -84], [0, 84], [-84, 0], [84, 0]];
+// Geometry is independent of time and seed. Share immutable lookup data across
+// instances instead of doing nine atan2/cos/hypot calls per pixel every frame.
+let geometry;
+function geometryForPaper() {
+  if (geometry) return geometry;
+  const size = meta.w * meta.h, count = blooms.length;
+  const distances = new Float64Array(size * count), reaches = new Float64Array(size * count);
+  const veins = new Uint8Array(size * count), centers = new Float64Array(size);
+  for (let y = 0; y < meta.h; y++) for (let x = 0; x < meta.w; x++) {
+    const i = y * meta.w + x;
+    centers[i] = Math.hypot(x - meta.ox, y - meta.oy);
+    const candidates = blooms.map(([bx, by]) => {
+      const dx = x - meta.ox - bx, dy = y - meta.oy - by;
+      const angle = Math.atan2(dy, dx) * 5, vein = .5 + .5 * Math.cos(angle);
+      return { d: Math.hypot(dx, dy), reach: .78 + .22 * Math.cos(angle + bx * .01),
+        flags: (vein > .75 ? 1 : 0) | (vein > .8 ? 2 : 0) };
+    }).sort((a, b) => a.d - b.d);
+    for (let j = 0; j < count; j++) {
+      const offset = i * count + j, c = candidates[j];
+      distances[offset] = c.d; reaches[offset] = c.reach; veins[offset] = c.flags;
+    }
+  }
+  geometry = { distances, reaches, veins, centers };
+  return geometry;
+}
 export function create({ seed = 1, ...options } = {}) {
+  const { distances, reaches, veins, centers } = geometryForPaper(), count = blooms.length;
   return createPureEffect(meta, act, (f, t) => {
     const p = clamp((t + .1) / 1.05), radius = 16 + p * 150;
-    for (let y = 0; y < f.h; y++) for (let x = 0; x < f.w; x++) {
-      let best = 1e9, vein = 0, hit = false;
-      for (const [bx, by] of blooms) {
-        const dx = x - f.ox - bx, dy = y - f.oy - by, d = Math.hypot(dx, dy);
-        const reach = radius * (.78 + .22 * Math.cos(Math.atan2(dy, dx) * 5 + bx * .01));
-        if (d < reach) { hit = true; if (d < best) { best = d; vein = .5 + .5 * Math.cos(Math.atan2(dy, dx) * 5); } }
+    for (let i = 0; i < centers.length; i++) {
+      let best = centers[i], flags = 0, hit = false;
+      for (let j = i * count; j < (i + 1) * count; j++) {
+        if (distances[j] < radius * reaches[j]) {
+          hit = true; best = distances[j]; flags = veins[j]; break;
+        }
       }
-      const d0 = Math.hypot(x - f.ox, y - f.oy);
-      if (!hit && d0 > radius) continue;
-      const i = y * f.w + x, shade = clamp(1 - (hit ? best : d0) / radius);
-      f.pigment[i] = Math.min(.94, .3 + shade * .48 + f.paperGrain[i] * .1 + (vein > .75 ? .08 : 0));
+      if (!hit && best > radius) continue;
+      const shade = clamp(1 - best / radius);
+      f.pigment[i] = Math.min(.94, .3 + shade * .48 + f.paperGrain[i] * .1 + (flags & 1 ? .08 : 0));
       f.wetness[i] = .05;
-      f.tint[i] = vein > .8 ? 1 : 0;
+      f.tint[i] = flags & 2 ? 1 : 0;
     }
   }, { seed, ...options });
 }

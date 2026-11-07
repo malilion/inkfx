@@ -41,10 +41,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           if [ "$(gh api 'repos/${{ github.repository }}/pages' --jq .public)" != true ]; then
-            if ! gh api --method PUT 'repos/${{ github.repository }}/pages' -F public=true > "$RUNNER_TEMP/pages-response.json"; then
-              printf '::error title=Pages visibility::%s\n' "$(jq -c '{message,errors}' "$RUNNER_TEMP/pages-response.json")"
-              exit 1
-            fi
+            echo '::error title=Pages visibility::A repository administrator must enable public site access in Settings > Pages. The workflow token cannot change this setting. Keep the repository private.'
+            exit 1
           fi
           test "$(gh api 'repos/${{ github.repository }}/pages' --jq .public)" = true
       - name: Stage browser assets without a build
