@@ -62,7 +62,7 @@ export async function browserSmoke({ port = 9223, url = 'http://127.0.0.1:8080/g
       const filter = document.querySelector('#category-filter');
       filter.value = ${JSON.stringify(category)};
       filter.dispatchEvent(new Event('change'));
-      document.querySelector('.fx-card:not([hidden])').scrollIntoView();
+      document.querySelector('.fx-card:not([hidden])').scrollIntoView({ behavior: 'instant' });
     })()`);
     await delay(300);
     const visible = await evaluate(`[...document.querySelectorAll('.fx-card:not([hidden])')].filter(card => {
@@ -91,8 +91,19 @@ export async function browserSmoke({ port = 9223, url = 'http://127.0.0.1:8080/g
     await send('Page.navigate', { url }); await send('Page.bringToFront');
     await waitFor(`document.querySelectorAll(".fx-card").length === ${effects.length}`);
     await waitFor('[...document.images].every(image => image.complete && image.naturalWidth > 0)');
+    await evaluate('document.fonts.ready');
     assert.equal(await evaluate('document.documentElement.scrollWidth <= innerWidth'), true, 'desktop horizontal overflow');
+    await waitFor(`document.querySelector('#opening-canvas').dataset.time === '3.000'`);
     await screenshot('desktop.png');
+    await evaluate(`document.querySelector('#opening-play').click()`);
+    await waitFor(`Number(document.querySelector('#opening-canvas').dataset.time) >= 1.20`);
+    await evaluate(`document.querySelector('#opening-play').click()`);
+    await screenshot('opening-strike.png');
+    await evaluate(`document.querySelector('#opening-play').click()`);
+    await waitFor(`document.querySelector('#opening-canvas').dataset.time === '3.000'`);
+    await evaluate(`document.querySelector('#opening-try').click()`);
+    assert.equal(await evaluate(`document.querySelector('#play').getAttribute('aria-label')`), '暫停特效', 'opening starts the real workshop effect');
+    await evaluate(`document.querySelector('#timeline').value='.64';document.querySelector('#timeline').dispatchEvent(new Event('input'))`);
     const pixels = `(()=>{const c=document.querySelector('#canvas');const d=c.getContext('2d').getImageData(0,0,c.width,c.height).data;let h=2166136261;for(const n of d)h=Math.imul(h^n,16777619);return h>>>0})()`;
     const palettePixels = new Set();
     for (const palette of ['songyan', 'zhusha', 'shiqing', 'nijin']) {
@@ -116,14 +127,14 @@ export async function browserSmoke({ port = 9223, url = 'http://127.0.0.1:8080/g
     })()`);
     assert.match(await evaluate(`document.querySelector('#canvas').style.transform`), /^translateX\(/, 'hit shakes the preview');
     const atImpact = await evaluate(pixels);
-    await evaluate(`document.querySelector('.workbench').scrollIntoView({ block: 'center' })`);
+    await evaluate(`document.querySelector('.workbench').scrollIntoView({ block: 'center', behavior: 'instant' })`);
     await screenshot('act-hit.png');
     await evaluate(`const toggle = document.querySelector('#act-toggle'); toggle.checked = false; toggle.dispatchEvent(new Event('change'))`);
     assert.equal(await evaluate(`document.querySelector('#canvas').style.transform`), '', 'disabling act clears shake');
     assert.notEqual(await evaluate(pixels), atImpact, 'disabling act removes the hit overlay');
     await evaluate(`const timeline = document.querySelector('#timeline'); timeline.value = ${JSON.stringify(beforeImpactScrub)}; timeline.dispatchEvent(new Event('input'))`);
     await evaluate(`document.querySelector('#seed').value=42;document.querySelector('#seed').dispatchEvent(new Event('change'));document.querySelector('#copy-source').click()`);
-    await waitFor(`document.querySelector('#status').textContent.startsWith('Copied')`);
+    await waitFor(`document.querySelector('#status').dataset.state === 'copied'`);
     assert.equal(await evaluate(`(async () => {
       const source = await navigator.clipboard.readText();
       const response = await fetch(document.querySelector('#source-link').href);
@@ -147,7 +158,7 @@ export async function browserSmoke({ port = 9223, url = 'http://127.0.0.1:8080/g
     let pngSize;
     for (const [id, suffix] of [['sheet-link', '.png'], ['atlas-link', '.json']]) {
       await evaluate(`document.querySelector('#${id}').click()`);
-      await waitFor(`document.querySelector('#status').textContent.startsWith('Exported')`);
+      await waitFor(`document.querySelector('#status').dataset.state === 'exported'`);
       const filename = `sword-qi-slash-shiqing-seed42${suffix}`;
       let bytes;
       for (let attempt = 0; attempt < 50; attempt++) {
@@ -201,7 +212,7 @@ export async function browserSmoke({ port = 9223, url = 'http://127.0.0.1:8080/g
     assert.ok(normal > .1 && slow > 0 && slow / normal < .5, '0.25x slows real playback');
     await evaluate(`document.querySelector('#slow-toggle').checked=false;document.querySelector('#slow-toggle').dispatchEvent(new Event('change'));[...document.querySelectorAll('#effects button')].find(b=>b.querySelector('small').textContent==='enso-breath').click();document.querySelector('#replay').click()`);
     await evaluate(`new Promise((resolve,reject)=>{let previous=0,peak=0;const duration=Number(document.querySelector('#timeline').max),deadline=performance.now()+8000;function frame(){const time=Number(document.querySelector('#timeline').value);peak=Math.max(peak,time);if(peak>duration*.75&&time<previous-.5)return resolve(true);if(performance.now()>deadline)return reject(new Error('Loop did not wrap'));previous=time;requestAnimationFrame(frame)}requestAnimationFrame(frame)})`);
-    assert.equal(await evaluate(`document.querySelector('#play').getAttribute('aria-label')`), 'Pause effect', 'loop continues beyond one cycle');
+    assert.equal(await evaluate(`document.querySelector('#play').getAttribute('aria-label')`), '暫停特效', 'loop continues beyond one cycle');
     await evaluate(`document.querySelector('#play').click();document.querySelector('#act-toggle').checked=false;document.querySelector('#act-toggle').dispatchEvent(new Event('change'));document.querySelector('#grain').value=1;document.querySelector('#grain').dispatchEvent(new Event('input'))`);
     const previews = await evaluate(`(async()=>{
       document.querySelector('#grain').value=0;document.querySelector('#grain').dispatchEvent(new Event('input'));
@@ -219,28 +230,64 @@ export async function browserSmoke({ port = 9223, url = 'http://127.0.0.1:8080/g
       return {count:buttons.length,blank};
     })()`);
     assert.equal(previews.count, effects.length); assert.deepEqual(previews.blank, [], 'every real canvas preview contains ink');
-    await evaluate(`document.querySelector('#category-filter').value='zen';document.querySelector('#category-filter').dispatchEvent(new Event('change'));document.querySelector('.fx-card:not([hidden])').scrollIntoView()`);
+    await evaluate(`document.querySelector('#category-filter').value='zen';document.querySelector('#category-filter').dispatchEvent(new Event('change'));document.querySelector('.fx-card:not([hidden])').scrollIntoView({ behavior: 'instant' })`);
     assert.equal(await evaluate('document.querySelectorAll(".fx-card:not([hidden])").length'), categoryCounts.zen);
     await waitFor(`Number(document.querySelector('.fx-card:not([hidden])').dataset.time)>0`);
+    await evaluate(`document.querySelector('#collection').scrollIntoView({ behavior: 'instant' })`);
     await screenshot('collection.png');
-    await evaluate('scrollTo(0,0)'); await delay(200);
+    await evaluate("scrollTo({ top: 0, behavior: 'instant' })"); await delay(200);
     const stopped = await evaluate(`document.querySelector('.fx-card:not([hidden])').dataset.time`);
     await delay(250);
     assert.equal(await evaluate(`document.querySelector('.fx-card:not([hidden])').dataset.time`), stopped, 'offscreen card pauses');
+    const search = await evaluate(`(() => {
+      const input = document.querySelector('#catalog-search');
+      input.value = '竹葉';
+      input.dispatchEvent(new Event('input'));
+      const names = [...document.querySelectorAll('.fx-card:not([hidden]) h3')].map(card => card.textContent);
+      input.value = 'inkfx-no-result';
+      input.dispatchEvent(new Event('input'));
+      const empty = !document.querySelector('#catalog-empty').hidden;
+      document.querySelector('#catalog-reset').click();
+      const resetFocus = document.activeElement === input;
+      const start = document.querySelectorAll('.fx-card:not([hidden])').length;
+      document.querySelector('#catalog-more-button').click();
+      const more = document.querySelectorAll('.fx-card:not([hidden])').length;
+      return { names, empty, resetFocus, start, more, moreFocus: document.activeElement.matches('.card-preview') };
+    })()`);
+    assert.deepEqual(search, { names: ['竹葉隨風'], empty: true, resetFocus: true, start: 12, more: 24, moreFocus: true });
+    await evaluate(`document.querySelector('#catalog-reset').click();document.activeElement.blur();document.querySelector('#collection').scrollIntoView({ behavior: 'instant' })`);
+    await delay(450);
+    await screenshot('curated.png');
+    await evaluate(`document.querySelector('[data-cover="enso-breath"] .card-preview').click()`);
+    assert.deepEqual(await evaluate(`[document.querySelector('#effect-title').textContent, document.activeElement.id]`),
+      ['禪圓', 'workbench-title'], 'the catalog opens its exact effect and focuses the studio');
     const timing = await samplePlayback(1440, 1000, false, 'all');
     const transitionsTiming = await samplePlayback(1920, 1440, false, 'transitions');
     const mobileTiming = await samplePlayback(390, 844, true, 'all');
-    await evaluate('scrollTo(0,0)'); await delay(200);
+    await evaluate("scrollTo({ top: 0, behavior: 'instant' })"); await delay(200);
     assert.equal(await evaluate('document.documentElement.scrollWidth <= innerWidth'), true, 'mobile horizontal overflow');
     await screenshot('mobile.png');
+    await evaluate(`document.querySelector('#workbench').scrollIntoView({ behavior: 'instant' })`);
+    await screenshot('mobile-studio.png');
+    for (const [width, height] of [[320, 720], [768, 1024]]) {
+      await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: true });
+      assert.equal(await evaluate('document.documentElement.scrollWidth <= innerWidth'), true, `horizontal overflow at ${width}px`);
+      await evaluate("scrollTo({ top: 0, behavior: 'instant' })");
+      await screenshot(`viewport-${width}.png`);
+    }
+    await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
+    await send('Page.reload');
+    await waitFor(`document.querySelector('#opening-canvas')?.dataset.time === '3.000'`);
+    assert.equal(await evaluate(`document.querySelector('#opening-play').getAttribute('aria-label')`), '重播開場', 'reduced motion loads a still');
+    await send('Emulation.setEmulatedMedia', { features: [] });
     const exceptions = events.filter(event => event.method === 'Runtime.exceptionThrown');
     const failedResponses = events.filter(event => event.method === 'Network.responseReceived' && event.params.response.status >= 400)
       .map(event => ({ url: event.params.response.url, status: event.params.response.status }));
     assert.deepEqual(exceptions, [], 'uncaught browser errors'); assert.deepEqual(failedResponses, [], 'failed browser resources');
     const report = { browser: (await send('Browser.getVersion')).product, url,
-      checks: [`${effects.length} cards and rendered previews`, 'desktop/mobile layout', 'four palettes and grain', 'act impact overlay and camera shake', 'standalone module from clipboard', 'decoded PNG and matching JSON downloads', 'slow motion and 120 Hz stepping', 'continuous loop', 'category filter', 'offscreen pause', 'no JS/resource errors'],
+      checks: [`${effects.length} cards and rendered previews`, 'live overture and studio handoff', 'reduced motion still', 'desktop/mobile layout', 'four palettes and grain', 'act impact overlay and camera shake', 'standalone module from clipboard', 'decoded PNG and matching JSON downloads', 'slow motion and 120 Hz stepping', 'continuous loop', 'search, empty state, category and progressive reveal', 'offscreen pause', 'no JS/resource errors'],
       timing, viewportTimings: [timing, transitionsTiming, mobileTiming],
-      screenshots: ['desktop.png', 'act-hit.png', 'collection.png', 'mobile.png'] };
+      screenshots: ['desktop.png', 'opening-strike.png', 'act-hit.png', 'collection.png', 'curated.png', 'mobile.png', 'mobile-studio.png', 'viewport-320.png', 'viewport-768.png'] };
     await writeFile(join(output, 'report.json'), JSON.stringify(report, null, 2) + '\n');
     return report;
   } finally { browser.close(); }

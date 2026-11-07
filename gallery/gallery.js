@@ -9,11 +9,31 @@ const $ = id => document.getElementById(id);
 const canvas = $('canvas'), context = canvas.getContext('2d');
 let fx = effects[0], palette = 'songyan', seed = 1, effect, playing = false, last = 0, preview = true;
 let grain = 1, actEnabled = false, speed = 1, gridLast = 0;
-const categoryNames = { sword: 'SWORD / 劍', transitions: 'TRANSITION / 卷', 'ink-burst': 'IMPACT / 墨',
-  talisman: 'TALISMAN / 符', zen: 'ZEN / 禪', ui: 'UI / 印' };
+const categoryNames = { sword: ['劍式', 'SWORD'], talisman: ['符陣', 'TALISMAN'], zen: ['禪境', 'ZEN'],
+  'ink-burst': ['墨擊', 'IMPACT'], transitions: ['轉場', 'TRANSITION'], ui: ['印記', 'UI'] };
+const featured = ['sword-qi-slash', 'enso-breath', 'bagua-array', 'ink-iris', 'meteor-crater', 'jade-pendant'];
+const catalogBatch = 12;
+let catalogLimit = catalogBatch;
 const cards = [], visible = new Set();
+const cardByElement = new WeakMap();
+const categoryButtons = new Map();
 const previewBuffers = new Map();
+const reduced = globalThis.matchMedia?.('(prefers-reduced-motion: reduce)');
+const swordIndex = effects.findIndex(entry => entry.meta.id === 'sword-qi-slash');
 const standalonePath = entry => `./standalone/${entry.meta.id}.mjs`;
+
+function notify(text, state = '') {
+  $('status').textContent = text;
+  $('status').dataset.state = state;
+}
+
+function feedback(button, message) {
+  const original = button.dataset.originalLabel ?? button.textContent;
+  button.dataset.originalLabel = original;
+  button.textContent = message;
+  clearTimeout(button.feedbackTimer);
+  button.feedbackTimer = setTimeout(() => { button.textContent = original; }, 1600);
+}
 
 function paint(ctx, entry, instance) {
   const { w, h } = entry.meta, size = `${w}x${h}`;
@@ -42,8 +62,8 @@ function seek(time) {
 }
 function setPlaying(value) {
   playing = value; last = 0;
-  $('play').innerHTML = value ? 'Ⅱ <span>Pause gesture</span>' : '▶ <span>Play gesture</span>';
-  $('play').setAttribute('aria-label', value ? 'Pause effect' : 'Play effect');
+  $('play').innerHTML = value ? '<span aria-hidden="true">Ⅱ</span> 暫停' : '<span aria-hidden="true">▶</span> 播放';
+  $('play').setAttribute('aria-label', value ? '暫停特效' : '播放特效');
 }
 function stepFrame(direction) {
   const time = displayTime();
@@ -104,7 +124,9 @@ function selectEffect(index) {
   canvas.width = fx.meta.w; canvas.height = fx.meta.h;
   $('timeline').max = fx.meta.duration;
   $('dimensions').textContent = `${fx.meta.w} × ${fx.meta.h}`;
-  $('category').textContent = categoryNames[fx.meta.category];
+  $('category').textContent = categoryNames[fx.meta.category].join(' / ');
+  $('effect-title').textContent = fx.meta.name;
+  $('canvas').setAttribute('aria-label', `${fx.meta.name}特效試演`);
   $('figure').textContent = String(index + 1).padStart(2, '0');
   $('windup').textContent = `${fx.act.windup.toFixed(2)}s`;
   $('freeze').textContent = `${fx.act.hits.reduce((sum, hit) => sum + hit.freeze, 0).toFixed(2)}s`;
@@ -116,14 +138,25 @@ function selectEffect(index) {
   for (const [i, button] of [...$('effects').children].entries()) {
     button.classList.toggle('active', i === index); button.setAttribute('aria-pressed', i === index);
   }
+  for (const card of cards) card.control.setAttribute('aria-current', card.entry === fx);
   seek(fx.meta.loop ? .5 : fx.act.windup + .24); preview = true;
 }
-async function copyPath(entry) {
-  const path = effectPaths[entry.meta.id];
-  try { await navigator.clipboard.writeText(path); $('status').textContent = `Copied ${path}`; }
-  catch { $('status').textContent = `Copy path: ${path}`; }
+function focusStudio() {
+  $('workbench-title').focus?.({ preventScroll: true });
+  $('workbench').scrollIntoView({ behavior: 'instant', block: 'start' });
 }
-async function copySource(entry) {
+async function copyPath(entry, button) {
+  const path = effectPaths[entry.meta.id];
+  try {
+    await navigator.clipboard.writeText(path);
+    notify(`已複製 ${path}`, 'copied');
+    if (button) feedback(button, '已複製');
+  } catch {
+    notify(`模組路徑：${path}`, 'error');
+    if (button) feedback(button, '複製失敗');
+  }
+}
+async function copySource(entry, button) {
   async function load() {
     const response = await fetch(standalonePath(entry));
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -135,16 +168,17 @@ async function copySource(entry) {
       const source = load().then(text => new Blob([text], { type: 'text/plain' }));
       await Promise.all([source, clipboard.write([new ClipboardItem({ 'text/plain': source })])]);
     } else await clipboard.writeText(await load());
-    $('status').textContent = `Copied ${entry.meta.name} as a standalone ES module. Save it as ${entry.meta.id}.mjs.`;
+    notify(`已複製「${entry.meta.name}」。請存成獨立 ES module：${entry.meta.id}.mjs。`, 'copied');
+    if (button) feedback(button, '已複製');
   } catch (error) {
-    $('status').textContent = `Copy failed: ${error.message}. Use Download standalone JS for this effect.`;
+    notify(`複製失敗：${error.message}。可改用「單檔 JS ↓」下載。`, 'error');
+    if (button) feedback(button, '複製失敗');
   }
 }
 const blobURLs = new Map();
 function downloadBlob(blob, filename, link) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
-  // Keep the actual card link usable after the first download.
   const old = blobURLs.get(link); if (old) URL.revokeObjectURL(old);
   link.href = url; link.download = filename; blobURLs.set(link, url);
 }
@@ -155,8 +189,7 @@ async function downloadSheet(event, entry, atlasOnly = false) {
   const options = { seed, palette, grain };
   const stem = `${entry.meta.id}-${options.palette}-seed${options.seed}`;
   link.dataset.busy = 'true'; link.setAttribute('aria-busy', 'true');
-  $('status').textContent = `Baking ${entry.meta.name}…`;
-  // Yield so the busy state paints before baking a large atlas.
+  notify(`正在烘焙「${entry.meta.name}」…`, 'busy');
   await new Promise(resolve => requestAnimationFrame(resolve));
   try {
     const sheet = buildSheet(entry, options);
@@ -169,13 +202,17 @@ async function downloadSheet(event, entry, atlasOnly = false) {
       if (!blob) throw new Error('PNG encoding failed');
       downloadBlob(blob, `${stem}.png`, link);
     }
-    $('status').textContent = `Exported ${entry.meta.name}; PNG and JSON use the same seed and palette.`;
-  } catch (error) { $('status').textContent = `Export failed: ${error.message}`; }
+    notify(`已匯出「${entry.meta.name}」。PNG 和 JSON 使用相同種子與墨色。`, 'exported');
+    if (link.dataset.cardAction) feedback(link, '已匯出');
+  } catch (error) {
+    notify(`匯出失敗：${error.message}`, 'error');
+    if (link.dataset.cardAction) feedback(link, '匯出失敗');
+  }
   finally { delete link.dataset.busy; link.removeAttribute('aria-busy'); }
 }
 const observer = typeof IntersectionObserver === 'function' ? new IntersectionObserver(entries => {
   for (const entry of entries) {
-    const card = cards.find(card => card.element === entry.target);
+    const card = cardByElement.get(entry.target);
     if (!card) continue;
     if (entry.isIntersecting && !card.element.hidden) visible.add(card); else visible.delete(card);
   }
@@ -184,24 +221,40 @@ const observer = typeof IntersectionObserver === 'function' ? new IntersectionOb
 effects.forEach((entry, index) => {
   const button = document.createElement('button'); button.className = 'effect';
   button.innerHTML = `<span class="effect-index">${String(index + 1).padStart(2, '0')}</span><span><strong>${entry.meta.name}</strong><small>${entry.meta.id}</small></span><span class="effect-arrow">↗</span>`;
-  button.addEventListener('click', () => selectEffect(index)); $('effects').append(button);
+  button.addEventListener('click', () => {
+    selectEffect(index);
+    $('effect-picker').removeAttribute('open');
+    $('play').focus?.({ preventScroll: true });
+  });
+  $('effects').append(button);
   const element = document.createElement('article'); element.className = 'fx-card'; element.dataset.category = entry.meta.category;
-  const open = document.createElement('button'); open.className = 'card-preview'; open.setAttribute('aria-label', `Inspect ${entry.meta.name}`);
+  if (featured.slice(0, 2).includes(entry.meta.id)) element.dataset.cover = entry.meta.id;
+  const open = document.createElement('button'); open.className = 'card-preview'; open.setAttribute('aria-label', `試演${entry.meta.name}`);
   const thumbnail = document.createElement('canvas'); thumbnail.width = entry.meta.w; thumbnail.height = entry.meta.h;
-  thumbnail.setAttribute('aria-label', entry.meta.name); open.append(thumbnail); open.addEventListener('click', () => { selectEffect(index); $('canvas').scrollIntoView({ behavior: 'smooth', block: 'center' }); });
+  thumbnail.setAttribute('aria-hidden', 'true');
+  const number = document.createElement('span'); number.className = 'card-number'; number.textContent = String(index + 1).padStart(3, '0'); number.setAttribute('aria-hidden', 'true');
+  const arrow = document.createElement('span'); arrow.className = 'card-arrow'; arrow.textContent = '↗'; arrow.setAttribute('aria-hidden', 'true');
+  open.append(thumbnail, number, arrow);
+  open.addEventListener('click', () => { selectEffect(index); focusStudio(); });
   const title = document.createElement('h3'); title.textContent = entry.meta.name;
-  const caption = document.createElement('p'); caption.textContent = `${entry.meta.category} / ${entry.meta.id}`;
+  const caption = document.createElement('p'); caption.textContent = `${categoryNames[entry.meta.category][0]} / ${entry.meta.id}`;
   const actions = document.createElement('div'); actions.className = 'card-actions';
-  const copy = document.createElement('button'); copy.textContent = 'Copy path'; copy.addEventListener('click', () => copyPath(entry));
-  const source = document.createElement('button'); source.textContent = 'Copy JS'; source.addEventListener('click', () => copySource(entry));
-  const sheet = document.createElement('a'); sheet.textContent = 'PNG sheet ↓'; sheet.href = `../examples/out/${entry.meta.id}/sheet.png`; sheet.download = `${entry.meta.id}.png`;
+  const copy = document.createElement('button'); copy.textContent = '路徑'; copy.addEventListener('click', () => copyPath(entry, copy));
+  const source = document.createElement('button'); source.textContent = '複製 JS'; source.addEventListener('click', () => copySource(entry, source));
+  const sheet = document.createElement('a'); sheet.textContent = 'PNG ↓'; sheet.href = `../examples/out/${entry.meta.id}/sheet.png`; sheet.download = `${entry.meta.id}.png`; sheet.dataset.cardAction = 'true';
   sheet.addEventListener('click', event => downloadSheet(event, entry));
-  const atlas = document.createElement('a'); atlas.textContent = 'JSON ↓'; atlas.href = `../examples/out/${entry.meta.id}/sheet.json`; atlas.download = `${entry.meta.id}.json`;
+  const atlas = document.createElement('a'); atlas.textContent = 'JSON ↓'; atlas.href = `../examples/out/${entry.meta.id}/sheet.json`; atlas.download = `${entry.meta.id}.json`; atlas.dataset.cardAction = 'true';
   atlas.addEventListener('click', event => downloadSheet(event, entry, true));
-  actions.append(copy, source, sheet, atlas); element.append(open, title, caption, actions); $('fx-grid').append(element);
-  const card = { element, entry, context: thumbnail.getContext('2d'), instance: null, hold: 0 };
-  cards.push(card); if (observer) observer.observe(element); else visible.add(card);
+  actions.append(source, sheet, atlas, copy); element.append(open, title, caption, actions);
+  const card = { element, entry, control: open, context: thumbnail.getContext('2d'), instance: null, hold: 0 };
+  cards.push(card); cardByElement.set(element, card);
 });
+const curated = featured.map(id => cards.find(card => card.entry.meta.id === id)).filter(Boolean);
+const orderedCards = [...curated, ...cards.filter(card => !curated.includes(card))];
+for (const card of orderedCards) {
+  $('fx-grid').append(card.element);
+  if (observer) observer.observe(card.element); else visible.add(card);
+}
 function resetCards() { for (const card of cards) { card.instance = null; card.hold = 0; } gridLast = 0; }
 function setPalette(id) {
   palette = id;
@@ -228,19 +281,69 @@ $('act-toggle').addEventListener('change', event => {
 });
 $('slow-toggle').addEventListener('change', event => { speed = event.target.checked ? .25 : 1; last = gridLast = 0; });
 for (const [category, count] of Object.entries(categoryCounts)) {
-  const option = document.createElement('option'); option.value = category; option.textContent = `${category} (${count})`; $('category-filter').append(option);
+  const option = document.createElement('option'); option.value = category;
+  option.textContent = `${categoryNames[category][0]}（${count}）`;
+  $('category-filter').append(option);
+}
+for (const [id, name] of [['all', '全部'], ...Object.entries(categoryNames).map(([id, [name]]) => [id, name])]) {
+  const button = document.createElement('button');
+  button.type = 'button'; button.className = 'category-tab'; button.textContent = name;
+  button.setAttribute('aria-pressed', id === 'all');
+  button.addEventListener('click', () => { $('category-filter').value = id; resetCatalogPage(); });
+  categoryButtons.set(id, button); $('category-tabs').append(button);
 }
 for (const id of ['catalog-count', 'explore-count', 'collection-count']) $(id).textContent = effects.length;
 $('catalog-edition').textContent = [...String(effects.length)].map(digit => '〇一二三四五六七八九'[Number(digit)]).join('') + '式';
-$('visible-count').textContent = `${effects.length} effects`;
-$('category-filter').addEventListener('change', event => {
-  let count = 0;
-  for (const card of cards) {
-    card.element.hidden = event.target.value !== 'all' && card.entry.meta.category !== event.target.value;
-    if (card.element.hidden) visible.delete(card);
-    else { count++; if (observer) { observer.unobserve(card.element); observer.observe(card.element); } else visible.add(card); }
+$('category-filter').value = 'all';
+function filterCatalog() {
+  const category = $('category-filter').value;
+  const query = $('catalog-search').value.trim().toLowerCase();
+  const paginated = category === 'all' && !query;
+  $('fx-grid').dataset.view = paginated ? 'curated' : 'filtered';
+  for (const [id, button] of categoryButtons) button.setAttribute('aria-pressed', id === category);
+  let count = 0, shown = 0;
+  for (const card of orderedCards) {
+    const meta = card.entry.meta;
+    const matches = (category === 'all' || meta.category === category) &&
+      (!query || `${meta.name} ${meta.id} ${categoryNames[meta.category].join(' ')}`.toLowerCase().includes(query));
+    if (matches) count++;
+    const show = matches && (!paginated || count <= catalogLimit);
+    if (show) shown++;
+    if (card.element.hidden === !show) continue;
+    card.element.hidden = !show;
+    if (show) {
+      if (observer) observer.observe(card.element); else visible.add(card);
+    } else {
+      observer?.unobserve(card.element);
+      visible.delete(card);
+    }
   }
-  $('visible-count').textContent = `${count} effects`;
+  $('visible-count').textContent = shown < count ? `展出 ${shown} / ${count} 式` : `${count} 式`;
+  $('catalog-empty').hidden = count !== 0;
+  $('catalog-more').hidden = shown >= count;
+  $('catalog-more-button').textContent = `再展 ${Math.min(catalogBatch, count - shown)} 式 ↓`;
+}
+function resetCatalogPage() { catalogLimit = catalogBatch; filterCatalog(); }
+filterCatalog();
+$('category-filter').addEventListener('change', resetCatalogPage);
+$('catalog-search').addEventListener('input', resetCatalogPage);
+$('catalog-more-button').addEventListener('click', () => {
+  const next = orderedCards[catalogLimit];
+  catalogLimit += catalogBatch;
+  filterCatalog();
+  next?.control.focus?.();
+});
+$('catalog-reset').addEventListener('click', () => {
+  $('catalog-search').value = '';
+  $('category-filter').value = 'all';
+  resetCatalogPage();
+  $('catalog-search').focus?.();
+});
+$('opening-try').addEventListener('click', event => {
+  event.preventDefault();
+  selectEffect(swordIndex);
+  if (!reduced?.matches) { preview = false; seek(0); setPlaying(true); }
+  focusStudio();
 });
 $('copy-path').addEventListener('click', () => copyPath(fx));
 $('copy-source').addEventListener('click', () => copySource(fx));
@@ -257,16 +360,23 @@ $('prev-frame').addEventListener('click', () => stepFrame(-1));
 $('next-frame').addEventListener('click', () => stepFrame(1));
 $('timeline').addEventListener('input', event => { preview = false; setPlaying(false); seek(Number(event.target.value)); });
 function changeSeed() {
-  const next = Number($('seed').value);
-  if (!Number.isInteger(next) || next < 0 || next > 0xffffffff) { $('status').textContent = 'Seed must be an integer from 0 to 4294967295.'; return; }
-  seed = next; $('status').textContent = 'Deterministic by nature.';
+  const input = $('seed').value, next = Number(input);
+  if (input === '' || !Number.isInteger(next) || next < 0 || next > 0xffffffff) {
+    notify('種子必須是 0 到 4294967295 的整數。', 'error');
+    return;
+  }
+  seed = next; notify('種子已更新，畫面可重現。');
   $('component-examples').textContent = componentExamples();
   seek(displayTime()); resetCards();
 }
 $('seed').addEventListener('change', changeSeed);
 $('next-seed').addEventListener('click', () => { $('seed').value = (seed + 1) >>> 0; changeSeed(); });
 $('download').addEventListener('click', () => {
-  canvas.toBlob(blob => { if (blob) downloadBlob(blob, `inkfx-${fx.meta.id}-${palette}-seed${seed}.png`, $('download')); }, 'image/png');
+  const filename = `inkfx-${fx.meta.id}-${palette}-seed${seed}.png`;
+  canvas.toBlob(blob => {
+    if (blob) { downloadBlob(blob, filename, $('download')); notify('已儲存目前一幀。', 'exported'); }
+    else notify('無法儲存這一幀。', 'error');
+  }, 'image/png');
 });
 function animate(now) {
   if (!document.hidden && playing) {
@@ -274,12 +384,21 @@ function animate(now) {
     last = now; display();
     if (!fx.meta.loop && effect.t >= fx.meta.duration - 1e-8) setPlaying(false);
   }
-  // Follow the display's animation frames; offscreen cards never allocate or
-  // advance an effect. Fixed 120Hz simulation keeps timing independent of RAF.
   if (!document.hidden) {
     const dt = gridLast ? Math.min((now - gridLast) / 1000, .1) * speed : 0; gridLast = now;
     for (const card of visible) {
-      if (!card.instance) card.instance = card.entry.create({ seed, palette });
+      if (reduced?.matches) {
+        if (!card.instance) {
+          card.instance = card.entry.create({ seed, palette });
+          card.instance.step(card.entry.meta.loop ? .5 : card.entry.act.windup + .24);
+          paint(card.context, card.entry, card.instance);
+        }
+        continue;
+      }
+      if (!card.instance) {
+        card.instance = card.entry.create({ seed, palette });
+        if (card.element.dataset.cover) card.instance.step(card.entry.meta.loop ? .5 : card.entry.act.windup + .28);
+      }
       if (card.entry.meta.loop) card.instance.step(dt);
       else if (card.instance.t >= card.entry.meta.duration) {
         card.hold += dt;
@@ -293,4 +412,5 @@ function animate(now) {
   requestAnimationFrame(animate);
 }
 document.addEventListener('visibilitychange', () => { last = gridLast = 0; });
-selectEffect(effects.findIndex(entry => entry.meta.id === 'sword-qi-slash')); requestAnimationFrame(animate);
+reduced?.addEventListener('change', resetCards);
+selectEffect(swordIndex); requestAnimationFrame(animate);

@@ -6,7 +6,7 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
   '.mjs': 'text/javascript; charset=utf-8',
   '.md': 'text/plain; charset=utf-8', '.png': 'image/png', '.json': 'application/json', '.mp4': 'video/mp4',
-  '.svg': 'image/svg+xml', '.ico': 'image/vnd.microsoft.icon' };
+  '.svg': 'image/svg+xml', '.ico': 'image/vnd.microsoft.icon', '.woff2': 'font/woff2', '.txt': 'text/plain; charset=utf-8' };
 const port = Number(process.env.PORT ?? 8080);
 const server = createServer(async (request, response) => {
   try {
