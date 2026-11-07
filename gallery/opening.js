@@ -78,7 +78,10 @@ const pixels = swordCtx.createImageData(meta.w, meta.h);
 const clamp = v => Math.max(0, Math.min(1, v));
 const taper = u => Math.sin(Math.PI * u) ** .77;
 const sweepX = u => RW * .08 + u * RW * .84;
-const sweepY = u => RH * .67 - RH * .92 * u + RH * .45 * u ** 2;
+// On portrait screens the stroke is lowered so it sweeps past the actions,
+// not through the headline. 0 on landscape, up to RH * .34 on phones.
+let yShift = 0;
+const sweepY = u => yShift + RH * .67 - RH * .92 * u + RH * .45 * u ** 2;
 
 // Brush hairs for the sword stroke
 const hairs = Array.from({ length: 180 }, (_, i) => ({
@@ -110,11 +113,15 @@ const gaps = Array.from({ length: 90 }, () => ({
 const wetCanvas = document.createElement('canvas');
 wetCanvas.width = RW; wetCanvas.height = RH;
 const wet = wetCanvas.getContext('2d');
-const wetGradient = wet.createLinearGradient(RW * .08, RH * .64, RW * .92, RH * .24);
-wetGradient.addColorStop(0, '#5e4130');
-wetGradient.addColorStop(.22, '#26221b');
-wetGradient.addColorStop(.61, '#29241c');
-wetGradient.addColorStop(1, '#665644');
+let wetGradient;
+function buildWetGradient() {
+  wetGradient = wet.createLinearGradient(RW * .08, yShift + RH * .64, RW * .92, yShift + RH * .24);
+  wetGradient.addColorStop(0, '#5e4130');
+  wetGradient.addColorStop(.22, '#26221b');
+  wetGradient.addColorStop(.61, '#29241c');
+  wetGradient.addColorStop(1, '#665644');
+}
+buildWetGradient();
 
 let instance = create({ seed: 42 });
 let elapsed = reduced.matches ? duration : 0;
@@ -214,7 +221,7 @@ function draw(time) {
     composite(instance.frame, 'zhusha', {}, pixels.data);
     swordCtx.putImageData(pixels, 0, 0);
     rctx.save();
-    rctx.translate(RW * .49, RH * .39);
+    rctx.translate(RW * .49, yShift + RH * .39);
     rctx.rotate(-.37);
     rctx.globalAlpha = .65;
     const scale = RW * .68;
@@ -243,6 +250,10 @@ function resize() {
   const rect = wrap.getBoundingClientRect();
   canvas.width = Math.round(rect.width * dpr);
   canvas.height = Math.round(rect.height * dpr);
+  // aspect 1.0+ → no shift; 0.5 or narrower (phones) → full shift
+  const aspect = rect.width / Math.max(1, rect.height);
+  yShift = RH * .34 * clamp((1 - aspect) / .5);
+  buildWetGradient();
   draw(elapsed);
 }
 window.addEventListener('resize', resize);
