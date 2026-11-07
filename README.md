@@ -3,7 +3,7 @@
 <p align="center"><img src="docs/brand/icon-512.png" alt="inkfx mark — mineral ink stroke" width="160" height="160"></p>
 
 
-**120 procedural ink FX. Four mineral palettes. Zero runtime dependencies.**
+**120 procedural ink FX. Four mineral palettes. Zero runtime dependencies. Built-in Agent Skill.**
 
 For web storytellers, 2D game developers, and creative coders building ink and wuxia scenes. 墨起，意隨。Seeded brushwork, flying-white sword trails, paper diffusion, talisman arrays, natural loops, impact bursts, transitions, and interface seals. Every effect is a small JavaScript module; no textures or prerecorded animation.
 
@@ -40,7 +40,7 @@ node tools/export-sheet.mjs sword-qi-slash --seed 42 --palette zhusha
 node tools/export-sheet.mjs bagua-array --background paper --fps 24 --columns 6
 ```
 
-The gallery plays cards only while visible. Its toolbar switches all four palettes, adjusts paper grain, shows an act practice dummy, and slows playback to 0.25×. Select a card to scrub its timeline, inspect React/Vue examples, copy its module path, or download a PNG sheet and matching JSON atlas. Downloads are baked locally in the browser with the current seed and palette; they also work on ordinary static hosting.
+The gallery plays cards only while visible. Its toolbar switches all four palettes, adjusts paper grain, shows an act practice dummy, and slows playback to 0.25×. Select a card to scrub its timeline, inspect React/Vue examples, copy its JavaScript source or module path, or download a PNG sheet and matching JSON atlas. Downloads are baked locally in the browser with the current seed and palette; they also work on ordinary static hosting.
 
 ```js
 import { getFX, composite } from './src/index.js';
@@ -59,8 +59,22 @@ Sprite sheets contain clean, untrimmed cells without guides or preview actors. J
 
 Read [AUTHORING](docs/AUTHORING.md) for the check/render workflow and optional fx-skill-kit bridge, and [PRD gap tracking](docs/prd-gap.md) for the release notes behind the 120-effect catalog.
 
-Gallery access: use `npm run gallery` locally. The current personal-account Pages configuration returns 404 and does not provide a usable private gallery; a successful workflow deployment does not establish private access. Repository visibility and Pages settings are unchanged.
+## Gallery hosting
 
-Not included: physical ESP32 flashing or hardware validation, a community demo video, or a launch blog. Hardware playback is outside this ink renderer’s verified scope.
+The repository stays **private**; the GitHub Pages gallery is intended to be **public**. Public hosting exposes the JavaScript, docs, and examples needed by the gallery, not repository history or private repository access. The Pages workflow checks that the repository remains private and deploys only `gallery/`, `src/`, `docs/`, and `examples/`.
+
+Expected Pages address: `https://malilion.github.io/inkfx/` (deployment and public reachability must be verified; this is not a claim that the site is live). Enable **Settings → Pages → Build and deployment → GitHub Actions** and choose public site visibility if available. Private-repository Pages requires an eligible GitHub plan; keep the repository private if the account cannot enable it. See [Pages setup and verification](docs/PAGES.md).
+
+## Agent authoring
+
+The [inkfx-author Skill](skills/inkfx-author/SKILL.md) covers catalog discovery, integration, deterministic authoring, visual review, and export. Claude Code can load the repository as a local plugin with `claude --plugin-dir /path/to/inkfx`; other agents can read the same Skill directly. No external fx-skill-kit checkout is required for the local check/render workflow.
+
+## Validation and performance
+
+`npm test` exercises renderer behavior, gallery controls, export bytes/timing, and all registered effects at multiple seed/palette combinations. `npm run check` validates the 120-effect catalog. The gallery's natural loops continue across cycles; one-shot gestures stop after recovery.
+
+Run `node tools/benchmark.mjs --out artifacts/benchmark.json` for warmed-up native-size `step + draw + composite` timings. Creation and I/O are excluded. Measurements depend on the machine; they do not certify the PRD's 320×180 reference-laptop budget or 60fps browser playback. Full-frame procedural transitions can exceed the interactive frame budget; bake them into sprite sheets for constrained clients. See [PRD delivery status](docs/prd-gap.md) for verified scope and remaining release checks.
+
+Community video publication and a launch blog remain release work. Physical ESP32 flashing belongs to the separate oledfx PRD, not this ink renderer.
 
 If a command fails, use Node.js 20+ and run it from the repository root. Unknown IDs can be listed with `node tools/render.mjs --list`. If port 8080 is in use, run `PORT=8081 npm run gallery` on macOS/Linux and open http://127.0.0.1:8081/gallery/ (PowerShell: `$env:PORT=8081; npm run gallery`).

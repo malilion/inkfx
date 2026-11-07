@@ -4,7 +4,7 @@ import { effects, categoryCounts } from '../src/fx/index.js';
 
 // Run the real browser module and real pixel renderer, controlling only DOM and visibility.
 test('gallery controls, visible-only playback, slow motion, actor, palette and filters', async t => {
-  const globals = ['document', 'ImageData', 'requestAnimationFrame', 'IntersectionObserver', 'navigator'];
+  const globals = ['document', 'ImageData', 'requestAnimationFrame', 'IntersectionObserver', 'navigator', 'fetch'];
   const previous = globals.map(name => Object.getOwnPropertyDescriptor(globalThis, name));
   t.after(() => globals.forEach((name, i) => {
     if (previous[i]) Object.defineProperty(globalThis, name, previous[i]); else delete globalThis[name];
@@ -53,6 +53,19 @@ test('gallery controls, visible-only playback, slow motion, actor, palette and f
   const swordIndex = effects.findIndex(fx => fx.meta.id === 'sword-qi-slash');
   get('effects').children[swordIndex].click();
   await get('copy-path').click(); assert.equal(copied, 'src/fx/sword/sword-qi-slash.js');
+  const { readFile } = await import('node:fs/promises');
+  const source = await readFile(new URL('../src/fx/sword/sword-qi-slash.js', import.meta.url), 'utf8');
+  globalThis.fetch = async path => {
+    assert.equal(path, '../src/fx/sword/sword-qi-slash.js');
+    return { ok: true, text: async () => source };
+  };
+  await get('copy-source').click(); assert.equal(copied, source);
+  assert.match(get('status').textContent, /keep imports/);
+  globalThis.fetch = async () => ({ ok: false, status: 404 });
+  await get('copy-source').click(); assert.match(get('status').textContent, /HTTP 404/);
+  globalThis.fetch = async () => ({ ok: true, text: async () => source });
+  navigator.clipboard.writeText = async () => { throw new Error('Clipboard permission denied'); };
+  await get('copy-source').click(); assert.match(get('status').textContent, /View single-file JS/);
   get('play').click(); assert.equal(get('timeline').value, 0);
   nextAnimation(1000); nextAnimation(1040); assert.ok(get('timeline').value > 0);
   get('play').click(); assert.equal(get('play').attributes['aria-label'], 'Play effect');
@@ -76,4 +89,13 @@ test('gallery controls, visible-only playback, slow motion, actor, palette and f
   assert.equal(get('fx-grid').children.filter(card => !card.hidden).length, categoryCounts.zen);
   assert.equal(get('visible-count').textContent, `${categoryCounts.zen} effects`);
   get('next-seed').click(); assert.equal(get('seed').value, 43);
+  const loopIndex = effects.findIndex(fx => fx.meta.id === 'enso-breath');
+  get('effects').children[loopIndex].click(); get('replay').click();
+  const loopCard = observed[loopIndex];
+  onIntersection([{ target: loopCard, isIntersecting: true }]);
+  const duration = effects[loopIndex].meta.duration;
+  for (let elapsed = 0; elapsed <= duration + .3; elapsed += .05) nextAnimation(4000 + elapsed * 1000);
+  assert.equal(get('play').attributes['aria-label'], 'Pause effect', 'loop preview keeps playing');
+  assert.ok(Number(loopCard.dataset.time) > duration, 'loop thumbnails advance without a blank hold');
+  assert.ok(Number(get('timeline').value) < duration, 'loop timeline wraps');
 });

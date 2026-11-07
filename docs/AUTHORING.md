@@ -1,5 +1,7 @@
 # Authoring inkfx
 
+The installable authoring guide is [inkfx-author](../skills/inkfx-author/SKILL.md). Use `src/runtime.js` for a renderer-only entry without loading the FX catalog.
+
 inkfx is pure ESM. Browser modules use no Node APIs; PNG encoding and tooling use Node built-ins. Every effect is one module importing only inkfx core helpers. Copy those helpers with an effect when using it outside this repository.
 
 ## InkFrame contract
@@ -29,7 +31,7 @@ Palette IDs: `songyan`, `zhusha`, `shiqing`, `nijin`. Each exports `id`, `name`,
 
 ## Act timing
 
-Every module exports `meta`, `act`, and `create({ seed, palette })`. `meta` contains `id`, `name`, `category`, `duration`, `loop`, `w`, `h`, `ox`, `oy`. Duration includes windup, hit-stop, and recovery; sword, talisman, impact, UI and transition effects are one-shot gestures; the seven zen studies are periodic Pure effects.
+Every module exports `meta`, `act`, and `create({ seed, palette })`. `meta` contains `id`, `name`, `category`, `duration`, `loop`, `w`, `h`, `ox`, `oy`. Duration includes windup, hit-stop, and recovery; sword, talisman, impact, UI and transition effects are one-shot gestures; the twenty zen studies are periodic Pure effects.
 
 `act.windup` is a positive duration. Pose and hit times use an impact-relative clock, starting at `-act.windup`. A pose is `[time, poseId, easing]`, where easing is `snap`, `linear`, or `easeOut`. `samplePose(act, t)` returns `poseId`, `nextPoseId`, and eased `progress`. A hit is `{ t, freeze, shakeAmp, inkSplash }`; `hitStopAt(act, t)` uses half-open windows `[t, t + freeze)`. `actionTime` subtracts elapsed freeze windows. Keep windows ordered and nonoverlapping. Shake and splash are choreography metadata; shake belongs to the consuming scene's camera.
 

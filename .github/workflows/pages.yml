@@ -8,6 +8,7 @@ on:
       - "src/**"
       - "docs/**"
       - "examples/**"
+      - "README.md"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -28,12 +29,21 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v7
-      - name: Verify private repository and Pages visibility
+      - name: Require private repository
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           test "$(gh api 'repos/${{ github.repository }}' --jq .private)" = true
-          test "$(gh api 'repos/${{ github.repository }}/pages' --jq .public)" = false
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Ensure gallery is public
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$(gh api 'repos/${{ github.repository }}/pages' --jq .public)" != true ]; then
+            gh api --method PUT 'repos/${{ github.repository }}/pages' -F public=true > /dev/null
+          fi
+          test "$(gh api 'repos/${{ github.repository }}/pages' --jq .public)" = true
       - name: Stage browser assets without a build
         run: |
           mkdir -p _site
@@ -51,6 +61,6 @@ jobs:
       - uses: actions/upload-pages-artifact@v5
         with:
           path: _site
-      - name: Deploy private Pages
+      - name: Deploy public gallery from private repository
         id: deployment
         uses: actions/deploy-pages@v5

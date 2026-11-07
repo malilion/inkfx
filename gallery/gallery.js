@@ -19,8 +19,9 @@ function paint(ctx, entry, instance) {
 }
 function display() {
   paint(context, fx, effect);
-  $('timeline').value = Math.min(effect.t, fx.meta.duration);
-  $('time').textContent = `${Math.min(effect.t, fx.meta.duration).toFixed(3)} / ${fx.meta.duration.toFixed(3)}s`;
+  const time = fx.meta.loop ? effect.t % fx.meta.duration : Math.min(effect.t, fx.meta.duration);
+  $('timeline').value = time;
+  $('time').textContent = `${time.toFixed(3)} / ${fx.meta.duration.toFixed(3)}s`;
   $('pose').textContent = samplePose(fx.act, actionTime(fx.act, effect.t - fx.act.windup)).poseId;
 }
 function seek(time) {
@@ -56,6 +57,17 @@ async function copyPath(entry) {
   const path = effectPaths[entry.meta.id];
   try { await navigator.clipboard.writeText(path); $('status').textContent = `Copied ${path}`; }
   catch { $('status').textContent = `Copy path: ${path}`; }
+}
+async function copySource(entry) {
+  try {
+    const response = await fetch(`../${effectPaths[entry.meta.id]}`);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const source = await response.text();
+    await navigator.clipboard.writeText(source);
+    $('status').textContent = `Copied ${entry.meta.name} JS; keep imports alongside src/core and src/palettes.`;
+  } catch (error) {
+    $('status').textContent = `Copy failed: ${error.message}. Use View single-file JS to copy the source.`;
+  }
 }
 const blobURLs = new Map();
 function downloadBlob(blob, filename, link) {
@@ -109,11 +121,12 @@ effects.forEach((entry, index) => {
   const caption = document.createElement('p'); caption.textContent = `${entry.meta.category} / ${entry.meta.id}`;
   const actions = document.createElement('div'); actions.className = 'card-actions';
   const copy = document.createElement('button'); copy.textContent = 'Copy path'; copy.addEventListener('click', () => copyPath(entry));
+  const source = document.createElement('button'); source.textContent = 'Copy JS'; source.addEventListener('click', () => copySource(entry));
   const sheet = document.createElement('a'); sheet.textContent = 'PNG sheet ↓'; sheet.href = `../examples/out/${entry.meta.id}/sheet.png`; sheet.download = `${entry.meta.id}.png`;
   sheet.addEventListener('click', event => downloadSheet(event, entry));
   const atlas = document.createElement('a'); atlas.textContent = 'JSON ↓'; atlas.href = `../examples/out/${entry.meta.id}/sheet.json`; atlas.download = `${entry.meta.id}.json`;
   atlas.addEventListener('click', event => downloadSheet(event, entry, true));
-  actions.append(copy, sheet, atlas); element.append(open, title, caption, actions); $('fx-grid').append(element);
+  actions.append(copy, source, sheet, atlas); element.append(open, title, caption, actions); $('fx-grid').append(element);
   const card = { element, entry, context: thumbnail.getContext('2d'), instance: null, hold: 0 };
   cards.push(card); if (observer) observer.observe(element); else visible.add(card);
 });
@@ -152,6 +165,7 @@ $('category-filter').addEventListener('change', event => {
   $('visible-count').textContent = `${count} effects`;
 });
 $('copy-path').addEventListener('click', () => copyPath(fx));
+$('copy-source').addEventListener('click', () => copySource(fx));
 $('sheet-link').href = '../examples/out/sword-qi-slash/sheet.png';
 $('atlas-link').href = '../examples/out/sword-qi-slash/sheet.json';
 $('sheet-link').addEventListener('click', event => downloadSheet(event, fx));
@@ -175,16 +189,17 @@ $('download').addEventListener('click', () => {
 });
 function animate(now) {
   if (!document.hidden && playing) {
-    if (last) effect.step(Math.min(Math.min((now - last) / 1000, .05) * speed, Math.max(0, fx.meta.duration - effect.t)));
+    if (last) effect.step(Math.min(Math.min((now - last) / 1000, .05) * speed, fx.meta.loop ? Infinity : Math.max(0, fx.meta.duration - effect.t)));
     last = now; display();
-    if (effect.t >= fx.meta.duration - 1e-8) setPlaying(false);
+    if (!fx.meta.loop && effect.t >= fx.meta.duration - 1e-8) setPlaying(false);
   }
   // Thumbnails run at 24fps; offscreen cards never allocate or advance an effect.
   if (!document.hidden && (!gridLast || now - gridLast >= 1000 / 24)) {
     const dt = gridLast ? Math.min((now - gridLast) / 1000, .1) * speed : 0; gridLast = now;
     for (const card of visible) {
       if (!card.instance) card.instance = card.entry.create({ seed, palette });
-      if (card.instance.t >= card.entry.meta.duration) {
+      if (card.entry.meta.loop) card.instance.step(dt);
+      else if (card.instance.t >= card.entry.meta.duration) {
         card.hold += dt;
         if (card.hold > .25) { card.instance = card.entry.create({ seed, palette }); card.hold = 0; }
       } else card.instance.step(Math.min(dt, card.entry.meta.duration - card.instance.t));
