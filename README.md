@@ -10,6 +10,8 @@
 <p align="center">
   <a href="https://malilion.github.io/inkfx/"><strong>進入線上展廳 / Enter the Live Exhibition ↗</strong></a>
   &nbsp;·&nbsp;
+  <a href="docs/AUTHORING.md"><strong>使用與串接指南 / User Guide ↗</strong></a>
+  &nbsp;·&nbsp;
   <a href="examples/demo.mp4"><strong>觀看 60fps 示範影片 / Watch 60fps Demo ↗</strong></a>
   &nbsp;·&nbsp;
   <a href="#繁體中文"><strong>繁體中文</strong></a>
@@ -46,8 +48,8 @@
 內建四組取材自傳統書畫顏料的六階濃淡色盤與點睛朱砂／泥金，可於全站與匯出時自由切換：
 
 - **松煙古墨（`songyan`）**：取松木焚煙入膠，濃淡六階層次分明，配一抹丹砂點睛。
-- **朱砂神印（`zhusha`）**：以天然辰砂入畫，赤紅破陣、氣勢凜然，適合暴擊、符咒與大招演出。
-- **石青寒玉（`shiqing`）**：藍銅礦石青與竹翠交織，冷冽澄澈，適合寒冰劍氣、山嵐與水景。
+- **朱砂血墨（`zhusha`）**：以天然辰砂入畫，赤紅破陣、氣勢凜然，適合暴擊、符咒與大招演出。
+- **石青竹翠（`shiqing`）**：藍銅礦石青與竹翠交織，冷冽澄澈，適合寒冰劍氣、山嵐與水景。
 - **泥金佛光（`nijin`）**：金箔研磨入墨，溫潤鎏金，適合境界突破、神聖法陣與高階印記。
 
 ### 3. 一念起，三折成招：內建武術打擊節奏（Act & Hit-Stop）
@@ -103,8 +105,8 @@ Covering the full visual vocabulary of martial arts and classical East Asian bru
 Each palette models six tonal stops of mineral pigment on Xuan paper plus a signature accent and highlight tint:
 
 - **Pine Soot (`songyan` · 松煙古墨)**: Deep, classic sumi ink across six tonal gradations with a warm cinnabar seal accent.
-- **Cinnabar Seal (`zhusha` · 朱砂神印)**: Crimson vermilion strokes and fierce ember highlights built for critical strikes, talismans, and finishers.
-- **Azurite Jade (`shiqing` · 石青寒玉)**: Cool azurite blue and bamboo-jade tones suited for frost blades, mountain mist, and water scenes.
+- **Cinnabar Seal (`zhusha` · 朱砂血墨)**: Crimson vermilion strokes and fierce ember highlights built for critical strikes, talismans, and finishers.
+- **Azurite Jade (`shiqing` · 石青竹翠)**: Cool azurite blue and bamboo-jade tones suited for frost blades, mountain mist, and water scenes.
 - **Burnished Gold (`nijin` · 泥金佛光)**: Luminous gold-leaf ink designed for realm breakthroughs, sacred wards, and prestige emblems.
 
 ### 3. Choreographed for Combat — Built-in Windup, Hit-Stop & Settle
