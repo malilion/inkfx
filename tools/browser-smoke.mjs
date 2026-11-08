@@ -258,9 +258,22 @@ export async function browserSmoke({ port = 9223, url = 'http://127.0.0.1:8080/g
     await evaluate(`document.querySelector('#catalog-reset').click();document.activeElement.blur();document.querySelector('#collection').scrollIntoView({ behavior: 'instant' })`);
     await delay(450);
     await screenshot('curated.png');
+    await evaluate(`document.querySelector('#view-compact').click()`);
+    assert.equal(await evaluate(`document.querySelector('#fx-grid').dataset.layout`), 'compact', 'switches catalog to compact index view');
+    await evaluate(`document.querySelector('#view-curated').click()`);
+    await evaluate(`document.querySelector('#anatomy').scrollIntoView({ behavior: 'instant' })`);
+    await delay(300);
+    await screenshot('anatomy.png');
     await evaluate(`document.querySelector('[data-cover="enso-breath"] .card-preview').click()`);
     assert.deepEqual(await evaluate(`[document.querySelector('#effect-title').textContent, document.activeElement.id]`),
       ['禪圓', 'workbench-title'], 'the catalog opens its exact effect and focuses the studio');
+    await evaluate(`document.querySelectorAll('#filmstrip .kf-item')[2].click()`);
+    assert.ok(await evaluate(`Number(document.querySelector('#timeline').value) > 0`), 'filmstrip keyframe seeks timeline');
+    await evaluate(`document.querySelector('.surface-btn[data-surface="dark"]').click();document.querySelector('#onion-toggle').click()`);
+    assert.equal(await evaluate(`document.querySelector('#stage').dataset.surface`), 'dark', 'switches studio stage to dark night mode');
+    await delay(200);
+    await screenshot('studio-dark.png');
+    await evaluate(`document.querySelector('.surface-btn[data-surface="paper"]').click();document.querySelector('#onion-toggle').click();document.querySelector('#toolbar-palette').value='songyan';document.querySelector('#toolbar-palette').dispatchEvent(new Event('change'))`);
     const timing = await samplePlayback(1440, 1000, false, 'all');
     const transitionsTiming = await samplePlayback(1920, 1440, false, 'transitions');
     const mobileTiming = await samplePlayback(390, 844, true, 'all');

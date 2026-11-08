@@ -5,16 +5,18 @@ import { mulberry32 } from '../src/core/seed.js';
 const canvas = document.getElementById('opening-canvas');
 const ctx = canvas.getContext('2d');
 const wrap = document.getElementById('opening-canvas-wrap');
+const openingSection = document.getElementById('opening');
 const button = document.getElementById('opening-play');
 const label = document.getElementById('opening-play-label');
 const icon = document.getElementById('opening-icon');
 const phase = document.getElementById('opening-phase');
+const brushHint = document.getElementById('opening-brush-hint');
 const topbar = document.getElementById('topbar');
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 const duration = 3;
 const random = mulberry32(6129);
 
-// Internal render resolution — will be painted to the full canvas
+// Internal render resolution — painted to the full canvas with cover-fit
 const RW = 960, RH = 540;
 const render = document.createElement('canvas');
 render.width = RW; render.height = RH;
@@ -25,18 +27,15 @@ const backdrop = document.createElement('canvas');
 backdrop.width = RW; backdrop.height = RH;
 const land = backdrop.getContext('2d');
 
-// Fill base warm tone
 land.fillStyle = '#f0e9d8';
 land.fillRect(0, 0, RW, RH);
 
-// Radial haze
 const haze = land.createRadialGradient(RW * .67, RH * .3, 20, RW * .65, RH * .35, RW * .7);
 haze.addColorStop(0, 'rgba(255, 250, 234, .55)');
 haze.addColorStop(1, 'rgba(158, 142, 113, .14)');
 land.fillStyle = haze;
 land.fillRect(0, 0, RW, RH);
 
-// Paper fibres
 for (let i = 0; i < 16000; i++) {
   land.fillStyle = i % 2 ? '#342a1d' : '#fffdfa';
   land.globalAlpha = random() * .09;
@@ -44,7 +43,6 @@ for (let i = 0; i < 16000; i++) {
 }
 land.globalAlpha = 1;
 
-// Distant mountain ridges
 for (let ridge = 0; ridge < 9; ridge++) {
   const horizon = RH * .62 + ridge * RH * .032;
   const crest = land.createLinearGradient(0, horizon - 80, 0, RH);
@@ -62,7 +60,6 @@ for (let ridge = 0; ridge < 9; ridge++) {
   land.fill();
 }
 
-// Red moon
 land.strokeStyle = 'rgba(194, 58, 46, .28)';
 land.lineWidth = 1;
 land.beginPath();
@@ -83,7 +80,6 @@ const sweepX = u => RW * .08 + u * RW * .84;
 let yShift = 0;
 const sweepY = u => yShift + RH * .67 - RH * .92 * u + RH * .45 * u ** 2;
 
-// Brush hairs for the sword stroke
 const hairs = Array.from({ length: 180 }, (_, i) => ({
   start: random() * .21,
   end: .73 + random() * .27,
@@ -102,7 +98,6 @@ const flecks = Array.from({ length: 160 }, (_, i) => ({
   accent: i % 14 === 0,
 }));
 
-// Wet stroke overlay
 const gaps = Array.from({ length: 90 }, () => ({
   start: .11 + random() * .78,
   length: .035 + random() * .28,
@@ -129,6 +124,12 @@ let running = !reduced.matches;
 let last = null;
 let inView = true;
 let request = null;
+
+// Interactive user sword-brush trail state ("揮劍留墨")
+const trailNodes = [];
+const trailSparks = [];
+const TRAIL_LIFE = 2.1;
+let pointerLast = null;
 
 function edge(u, side, reveal) {
   const pressure = Math.sin(Math.PI * u ** .72) ** 1.28;
@@ -171,6 +172,74 @@ function wetStroke(reveal) {
   }
   wet.globalCompositeOperation = 'source-over';
   wet.globalAlpha = 1;
+}
+
+function drawUserTrails() {
+  if (!trailNodes.length && !trailSparks.length) return;
+  rctx.save();
+  rctx.lineCap = 'round';
+  rctx.lineJoin = 'round';
+
+  for (let i = 1; i < trailNodes.length; i++) {
+    const a = trailNodes[i - 1], b = trailNodes[i];
+    if (b.break) continue;
+    const life = clamp(1 - b.age / TRAIL_LIFE);
+    if (life <= 0) continue;
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const dist = Math.hypot(dx, dy) || 1;
+    const nx = -dy / dist, ny = dx / dist;
+    const spread = (1 - life) * 5.5;
+    const w = b.width * (0.65 + 0.35 * life) + spread * .4;
+
+    // Soft outer ink wash halo (水暈)
+    rctx.globalAlpha = life * life * .16;
+    rctx.strokeStyle = '#4e4233';
+    rctx.lineWidth = w * 2.3 + spread;
+    rctx.beginPath();
+    rctx.moveTo(a.x, a.y);
+    rctx.lineTo(b.x, b.y);
+    rctx.stroke();
+
+    // Core pine-soot stroke (中鋒松煙)
+    rctx.globalAlpha = life ** 1.25 * .68;
+    rctx.strokeStyle = '#1e1a15';
+    rctx.lineWidth = w * .75;
+    rctx.beginPath();
+    rctx.moveTo(a.x, a.y);
+    rctx.lineTo(b.x, b.y);
+    rctx.stroke();
+
+    // Flying-white bristles (飛白絲紋)
+    for (let h = -2; h <= 2; h++) {
+      if (h === 0) continue;
+      const offset = h * (w * .36 + spread * .25);
+      rctx.globalAlpha = life ** 1.4 * (Math.abs(h) === 2 ? .24 : .38);
+      rctx.strokeStyle = h === 2 && b.fast ? '#b8372b' : '#2c251d';
+      rctx.lineWidth = Math.max(.55, w * .15);
+      rctx.beginPath();
+      rctx.moveTo(a.x + nx * offset, a.y + ny * offset);
+      rctx.lineTo(b.x + nx * offset, b.y + ny * offset);
+      rctx.stroke();
+    }
+  }
+
+  // Cinnabar & ink droplets (朱砂火星與墨滴)
+  for (const s of trailSparks) {
+    const life = clamp(1 - s.age / s.maxLife);
+    if (life <= 0) continue;
+    rctx.globalAlpha = life * s.alpha;
+    rctx.fillStyle = s.cinnabar ? '#c23a2e' : '#2b241c';
+    rctx.beginPath();
+    rctx.ellipse(
+      s.x + s.vx * s.age,
+      s.y + s.vy * s.age + 24 * s.age * s.age,
+      s.r * (.6 + .4 * life),
+      s.r * .62 * (.6 + .4 * life),
+      s.angle, 0, Math.PI * 2
+    );
+    rctx.fill();
+  }
+  rctx.restore();
 }
 
 function draw(time) {
@@ -230,6 +299,9 @@ function draw(time) {
   }
   rctx.globalAlpha = 1;
 
+  // Interactive user sword trails on top of paper & overture
+  drawUserTrails();
+
   // Paint to display canvas with cover-fit (uniform scale, centred crop)
   const cw = canvas.width, ch = canvas.height;
   const fit = Math.max(cw / RW, ch / RH);
@@ -244,7 +316,82 @@ function draw(time) {
   wrap.style.setProperty('--progress', time / duration);
 }
 
-// Responsive canvas sizing
+function clientToRenderCoords(clientX, clientY) {
+  const rect = wrap.getBoundingClientRect();
+  if (!rect.width || !rect.height) return null;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const cw = rect.width * dpr, ch = rect.height * dpr;
+  const fit = Math.max(cw / RW, ch / RH);
+  const dw = RW * fit, dh = RH * fit;
+  const ox = (cw - dw) / 2, oy = (ch - dh) / 2;
+  const px = (clientX - rect.left) * dpr;
+  const py = (clientY - rect.top) * dpr;
+  return { x: (px - ox) / fit, y: (py - oy) / fit };
+}
+
+function addSwordPoint(clientX, clientY, isBreak = false) {
+  if (reduced.matches) return;
+  const pt = clientToRenderCoords(clientX, clientY);
+  if (!pt) return;
+  const now = performance.now();
+  let speed = 0;
+  if (!isBreak && pointerLast) {
+    const dt = Math.max(4, now - pointerLast.time);
+    const dist = Math.hypot(pt.x - pointerLast.x, pt.y - pointerLast.y);
+    if (dist < 2.2) return;
+    speed = dist / dt; // px per ms in render space
+  }
+  const fast = speed > 0.65;
+  const width = clamp(1 - speed / 2.2) * 10 + 3.2;
+  trailNodes.push({
+    x: pt.x,
+    y: pt.y,
+    width,
+    fast,
+    age: 0,
+    break: isBreak || !pointerLast || (now - pointerLast.time > 180),
+  });
+  if (trailNodes.length > 96) trailNodes.shift();
+
+  // Spawn flecks / cinnabar sparks along the slash
+  if (pointerLast && !isBreak) {
+    const count = fast ? 3 : 1;
+    for (let i = 0; i < count; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const spd = 8 + Math.random() * (fast ? 42 : 18);
+      trailSparks.push({
+        x: pt.x + (Math.random() - .5) * 10,
+        y: pt.y + (Math.random() - .5) * 10,
+        vx: Math.cos(angle) * spd,
+        vy: Math.sin(angle) * spd - 8,
+        r: .7 + Math.random() * (fast ? 2.6 : 1.5),
+        alpha: .35 + Math.random() * .45,
+        angle: Math.random() * Math.PI,
+        age: 0,
+        maxLife: .65 + Math.random() * .95,
+        cinnabar: fast && (i === 0 || Math.random() < .42),
+      });
+    }
+    if (trailSparks.length > 140) trailSparks.splice(0, trailSparks.length - 140);
+  }
+  pointerLast = { x: pt.x, y: pt.y, time: now };
+  if (brushHint) brushHint.dataset.active = 'true';
+  schedule();
+}
+
+openingSection?.addEventListener('pointermove', event => {
+  if (event.target.closest?.('a, button')) return;
+  addSwordPoint(event.clientX, event.clientY, false);
+}, { passive: true });
+
+openingSection?.addEventListener('pointerdown', event => {
+  if (event.target.closest?.('a, button')) return;
+  pointerLast = null;
+  addSwordPoint(event.clientX, event.clientY, true);
+}, { passive: true });
+
+openingSection?.addEventListener('pointerleave', () => { pointerLast = null; });
+
 function resize() {
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
   const rect = wrap.getBoundingClientRect();
@@ -257,13 +404,12 @@ function resize() {
   draw(elapsed);
 }
 window.addEventListener('resize', resize);
-// Initial sizing deferred to after layout
 requestAnimationFrame(() => { resize(); });
 
 function playback(active) {
   running = active;
   last = null;
-  if (!active && request !== null) {
+  if (!active && !trailNodes.length && !trailSparks.length && request !== null) {
     cancelAnimationFrame(request);
     request = null;
   }
@@ -274,16 +420,32 @@ function playback(active) {
 }
 
 function schedule() {
-  if (running && inView && !document.hidden && request === null) request = requestAnimationFrame(tick);
+  const hasTrails = trailNodes.length > 0 || trailSparks.length > 0;
+  if ((running || hasTrails) && inView && !document.hidden && request === null) {
+    request = requestAnimationFrame(tick);
+  }
 }
 
 function tick(now) {
   request = null;
-  if (running && inView && !document.hidden) {
-    if (last !== null) elapsed = Math.min(duration, elapsed + Math.min(.05, (now - last) / 1000));
+  if (inView && !document.hidden) {
+    const dt = last !== null ? Math.min(.05, (now - last) / 1000) : 0;
     last = now;
+    if (running) {
+      elapsed = Math.min(duration, elapsed + dt);
+    }
+    if (dt > 0 && (trailNodes.length || trailSparks.length)) {
+      for (let i = trailNodes.length - 1; i >= 0; i--) {
+        trailNodes[i].age += dt;
+        if (trailNodes[i].age >= TRAIL_LIFE) trailNodes.splice(i, 1);
+      }
+      for (let i = trailSparks.length - 1; i >= 0; i--) {
+        trailSparks[i].age += dt;
+        if (trailSparks[i].age >= trailSparks[i].maxLife) trailSparks.splice(i, 1);
+      }
+    }
     draw(elapsed);
-    if (elapsed >= duration) playback(false);
+    if (running && elapsed >= duration) playback(false);
   }
   schedule();
 }
@@ -296,6 +458,8 @@ button.addEventListener('click', () => {
 
 reduced.addEventListener('change', () => {
   if (!reduced.matches) return;
+  trailNodes.length = 0;
+  trailSparks.length = 0;
   elapsed = duration;
   draw(elapsed);
   playback(false);

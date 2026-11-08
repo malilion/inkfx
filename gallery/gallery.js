@@ -9,8 +9,15 @@ const $ = id => document.getElementById(id);
 const canvas = $('canvas'), context = canvas.getContext('2d');
 let fx = effects[0], palette = 'songyan', seed = 1, effect, playing = false, last = 0, preview = true;
 let grain = 1, actEnabled = false, speed = 1, gridLast = 0;
+let stageSurface = 'paper', onionEnabled = false, layoutMode = 'curated';
 const categoryNames = { sword: ['劍式', 'SWORD'], talisman: ['符陣', 'TALISMAN'], zen: ['禪境', 'ZEN'],
   'ink-burst': ['墨擊', 'IMPACT'], transitions: ['轉場', 'TRANSITION'], ui: ['印記', 'UI'] };
+const paletteSubtitles = {
+  songyan: '松煙入紙 · 濃淡六階',
+  zhusha: '朱砂點睛 · 丹印破陣',
+  shiqing: '石青寒玉 · 碧落山嵐',
+  nijin: '泥金佛光 · 鎏金古韻',
+};
 const featured = ['sword-qi-slash', 'enso-breath', 'bagua-array', 'ink-iris', 'meteor-crater', 'jade-pendant'];
 const catalogBatch = 12;
 let catalogLimit = catalogBatch;
@@ -21,6 +28,18 @@ const previewBuffers = new Map();
 const reduced = globalThis.matchMedia?.('(prefers-reduced-motion: reduce)');
 const swordIndex = effects.findIndex(entry => entry.meta.id === 'sword-qi-slash');
 const standalonePath = entry => `./standalone/${entry.meta.id}.mjs`;
+
+// Nocturnal palettes for Dark Game Stage ("玄夜") preview
+function getDarkPalette(id) {
+  const base = palettes[id] ?? palettes.songyan;
+  return {
+    id: `${id}-dark`,
+    name: base.name,
+    stops: ['#161512', '#2b2923', '#545046', '#8d8677', '#c8c0b0', '#f4efe4'],
+    accent: base.accent,
+    highlight: base.highlight,
+  };
+}
 
 function notify(text, state = '') {
   $('status').textContent = text;
@@ -35,28 +54,188 @@ function feedback(button, message) {
   button.feedbackTimer = setTimeout(() => { button.textContent = original; }, 1600);
 }
 
-function paint(ctx, entry, instance) {
+function paint(ctx, entry, instance, surfaceMode = 'paper', withOnion = false) {
   const { w, h } = entry.meta, size = `${w}x${h}`;
   let pixels = previewBuffers.get(size);
   if (!pixels) {
     pixels = new ImageData(new Uint8ClampedArray(w * h * 4), w, h);
     previewBuffers.set(size, pixels);
   }
-  composite(instance.frame, palette, { paper: true, grain }, pixels.data);
+  const activePalette = surfaceMode === 'dark' ? getDarkPalette(palette) : palette;
+  const usePaper = surfaceMode !== 'alpha';
+  composite(instance.frame, activePalette, { paper: usePaper, grain }, pixels.data);
+
+  // Optional onion-skin ghost frames (-45ms and -90ms) on the studio canvas
+  if (withOnion && instance.t > 0.02) {
+    const data = pixels.data;
+    for (const [lag, weight, tintR, tintG, tintB] of [[0.09, 0.14, 108, 100, 89], [0.045, 0.26, 194, 58, 46]]) {
+      const ghostTime = Math.max(0, displayTime(entry, instance) - lag);
+      if (ghostTime <= 0) continue;
+      const ghost = entry.create({ seed, palette });
+      ghost.step(ghostTime);
+      const pig = ghost.frame.pigment;
+      for (let i = 0; i < pig.length; i++) {
+        const gp = pig[i];
+        if (gp <= 0.04 || instance.frame.pigment[i] > 0.25) continue;
+        const mix = Math.min(0.45, gp * weight);
+        const o = i * 4;
+        data[o] = data[o] * (1 - mix) + tintR * mix;
+        data[o + 1] = data[o + 1] * (1 - mix) + tintG * mix;
+        data[o + 2] = data[o + 2] * (1 - mix) + tintB * mix;
+        if (!usePaper) data[o + 3] = Math.max(data[o + 3], Math.round(mix * 255));
+      }
+    }
+  }
+
   ctx.putImageData(pixels, 0, 0);
   const shake = actEnabled ? drawActor(ctx, entry, displayTime(entry, instance), seed) : 0;
   if (ctx === context) canvas.style.transform = shake ? `translateX(${shake}px)` : '';
 }
+
 function displayTime(entry = fx, instance = effect) {
   return entry.meta.loop ? instance.t % entry.meta.duration : Math.min(instance.t, entry.meta.duration);
 }
+
+// Keyframe filmstrip & Anatomy breakdown elements
+const keyframeLabels = ['起勢', '出鋒', '破空', '頓幀', '收勢'];
+const keyframeItems = [];
+const filmstripEl = $('filmstrip');
+if (filmstripEl) {
+  for (let i = 0; i < 5; i++) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'kf-item';
+    const thumb = document.createElement('canvas');
+    thumb.width = 96;
+    thumb.height = 96;
+    thumb.setAttribute('aria-hidden', 'true');
+    const metaRow = document.createElement('span');
+    metaRow.className = 'kf-meta';
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'kf-name';
+    nameSpan.textContent = keyframeLabels[i];
+    const timeSpan = document.createElement('span');
+    timeSpan.className = 'kf-time en';
+    timeSpan.textContent = '0.00s';
+    metaRow.append(nameSpan, timeSpan);
+    btn.append(thumb, metaRow);
+    const item = { button: btn, canvas: thumb, ctx: thumb.getContext('2d'), timeSpan, time: 0 };
+    btn.addEventListener('click', () => {
+      preview = false;
+      setPlaying(false);
+      seek(item.time);
+    });
+    keyframeItems.push(item);
+    filmstripEl.append(btn);
+  }
+}
+
+function computeKeyframeTimes(entry) {
+  const dur = entry.meta.duration;
+  if (entry.meta.loop) {
+    return [0.08, 0.26, 0.50, 0.72, 0.90].map(r => +(dur * r).toFixed(3));
+  }
+  const w = entry.act.windup;
+  const span = Math.max(0.15, dur - w);
+  const hit0 = entry.act.hits[0]?.t ?? span * 0.25;
+  const freeze = entry.act.hits[0]?.freeze ?? 0.12;
+  const t0 = Math.min(dur * 0.9, w + Math.max(0.03, span * 0.06));
+  const t1 = Math.min(dur * 0.92, Math.max(t0 + 0.04, w + span * 0.20));
+  const t2 = Math.min(dur * 0.94, Math.max(t1 + 0.05, w + Math.min(span * 0.44, hit0 + freeze * 0.5 + 0.04)));
+  const t3 = Math.min(dur * 0.96, Math.max(t2 + 0.06, w + Math.min(span * 0.66, hit0 + freeze + 0.16)));
+  const t4 = Math.min(dur - 0.02, Math.max(t3 + 0.06, w + span * 0.84));
+  return [t0, t1, t2, t3, t4];
+}
+
+function highlightActiveKeyframe(time) {
+  if (!keyframeItems.length) return;
+  let closest = 0, bestDiff = Infinity;
+  for (let i = 0; i < keyframeItems.length; i++) {
+    const diff = Math.abs(keyframeItems[i].time - time);
+    if (diff < bestDiff) { bestDiff = diff; closest = i; }
+  }
+  for (let i = 0; i < keyframeItems.length; i++) {
+    const active = i === closest;
+    keyframeItems[i].button.classList.toggle('active', active);
+    keyframeItems[i].button.setAttribute('aria-pressed', active);
+  }
+}
+
+// Coalesced async update for filmstrip & anatomy canvases so rapid effect switching stays 60fps
+// and never interferes with synchronous unit test canvas assertions.
+let auxScheduled = false;
+function scheduleAuxRender() {
+  if (auxScheduled) return;
+  auxScheduled = true;
+  const run = () => {
+    auxScheduled = false;
+    renderFilmstripAndAnatomy();
+  };
+  if (typeof globalThis.window !== 'undefined' && typeof requestAnimationFrame === 'function') {
+    requestAnimationFrame(run);
+  }
+}
+
+function renderSmallPreview(targetCanvas, entry, time, surfaceMode = 'paper') {
+  if (!targetCanvas || typeof targetCanvas.getContext !== 'function') return;
+  const tctx = targetCanvas.getContext('2d');
+  if (!tctx || typeof tctx.drawImage !== 'function') return;
+  const { w, h } = entry.meta;
+  const sim = entry.create({ seed, palette });
+  sim.step(time);
+  const off = document.createElement('canvas');
+  off.width = w; off.height = h;
+  const octx = off.getContext('2d');
+  if (!octx || typeof octx.putImageData !== 'function') return;
+  const buf = new ImageData(new Uint8ClampedArray(w * h * 4), w, h);
+  const activePal = surfaceMode === 'dark' ? getDarkPalette(palette) : palette;
+  composite(sim.frame, activePal, { paper: true, grain }, buf.data);
+  octx.putImageData(buf, 0, 0);
+  tctx.clearRect?.(0, 0, targetCanvas.width, targetCanvas.height);
+  tctx.drawImage(off, 0, 0, targetCanvas.width, targetCanvas.height);
+}
+
+function renderFilmstripAndAnatomy() {
+  const times = computeKeyframeTimes(fx);
+  for (let i = 0; i < keyframeItems.length; i++) {
+    const item = keyframeItems[i];
+    item.time = times[i];
+    item.timeSpan.textContent = `${times[i].toFixed(2)}s`;
+    item.button.setAttribute('aria-label', `${keyframeLabels[i]} ${times[i].toFixed(2)}秒`);
+    renderSmallPreview(item.canvas, fx, times[i], stageSurface === 'dark' ? 'dark' : 'paper');
+  }
+  highlightActiveKeyframe(displayTime());
+
+  // Update Anatomy of a Stroke 3-stage breakdown
+  const nameEl = $('anatomy-effect-name');
+  if (nameEl) nameEl.textContent = fx.meta.name;
+  const [tWindup, , tImpact, , tSettle] = times;
+  const stages = [
+    ['anatomy-windup', 'anatomy-windup-time', tWindup],
+    ['anatomy-impact', 'anatomy-impact-time', tImpact],
+    ['anatomy-settle', 'anatomy-settle-time', tSettle],
+  ];
+  for (const [canvasId, timeId, tVal] of stages) {
+    const c = $(canvasId), label = $(timeId);
+    if (label) label.textContent = `${tVal.toFixed(2)}s · F${String(Math.round(tVal * 120)).padStart(3, '0')}`;
+    if (c) {
+      c.width = fx.meta.w;
+      c.height = fx.meta.h;
+      renderSmallPreview(c, fx, tVal, 'paper');
+    }
+  }
+}
+
 function display() {
-  paint(context, fx, effect);
   const time = displayTime();
   $('timeline').value = time;
   $('time').textContent = `${time.toFixed(3)} / ${fx.meta.duration.toFixed(3)}s`;
   $('pose').textContent = samplePose(fx.act, actionTime(fx.act, time - fx.act.windup)).poseId;
+  highlightActiveKeyframe(time);
+  // Paint main studio canvas last so `rendered` in unit tests always captures `#canvas`
+  paint(context, fx, effect, stageSurface, onionEnabled);
 }
+
 function seek(time) {
   effect = fx.create({ seed, palette }); effect.step(time); display();
 }
@@ -139,7 +318,13 @@ function selectEffect(index) {
     button.classList.toggle('active', i === index); button.setAttribute('aria-pressed', i === index);
   }
   for (const card of cards) card.control.setAttribute('aria-current', card.entry === fx);
+  const times = computeKeyframeTimes(fx);
+  for (let i = 0; i < keyframeItems.length; i++) {
+    keyframeItems[i].time = times[i];
+    keyframeItems[i].timeSpan.textContent = `${times[i].toFixed(2)}s`;
+  }
   seek(fx.meta.loop ? .5 : fx.act.windup + .24); preview = true;
+  scheduleAuxRender();
 }
 function focusStudio() {
   $('workbench-title').focus?.({ preventScroll: true });
@@ -238,6 +423,18 @@ effects.forEach((entry, index) => {
   open.addEventListener('click', () => { selectEffect(index); focusStudio(); });
   const title = document.createElement('h3'); title.textContent = entry.meta.name;
   const caption = document.createElement('p'); caption.textContent = `${categoryNames[entry.meta.category][0]} / ${entry.meta.id}`;
+
+  // Hover Rhythm Bar (Windup / Hit-stop / Settle proportion + duration)
+  const dur = entry.meta.duration;
+  const windupRatio = Math.min(65, Math.max(12, Math.round((entry.act.windup / dur) * 100)));
+  const freezeTotal = entry.act.hits.reduce((sum, h) => sum + h.freeze, 0);
+  const freezeRatio = Math.min(35, Math.max(8, Math.round((freezeTotal / dur) * 100)));
+  const settleRatio = Math.max(10, 100 - windupRatio - freezeRatio);
+  const rhythm = document.createElement('div');
+  rhythm.className = 'card-rhythm';
+  rhythm.setAttribute('aria-hidden', 'true');
+  rhythm.innerHTML = `<div class="rhythm-track"><span class="rt-windup" style="width:${windupRatio}%"></span><span class="rt-freeze" style="width:${freezeRatio}%"></span><span class="rt-settle" style="width:${settleRatio}%"></span></div><div class="rhythm-legend"><span>起 ${entry.act.windup.toFixed(2)}s</span><span>頓 ${freezeTotal.toFixed(2)}s</span><span>全 ${dur.toFixed(2)}s${entry.meta.loop ? ' ↻' : ''}</span></div>`;
+
   const actions = document.createElement('div'); actions.className = 'card-actions';
   const copy = document.createElement('button'); copy.textContent = '路徑'; copy.addEventListener('click', () => copyPath(entry, copy));
   const source = document.createElement('button'); source.textContent = '複製 JS'; source.addEventListener('click', () => copySource(entry, source));
@@ -245,7 +442,8 @@ effects.forEach((entry, index) => {
   sheet.addEventListener('click', event => downloadSheet(event, entry));
   const atlas = document.createElement('a'); atlas.textContent = 'JSON ↓'; atlas.href = `../examples/out/${entry.meta.id}/sheet.json`; atlas.download = `${entry.meta.id}.json`; atlas.dataset.cardAction = 'true';
   atlas.addEventListener('click', event => downloadSheet(event, entry, true));
-  actions.append(source, sheet, atlas, copy); element.append(open, title, caption, actions);
+  // Keep `caption` at element.children[2] so unit tests indexing children[2] succeed
+  actions.append(source, sheet, atlas, copy); element.append(open, title, caption, rhythm, actions);
   const card = { element, entry, control: open, context: thumbnail.getContext('2d'), instance: null, hold: 0 };
   cards.push(card); cardByElement.set(element, card);
 });
@@ -256,30 +454,126 @@ for (const card of orderedCards) {
   if (observer) observer.observe(card.element); else visible.add(card);
 }
 function resetCards() { for (const card of cards) { card.instance = null; card.hold = 0; } gridLast = 0; }
+
+const catalogPaletteButtons = [];
+const anatomyPaletteButtons = [];
+
 function setPalette(id) {
   palette = id;
   for (const button of $('palettes').children) { const active = button.dataset.palette === id; button.classList.toggle('active', active); button.setAttribute('aria-pressed', active); }
+  for (const button of catalogPaletteButtons) { const active = button.dataset.palette === id; button.classList.toggle('active', active); button.setAttribute('aria-pressed', active); }
+  for (const button of anatomyPaletteButtons) { const active = button.dataset.palette === id; button.classList.toggle('active', active); button.setAttribute('aria-pressed', active); }
   $('toolbar-palette').value = id;
   document.documentElement.style.setProperty('--paper', palettes[id].stops[0]);
   $('component-examples').textContent = componentExamples(); display();
   for (const card of visible) if (card.instance) paint(card.context, card.entry, card.instance);
+  scheduleAuxRender();
 }
+
 for (const [id, entry] of Object.entries(palettes)) {
   const button = document.createElement('button'); button.className = `palette ${id === palette ? 'active' : ''}`; button.dataset.palette = id;
   button.setAttribute('aria-pressed', id === palette);
   button.innerHTML = `<span class="swatch" style="background:linear-gradient(135deg,${entry.stops[5]} 55%,${entry.accent} 55%)"></span><span class="palette-name">${entry.name}</span><small>${id}</small>`;
   button.addEventListener('click', () => setPalette(id)); $('palettes').append(button);
   const option = document.createElement('option'); option.value = id; option.textContent = entry.name; $('toolbar-palette').append(option);
+
+  // Quick palette dot in Collection toolbar
+  const catPal = $('catalog-palettes');
+  if (catPal) {
+    const dot = document.createElement('button');
+    dot.type = 'button';
+    dot.className = `catalog-palette-dot ${id === palette ? 'active' : ''}`;
+    dot.dataset.palette = id;
+    dot.setAttribute('aria-label', `切換至${entry.name}`);
+    dot.setAttribute('aria-pressed', id === palette);
+    dot.title = entry.name;
+    dot.innerHTML = `<span class="swatch" style="background:linear-gradient(135deg,${entry.stops[5]} 55%,${entry.accent} 55%)"></span><span class="dot-label">${entry.name.slice(0, 2)}</span>`;
+    dot.addEventListener('click', () => setPalette(id));
+    catalogPaletteButtons.push(dot);
+    catPal.append(dot);
+  }
+
+  // Mineral Pigment card in Anatomy dark section
+  const anatPal = $('anatomy-palettes');
+  if (anatPal) {
+    const cardBtn = document.createElement('button');
+    cardBtn.type = 'button';
+    cardBtn.className = `anatomy-pigment-card ${id === palette ? 'active' : ''}`;
+    cardBtn.dataset.palette = id;
+    cardBtn.setAttribute('aria-pressed', id === palette);
+    const stopsHtml = entry.stops.map(hex => `<span style="background:${hex}"></span>`).join('');
+    cardBtn.innerHTML = `<div class="pigment-head"><strong>${entry.name}</strong><span class="en">${id.toUpperCase()}</span></div><p class="pigment-sub">${paletteSubtitles[id] ?? ''}</p><div class="pigment-stops" aria-hidden="true">${stopsHtml}<i class="pigment-accent" style="background:${entry.accent}"></i></div>`;
+    cardBtn.addEventListener('click', () => setPalette(id));
+    anatomyPaletteButtons.push(cardBtn);
+    anatPal.append(cardBtn);
+  }
 }
 $('toolbar-palette').value = palette;
 $('toolbar-palette').addEventListener('change', event => setPalette(event.target.value));
-$('grain').addEventListener('input', event => { grain = Number(event.target.value); $('grain-value').textContent = grain.toFixed(1); display(); for (const card of visible) if (card.instance) paint(card.context, card.entry, card.instance); });
+$('grain').addEventListener('input', event => {
+  grain = Number(event.target.value);
+  $('grain-value').textContent = grain.toFixed(1);
+  display();
+  for (const card of visible) if (card.instance) paint(card.context, card.entry, card.instance);
+  scheduleAuxRender();
+});
 $('act-toggle').addEventListener('change', event => {
   actEnabled = event.target.checked;
   display();
   for (const card of visible) if (card.instance) paint(card.context, card.entry, card.instance);
 });
 $('slow-toggle').addEventListener('change', event => { speed = event.target.checked ? .25 : 1; last = gridLast = 0; });
+
+// Stage surface switcher ("宣紙 / 透明 / 玄夜") & Onion skin ("殘影")
+const surfaceLabels = {
+  paper: '宣紙 <span class="en">/ RICE PAPER</span>',
+  alpha: '透明 <span class="en">/ ALPHA CHANNEL</span>',
+  dark: '玄夜 <span class="en">/ NIGHT STAGE</span>',
+};
+const stageEl = $('stage');
+const surfaceLabelEl = $('surface-label');
+if (stageEl && typeof stageEl.parentElement?.querySelectorAll === 'function') {
+  const surfaceBtns = [...stageEl.parentElement.querySelectorAll('.surface-btn[data-surface]')];
+  for (const btn of surfaceBtns) {
+    btn.addEventListener('click', () => {
+      stageSurface = btn.dataset.surface;
+      stageEl.dataset.surface = stageSurface;
+      if (surfaceLabelEl) surfaceLabelEl.innerHTML = surfaceLabels[stageSurface] ?? surfaceLabels.paper;
+      for (const b of surfaceBtns) {
+        const active = b === btn;
+        b.classList.toggle('active', active);
+        b.setAttribute('aria-pressed', active);
+      }
+      display();
+      scheduleAuxRender();
+    });
+  }
+}
+const onionBtn = $('onion-toggle');
+if (onionBtn) {
+  onionBtn.addEventListener('click', () => {
+    onionEnabled = !onionEnabled;
+    onionBtn.classList.toggle('active', onionEnabled);
+    onionBtn.setAttribute('aria-pressed', onionEnabled);
+    display();
+  });
+}
+
+// Collection Dual-View Mode ("策展" vs "圖鑑")
+const viewCuratedBtn = $('view-curated');
+const viewCompactBtn = $('view-compact');
+function setCollectionLayout(mode) {
+  layoutMode = mode;
+  $('fx-grid').dataset.layout = mode;
+  viewCuratedBtn?.classList.toggle('active', mode === 'curated');
+  viewCuratedBtn?.setAttribute('aria-pressed', mode === 'curated');
+  viewCompactBtn?.classList.toggle('active', mode === 'compact');
+  viewCompactBtn?.setAttribute('aria-pressed', mode === 'compact');
+  filterCatalog();
+}
+viewCuratedBtn?.addEventListener('click', () => setCollectionLayout('curated'));
+viewCompactBtn?.addEventListener('click', () => setCollectionLayout('compact'));
+
 for (const [category, count] of Object.entries(categoryCounts)) {
   const option = document.createElement('option'); option.value = category;
   option.textContent = `${categoryNames[category][0]}（${count}）`;
@@ -299,7 +593,7 @@ function filterCatalog() {
   const category = $('category-filter').value;
   const query = $('catalog-search').value.trim().toLowerCase();
   const paginated = category === 'all' && !query;
-  $('fx-grid').dataset.view = paginated ? 'curated' : 'filtered';
+  $('fx-grid').dataset.view = paginated && layoutMode === 'curated' ? 'curated' : 'filtered';
   for (const [id, button] of categoryButtons) button.setAttribute('aria-pressed', id === category);
   let count = 0, shown = 0;
   for (const card of orderedCards) {
@@ -368,6 +662,7 @@ function changeSeed() {
   seed = next; notify('種子已更新，畫面可重現。');
   $('component-examples').textContent = componentExamples();
   seek(displayTime()); resetCards();
+  scheduleAuxRender();
 }
 $('seed').addEventListener('change', changeSeed);
 $('next-seed').addEventListener('click', () => { $('seed').value = (seed + 1) >>> 0; changeSeed(); });
