@@ -3,8 +3,8 @@
 <p align="center"><img src="docs/brand/icon-512.png" alt="InkFX 墨譜 — 東方水墨與武俠程序化特效庫 / Procedural Ink & Wuxia FX Library" width="160" height="160"></p>
 
 <p align="center">
-  <strong>126 式即時程序化水墨特效 · 4 款東方礦物色階 · 120Hz 物理筆觸模擬 · 零外部依賴</strong><br>
-  <strong>126 Procedural Ink FX · 4 Mineral Palettes · 120Hz Brush Simulation · Zero Dependencies</strong>
+  <strong>132 式即時程序化水墨特效 · 4 款東方礦物色階 · 120Hz 物理筆觸模擬 · 零外部依賴</strong><br>
+  <strong>132 Procedural Ink FX · 4 Mineral Palettes · 120Hz Brush Simulation · Zero Dependencies</strong>
 </p>
 
 <p align="center">
@@ -19,7 +19,7 @@
   <a href="#english"><strong>English</strong></a>
 </p>
 
-![InkFX 126 式水墨特效精選預覽 / 24 studies from the 126-effect library](examples/grid.png)
+![InkFX 132 式水墨特效精選預覽 / 24 studies from the 132-effect library](examples/grid.png)
 
 ---
 
@@ -31,18 +31,18 @@
 
 不依賴預錄影片或龐大貼圖素材，每一道飛白劍氣、符陣結界、墨擊破空與禪境水暈，皆在虛擬宣紙上以 **120Hz 固定步進**即時演算而成。透過固定種子（Seed）即可百分百重現每一滴墨跡與每一絲飛白，並可直接於線上工作台調墨、換紙、預覽深色遊戲場景，一鍵匯出為跨引擎通用的 PNG 序列圖集、JSON Atlas 或獨立單檔 JS 模組。
 
-### 1. 一式一景：六大類別、126 式水墨招式
+### 1. 一式一景：六大類別、132 式水墨招式
 從凌厲的拔刀斬擊、道家奇門符陣，到山水雲霧轉場與遊戲介面印記，涵蓋完整的武俠與東方美學視覺語彙：
 
 | 分類 | 代號 | 數量 | 視覺定位與應用場景 |
 | :--- | :--- | ---: | :--- |
-| **劍式** | `sword` | **26** | 拔刀斬、劍氣縱橫、流星斬、回風落雁等帶飛白與朱砂火星的刀劍軌跡 |
-| **符陣** | `talisman` | **21** | 八卦陣、五雷符、紅線結、北斗星圖、鎮魂印等陣法與結界特效 |
-| **禪境** | `zen` | **21** | 禪圓呼吸、竹葉隨風、茶煙、寒江孤舟、松雪等可無縫循環的意境氛圍 |
-| **墨擊** | `ink-burst` | **20** | 掌風破空、隕墨墜、碎石震波、破防重擊等高張力打擊感爆發特效 |
-| **轉場** | `transitions` | **19** | 雨池暈場、捲軸展開、屏風折疊、燒紙、雲幕等全幅水墨過場遮罩 |
-| **印記** | `ui` | **19** | 玉佩呈印、勝字朱印、連擊計數、氣血丹爐、羅盤路標等東方介面回饋 |
-| **合計** | | **126** | **全數支援固定種子重現、四色礦物色階與無損圖集匯出** |
+| **劍式** | `sword` | **27** | 拔刀斬、回風旋斬、劍氣縱橫、流星斬、回風落雁等帶飛白與朱砂火星的刀劍軌跡 |
+| **符陣** | `talisman` | **22** | 八卦陣、五行輪轉、五雷符、紅線結、北斗星圖、鎮魂印等陣法與結界特效 |
+| **禪境** | `zen` | **22** | 禪圓呼吸、河燈夜渡、竹葉隨風、茶煙、寒江孤舟、松雪等可無縫循環的意境氛圍 |
+| **墨擊** | `ink-burst` | **21** | 掌風破空、驚雷掌、隕墨墜、碎石震波、破防重擊等高張力打擊感爆發特效 |
+| **轉場** | `transitions` | **20** | 雨池暈場、墨雨垂簾、捲軸展開、屏風折疊、燒紙、雲幕等全幅水墨過場遮罩 |
+| **印記** | `ui` | **20** | 玉佩呈印、心法頓悟、勝字朱印、連擊計數、氣血丹爐、羅盤路標等東方介面回饋 |
+| **合計** | | **132** | **全數支援固定種子重現、四色礦物色階與無損圖集匯出** |
 
 ### 2. 四款傳統東方礦物色階
 內建四組取材自傳統書畫顏料的六階濃淡色盤與點睛朱砂／泥金，可於全站與匯出時自由切換：
@@ -88,18 +88,18 @@
 
 Instead of relying on prerecorded video clips or heavy texture packs, every flying-white sword slash, talisman array, ink impact, and Zen ripple is simulated live on virtual Xuan rice paper at a fixed **120Hz timestep**. Every droplet and bristle is 100% reproducible from a 32-bit seed, and can be customized, previewed against light or dark game backdrops, and exported directly from the browser as engine-ready PNG sprite sheets, JSON atlases, or zero-dependency single-file ES modules.
 
-### 1. One Stroke, One World — 126 Effects Across 6 Categories
+### 1. One Stroke, One World — 132 Effects Across 6 Categories
 Covering the full visual vocabulary of martial arts and classical East Asian brushwork:
 
 | Category | ID | Count | Visual Focus & Use Cases |
 | :--- | :--- | ---: | :--- |
-| **Sword** | `sword` | **26** | Draw cuts, sword-qi arcs, meteor slashes, and returning blades with flying-white bristles and cinnabar sparks |
-| **Talisman** | `talisman` | **21** | Bagua arrays, thunder charms, red-thread knots, star charts, and warding seals |
-| **Zen** | `zen` | **21** | Seamlessly looping ambient studies: Enso breath, bamboo wind, tea steam, boat ripples, and pine snow |
-| **Ink Burst** | `ink-burst` | **20** | High-impact combat strikes, palm shockwaves, meteor craters, guard breaks, and stone shatters |
-| **Transitions** | `transitions` | **19** | Full-screen scene wipes: rain-pool diffusion, unfolding scrolls, folding screens, paper burns, and cloud curtains |
-| **UI & Seals** | `ui` | **19** | Carved jade pendants, victory seals, combo tallies, health vessels, and compass waypoints |
-| **Total** | | **126** | **Deterministic seeds, 4 mineral palettes, and instant sprite-sheet / JS export** |
+| **Sword** | `sword` | **27** | Draw cuts, whirlwind spins, sword-qi arcs, meteor slashes, and returning blades with flying-white bristles and cinnabar sparks |
+| **Talisman** | `talisman` | **22** | Bagua arrays, five-element wheels, thunder charms, red-thread knots, star charts, and warding seals |
+| **Zen** | `zen` | **22** | Seamlessly looping ambient studies: Enso breath, river lanterns, bamboo wind, tea steam, boat ripples, and pine snow |
+| **Ink Burst** | `ink-burst` | **21** | High-impact combat strikes, thunder palms, palm shockwaves, meteor craters, guard breaks, and stone shatters |
+| **Transitions** | `transitions` | **20** | Full-screen scene wipes: ink-rain curtains, rain-pool diffusion, unfolding scrolls, folding screens, paper burns, and cloud curtains |
+| **UI & Seals** | `ui` | **20** | Skill-unlock lotus seals, carved jade pendants, victory seals, combo tallies, health vessels, and compass waypoints |
+| **Total** | | **132** | **Deterministic seeds, 4 mineral palettes, and instant sprite-sheet / JS export** |
 
 ### 2. Four Traditional Mineral Palettes
 Each palette models six tonal stops of mineral pigment on Xuan paper plus a signature accent and highlight tint:

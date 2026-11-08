@@ -44,3 +44,18 @@ test('rain-pool wipe grows monotonically to a fully covered canvas', () => {
   }
   assert.notDeepEqual(patterns[0], patterns[1], 'seed changes the rain fronts');
 });
+
+test('six new effects (whirlwind-cut, five-element-wheel, lantern-river, thunder-palm, ink-rain-curtain, skill-unlock) step deterministically and respect loop / hit-stop contracts', () => {
+  const loopEntry = getFX('lantern-river');
+  const loopFx = loopEntry.create({ seed: 42 }), loopFirst = loopFx.frame.pigment.slice();
+  loopFx.step(loopEntry.meta.duration);
+  assert.deepEqual(loopFx.frame.pigment, loopFirst, 'lantern-river loops seamlessly');
+
+  for (const id of ['whirlwind-cut', 'five-element-wheel', 'thunder-palm', 'ink-rain-curtain', 'skill-unlock']) {
+    const entry = getFX(id);
+    const a = entry.create({ seed: 7 }), b = entry.create({ seed: 7 });
+    a.step(entry.act.windup + .18); b.step(entry.act.windup + .18);
+    assert.deepEqual(a.frame.pigment, b.frame.pigment, `${id} is deterministic`);
+    assert.ok(a.frame.pigment.some(p => p > .1), `${id} deposits visible ink after windup`);
+  }
+});

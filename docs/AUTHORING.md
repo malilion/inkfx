@@ -290,7 +290,7 @@ func _ready() -> void:
 
 ### 5. 進階：自訂筆觸與創作新招式
 
-若想在專案中直接操作底層水墨畫布或創作全新招式，可從 `src/runtime.js` 匯入輕量渲染核心（不含 126 式圖庫與匯出工具）：
+若想在專案中直接操作底層水墨畫布或創作全新招式，可從 `src/runtime.js` 匯入輕量渲染核心（不含 132 式圖庫與匯出工具）：
 
 ```js
 import {
@@ -400,7 +400,7 @@ This guide covers how to browse, customize, and export procedural ink effects in
 
 ### 1. Using the Live Studio & Exporting Assets
 
-Open the **[InkFX Live Exhibition](https://malilion.github.io/inkfx/)** to explore and customize all 126 effects in three steps:
+Open the **[InkFX Live Exhibition](https://malilion.github.io/inkfx/)** to explore and customize all 132 effects in three steps:
 
 #### Step 1: Browse the Collection
 - **Categories & Search**: Filter across **Sword (`sword`)**, **Talisman (`talisman`)**, **Zen (`zen`)**, **Ink Burst (`ink-burst`)**, **Transitions (`transitions`)**, and **UI & Seals (`ui`)**, or search by Chinese title or English ID (e.g. `sword-qi-slash`, `enso-breath`).
@@ -579,7 +579,7 @@ Every effect includes combat choreography metadata (exported on both the JS modu
 
 ### 5. Advanced: Custom Brushwork & Authoring New Effects
 
-To author custom procedural ink effects using the lightweight renderer entry (`src/runtime.js`, which excludes the 126-effect catalog and Node tooling):
+To author custom procedural ink effects using the lightweight renderer entry (`src/runtime.js`, which excludes the 132-effect catalog and Node tooling):
 
 - **`createInkFrame(w, h, { ox, oy, seed })`**: Allocates row-major (`i = y * w + x`) channels: `pigment` (`Float32Array` in `[0, 1]`), `wetness` (`Float32Array` in `[0, 1]`), `tint` (`Uint8Array`: `0` main ink, `1` mineral accent, `2` highlight), and seeded `paperGrain` (`Float32Array` in `[0, 1]`).
 - **Brush Primitives (`src/core/brush.js`, `feibai.js`)**:
