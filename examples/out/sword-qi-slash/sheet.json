@@ -1,0 +1,897 @@
+{
+  "frames": {
+    "sword-qi-slash-0000": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0001": {
+      "frame": {
+        "x": 224,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0002": {
+      "frame": {
+        "x": 448,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0003": {
+      "frame": {
+        "x": 672,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0004": {
+      "frame": {
+        "x": 896,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0005": {
+      "frame": {
+        "x": 1120,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0006": {
+      "frame": {
+        "x": 1344,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0007": {
+      "frame": {
+        "x": 1568,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0008": {
+      "frame": {
+        "x": 0,
+        "y": 224,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0009": {
+      "frame": {
+        "x": 224,
+        "y": 224,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0010": {
+      "frame": {
+        "x": 448,
+        "y": 224,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0011": {
+      "frame": {
+        "x": 672,
+        "y": 224,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0012": {
+      "frame": {
+        "x": 896,
+        "y": 224,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0013": {
+      "frame": {
+        "x": 1120,
+        "y": 224,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0014": {
+      "frame": {
+        "x": 1344,
+        "y": 224,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0015": {
+      "frame": {
+        "x": 1568,
+        "y": 224,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0016": {
+      "frame": {
+        "x": 0,
+        "y": 448,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0017": {
+      "frame": {
+        "x": 224,
+        "y": 448,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0018": {
+      "frame": {
+        "x": 448,
+        "y": 448,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0019": {
+      "frame": {
+        "x": 672,
+        "y": 448,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0020": {
+      "frame": {
+        "x": 896,
+        "y": 448,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0021": {
+      "frame": {
+        "x": 1120,
+        "y": 448,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0022": {
+      "frame": {
+        "x": 1344,
+        "y": 448,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0023": {
+      "frame": {
+        "x": 1568,
+        "y": 448,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0024": {
+      "frame": {
+        "x": 0,
+        "y": 672,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0025": {
+      "frame": {
+        "x": 224,
+        "y": 672,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0026": {
+      "frame": {
+        "x": 448,
+        "y": 672,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0027": {
+      "frame": {
+        "x": 672,
+        "y": 672,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0028": {
+      "frame": {
+        "x": 896,
+        "y": 672,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0029": {
+      "frame": {
+        "x": 1120,
+        "y": 672,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0030": {
+      "frame": {
+        "x": 1344,
+        "y": 672,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0031": {
+      "frame": {
+        "x": 1568,
+        "y": 672,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0032": {
+      "frame": {
+        "x": 0,
+        "y": 896,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0033": {
+      "frame": {
+        "x": 224,
+        "y": 896,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0034": {
+      "frame": {
+        "x": 448,
+        "y": 896,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0035": {
+      "frame": {
+        "x": 672,
+        "y": 896,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0036": {
+      "frame": {
+        "x": 896,
+        "y": 896,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0037": {
+      "frame": {
+        "x": 1120,
+        "y": 896,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    },
+    "sword-qi-slash-0038": {
+      "frame": {
+        "x": 1344,
+        "y": 896,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 33.333333333333336
+    }
+  },
+  "meta": {
+    "app": "inkfx",
+    "version": "1",
+    "image": "sheet.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 1792,
+      "h": 1120
+    },
+    "scale": "1",
+    "frameTags": [
+      {
+        "name": "sword-qi-slash",
+        "from": 0,
+        "to": 38,
+        "direction": "forward"
+      }
+    ],
+    "inkfx": {
+      "id": "sword-qi-slash",
+      "seed": 42,
+      "palette": "zhusha",
+      "paper": false,
+      "grain": 1,
+      "fps": 30,
+      "duration": 1.3,
+      "loop": false,
+      "origin": {
+        "x": 112,
+        "y": 112
+      },
+      "simulationHz": 120,
+      "act": {
+        "windup": 0.4,
+        "poses": [
+          [
+            -0.4,
+            "SHEATH_CROUCH"
+          ],
+          [
+            -0.08,
+            "EYE_GLINT",
+            "snap"
+          ],
+          [
+            0,
+            "DRAW_CUT",
+            "snap"
+          ],
+          [
+            0.08,
+            "FOLLOW_HOLD"
+          ],
+          [
+            0.65,
+            "STAND_RECOVER"
+          ]
+        ],
+        "hits": [
+          {
+            "t": 0.04,
+            "freeze": 0.15,
+            "shakeAmp": 3,
+            "inkSplash": 24,
+            "displayT": 0.44,
+            "frame": 13,
+            "freezeFrames": 5
+          }
+        ],
+        "recovery": 0.1,
+        "timeOrigin": "impact-relative"
+      }
+    }
+  }
+}

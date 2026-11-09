@@ -1,0 +1,285 @@
+{
+  "schemaVersion": 1,
+  "meta": {
+    "id": "sword-qi-slash",
+    "name": "劍氣斬",
+    "category": "sword",
+    "duration": 1.3,
+    "actionDuration": 0.75,
+    "defaultPalette": "zhusha",
+    "loop": false,
+    "w": 224,
+    "h": 224,
+    "ox": 112,
+    "oy": 112,
+    "droplets": 28,
+    "accentRatio": 0.15
+  },
+  "seed": 42,
+  "palette": "songyan",
+  "fps": 30,
+  "dt": 0.03333333333333333,
+  "simulationHz": 120,
+  "hash": "95c9ca3e87d12b0647c0fd759d9b46b4d54f35bcc6ba3473b2d96fff9758aade",
+  "frameCount": 40,
+  "sheet": {
+    "w": 1040,
+    "h": 664,
+    "cellW": 252,
+    "cellH": 290,
+    "headerH": 68,
+    "columns": 4,
+    "selected": [
+      0,
+      6,
+      11,
+      17,
+      22,
+      28,
+      33,
+      39
+    ]
+  },
+  "frames": [
+    {
+      "index": 0,
+      "time": 0,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 1,
+      "time": 0.03333333333333333,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 2,
+      "time": 0.06666666666666667,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 3,
+      "time": 0.1,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 4,
+      "time": 0.13333333333333333,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 5,
+      "time": 0.16666666666666666,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 6,
+      "time": 0.2,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 7,
+      "time": 0.23333333333333334,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 8,
+      "time": 0.26666666666666666,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 9,
+      "time": 0.3,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 10,
+      "time": 0.3333333333333333,
+      "fillRatio": 0.00007971938775510203,
+      "edgeRatio": 0
+    },
+    {
+      "index": 11,
+      "time": 0.36666666666666664,
+      "fillRatio": 0.00007971938775510203,
+      "edgeRatio": 0
+    },
+    {
+      "index": 12,
+      "time": 0.4,
+      "fillRatio": 0.00007971938775510203,
+      "edgeRatio": 0
+    },
+    {
+      "index": 13,
+      "time": 0.43333333333333335,
+      "fillRatio": 0.010722257653061224,
+      "edgeRatio": 0
+    },
+    {
+      "index": 14,
+      "time": 0.4666666666666667,
+      "fillRatio": 0.010722257653061224,
+      "edgeRatio": 0
+    },
+    {
+      "index": 15,
+      "time": 0.5,
+      "fillRatio": 0.010722257653061224,
+      "edgeRatio": 0
+    },
+    {
+      "index": 16,
+      "time": 0.5333333333333333,
+      "fillRatio": 0.010722257653061224,
+      "edgeRatio": 0
+    },
+    {
+      "index": 17,
+      "time": 0.5666666666666667,
+      "fillRatio": 0.010722257653061224,
+      "edgeRatio": 0
+    },
+    {
+      "index": 18,
+      "time": 0.6,
+      "fillRatio": 0.015525350765306123,
+      "edgeRatio": 0
+    },
+    {
+      "index": 19,
+      "time": 0.6333333333333333,
+      "fillRatio": 0.021504304846938774,
+      "edgeRatio": 0
+    },
+    {
+      "index": 20,
+      "time": 0.6666666666666666,
+      "fillRatio": 0.024693080357142856,
+      "edgeRatio": 0
+    },
+    {
+      "index": 21,
+      "time": 0.7,
+      "fillRatio": 0.025430484693877552,
+      "edgeRatio": 0
+    },
+    {
+      "index": 22,
+      "time": 0.7333333333333333,
+      "fillRatio": 0.025829081632653062,
+      "edgeRatio": 0
+    },
+    {
+      "index": 23,
+      "time": 0.7666666666666666,
+      "fillRatio": 0.025948660714285716,
+      "edgeRatio": 0
+    },
+    {
+      "index": 24,
+      "time": 0.8,
+      "fillRatio": 0.02604830994897959,
+      "edgeRatio": 0
+    },
+    {
+      "index": 25,
+      "time": 0.8333333333333334,
+      "fillRatio": 0.02604830994897959,
+      "edgeRatio": 0
+    },
+    {
+      "index": 26,
+      "time": 0.8666666666666667,
+      "fillRatio": 0.026088169642857144,
+      "edgeRatio": 0
+    },
+    {
+      "index": 27,
+      "time": 0.9,
+      "fillRatio": 0.026068239795918366,
+      "edgeRatio": 0
+    },
+    {
+      "index": 28,
+      "time": 0.9333333333333333,
+      "fillRatio": 0.02600845025510204,
+      "edgeRatio": 0
+    },
+    {
+      "index": 29,
+      "time": 0.9666666666666667,
+      "fillRatio": 0.02596859056122449,
+      "edgeRatio": 0
+    },
+    {
+      "index": 30,
+      "time": 1,
+      "fillRatio": 0.02596859056122449,
+      "edgeRatio": 0
+    },
+    {
+      "index": 31,
+      "time": 1.0333333333333332,
+      "fillRatio": 0.025908801020408163,
+      "edgeRatio": 0
+    },
+    {
+      "index": 32,
+      "time": 1.0666666666666667,
+      "fillRatio": 0.02588887117346939,
+      "edgeRatio": 0
+    },
+    {
+      "index": 33,
+      "time": 1.1,
+      "fillRatio": 0.025849011479591837,
+      "edgeRatio": 0
+    },
+    {
+      "index": 34,
+      "time": 1.1333333333333333,
+      "fillRatio": 0.025809151785714284,
+      "edgeRatio": 0
+    },
+    {
+      "index": 35,
+      "time": 1.1666666666666667,
+      "fillRatio": 0.025769292091836735,
+      "edgeRatio": 0
+    },
+    {
+      "index": 36,
+      "time": 1.2,
+      "fillRatio": 0.025589923469387755,
+      "edgeRatio": 0
+    },
+    {
+      "index": 37,
+      "time": 1.2333333333333334,
+      "fillRatio": 0.025410554846938774,
+      "edgeRatio": 0
+    },
+    {
+      "index": 38,
+      "time": 1.2666666666666666,
+      "fillRatio": 0.0244937818877551,
+      "edgeRatio": 0
+    },
+    {
+      "index": 39,
+      "time": 1.3,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    }
+  ]
+}

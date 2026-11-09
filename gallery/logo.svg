@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="inkfx">
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f4efe4"/>
+      <stop offset="55%" stop-color="#ebe2d0"/>
+      <stop offset="100%" stop-color="#e0d4be"/>
+    </linearGradient>
+    <linearGradient id="ink" x1="0.15" y1="0.1" x2="0.9" y2="0.95">
+      <stop offset="0%" stop-color="#1a1a1c"/>
+      <stop offset="45%" stop-color="#2c2a32"/>
+      <stop offset="78%" stop-color="#5b3a4a"/>
+      <stop offset="100%" stop-color="#8b2e2e"/>
+    </linearGradient>
+    <linearGradient id="mineral" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#c45c26"/>
+      <stop offset="40%" stop-color="#2f5d8c"/>
+      <stop offset="75%" stop-color="#c9a227"/>
+      <stop offset="100%" stop-color="#8b2e2e"/>
+    </linearGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.2"/>
+    </filter>
+  </defs>
+  <!-- shared family rounded tile -->
+  <rect width="512" height="512" rx="96" fill="url(#paper)"/>
+  <rect x="18" y="18" width="476" height="476" rx="82" fill="none" stroke="#c9b89a" stroke-width="6" opacity="0.55"/>
+  <!-- flying-white sword/brush stroke -->
+  <path d="M92 360
+           C140 300, 170 250, 210 210
+           C250 168, 295 140, 340 118
+           C365 106, 392 98, 420 92
+           C402 108, 378 128, 352 155
+           C318 190, 285 235, 255 285
+           C228 330, 198 372, 160 402
+           C145 414, 125 422, 105 424
+           C118 400, 108 380, 92 360 Z"
+        fill="url(#ink)" opacity="0.92"/>
+  <!-- dry feibai gaps -->
+  <path d="M168 318 C190 290, 215 262, 242 238" fill="none" stroke="#f4efe4" stroke-width="7" stroke-linecap="round" opacity="0.55"/>
+  <path d="M210 350 C235 320, 262 292, 292 268" fill="none" stroke="#f4efe4" stroke-width="4.5" stroke-linecap="round" opacity="0.4"/>
+  <!-- mineral accent droplets -->
+  <circle cx="128" cy="148" r="18" fill="#8b2e2e"/>
+  <circle cx="168" cy="128" r="11" fill="#2f5d8c"/>
+  <circle cx="148" cy="178" r="8" fill="#c9a227"/>
+  <!-- thin seal mark -->
+  <rect x="372" y="372" width="52" height="52" rx="6" fill="none" stroke="#8b2e2e" stroke-width="5" opacity="0.85"/>
+  <path d="M386 398 h24 M398 386 v24" stroke="#8b2e2e" stroke-width="4" stroke-linecap="round" opacity="0.85"/>
+</svg>

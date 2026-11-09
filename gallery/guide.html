@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f5f1e8">
+  <meta name="description" content="InkFX 墨譜使用與串接指南：線上工作台操作、單檔 JS 模組（Canvas / React / Vue）與 PNG 圖集 + JSON Atlas（Phaser / Godot / PixiJS / Unity）完整說明。">
+  <title>使用與串接指南 — InkFX 墨譜</title>
+  <link rel="icon" href="./favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="./favicon.png" sizes="32x32">
+  <link rel="apple-touch-icon" href="./logo.png">
+  <link rel="preload" href="./fonts/ink-display.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body data-guide-lang="both">
+  <a class="skip-link" href="#guide-main">跳至指南內容</a>
+
+  <!-- ═══════════ TOPBAR ═══════════ -->
+  <header class="topbar" id="topbar">
+    <a class="brand" href="./" aria-label="回到 InkFX 墨譜展廳">
+      <span class="brand-seal" aria-hidden="true">墨</span>
+      <span>inkfx<span class="brand-dot">.</span></span>
+    </a>
+    <nav class="topbar-nav" aria-label="指南導覽">
+      <a href="./#collection">藏譜</a>
+      <a href="./#anatomy">墨法</a>
+      <a href="./#workbench">工作台</a>
+    </nav>
+    <a class="docs-link" href="./"><span class="arrow" aria-hidden="true">←</span> 回到展廳</a>
+  </header>
+
+  <main id="guide-main">
+    <!-- ═══════════ HERO ═══════════ -->
+    <section class="guide-hero">
+      <div class="shell guide-hero-grid">
+        <div>
+          <p class="eyebrow">
+            <span class="chapter-mark">卷</span>
+            <span>使用與串接指南 <span class="eyebrow-divider">/</span> <span class="en">USER &amp; INTEGRATION GUIDE</span></span>
+          </p>
+          <h1>從一式墨，<br>入你的作品。</h1>
+          <p class="guide-hero-lead" data-lang="zh">
+            無論你是要在網頁前端即時渲染水墨筆觸，或將透明序列圖集匯入遊戲引擎，皆可在三步驟內完成挑招、調墨與串接。
+          </p>
+          <p class="guide-hero-lead" data-lang="en">
+            Whether rendering live 120Hz brushwork on the web or importing straight-alpha sprite sheets into a game engine, go from browsing to integration in three steps.
+          </p>
+        </div>
+
+        <aside class="guide-hero-meta" aria-label="語言與快速連結">
+          <div>
+            <p class="guide-toc-title">語言顯示 / LANGUAGE</p>
+            <div class="guide-lang-bar" role="group" aria-label="切換指南語言">
+              <button type="button" class="guide-lang-btn active" data-set-lang="both" aria-pressed="true">中英對照</button>
+              <button type="button" class="guide-lang-btn" data-set-lang="zh" aria-pressed="false">繁體中文</button>
+              <button type="button" class="guide-lang-btn" data-set-lang="en" aria-pressed="false">English</button>
+            </div>
+          </div>
+          <div style="display:flex;gap:.9rem;flex-wrap:wrap;font-size:.84rem;">
+            <a class="text-action" href="./#workbench">前往調墨工作台 ↗</a>
+            <a class="text-action" href="../docs/AUTHORING.md">Markdown 原檔 ↗</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ═══════════ MAIN LAYOUT ═══════════ -->
+    <div class="shell guide-layout">
+      <nav class="guide-toc" aria-label="章節目錄">
+        <p class="guide-toc-title">目錄 / CONTENTS</p>
+        <a href="#sec-studio">壹 · 線上工作台與匯出</a>
+        <a href="#sec-web">貳 · 網頁與前端串接 (JS)</a>
+        <a href="#sec-engine">叁 · 遊戲引擎圖集串接</a>
+        <a href="#sec-timing">肆 · 招式時間軸與色階</a>
+        <a href="#sec-custom">伍 · 自訂筆觸與新招式</a>
+      </nav>
+
+      <div class="guide-content">
+
+        <!-- ═══════════ SECTION 1: STUDIO ═══════════ -->
+        <section id="sec-studio" class="guide-section">
+          <header class="guide-section-head">
+            <p class="eyebrow"><span class="chapter-mark">壹</span> <span>WORKFLOW / 線上工作台操作與匯出</span></p>
+            <h2>挑招、調墨、一鍵帶走。</h2>
+            <p data-lang="zh">在線上展廳中，從挑選招式、檢視關鍵幀到匯出資產完全在瀏覽器本地即時完成。</p>
+            <p data-lang="en">Browse, inspect keyframes, dial in mineral pigments, and bake production assets directly in your browser.</p>
+          </header>
+
+          <div class="guide-steps">
+            <article class="guide-card">
+              <span class="guide-card-num">STEP 01 · 藏譜挑招</span>
+              <h3>六大分類與節奏預覽</h3>
+              <ul data-lang="zh">
+                <li>依 <strong>劍式、符陣、禪境、墨擊、轉場、印記</strong> 篩選，或直接搜尋中英文代號（如 <code class="guide-inline-code">竹葉</code>、<code class="guide-inline-code">sword-qi-slash</code>）。</li>
+                <li>右上角可切換「<strong>策展</strong>（大卡畫廊）」與「<strong>圖鑑</strong>（密集速覽）」。</li>
+                <li>懸停卡片即可檢視底部「<strong>起勢 · 頓幀 · 收勢</strong>」時間比例，點選即載入工作台。</li>
+              </ul>
+              <ul data-lang="en">
+                <li>Filter across <strong>Sword, Talisman, Zen, Ink Burst, Transitions, UI</strong> or search by name/ID.</li>
+                <li>Switch between <strong>Curated Gallery</strong> and <strong>Compact Index</strong> views.</li>
+                <li>Hover any card to read its <strong>Windup · Hit-Stop · Settle</strong> timing bar; click to open in the Studio.</li>
+              </ul>
+            </article>
+
+            <article class="guide-card">
+              <span class="guide-card-num">STEP 02 · 舞台檢視</span>
+              <h3>三種底色、殘影與底片列</h3>
+              <ul data-lang="zh">
+                <li><strong>底色切換</strong>：一鍵切換「宣紙」、「透明 Alpha 棋盤格」與「玄夜（深色夜戰場景）」。</li>
+                <li><strong>殘影（Onion Skin）</strong>：疊加前 <code class="guide-inline-code">-45ms</code> 與 <code class="guide-inline-code">-90ms</code> 軌跡，檢視揮砍弧線。</li>
+                <li><strong>5 格關鍵幀底片列</strong>：點選「起勢 → 出鋒 → 破空 → 頓幀 → 收勢」任一格直接跳幀。</li>
+              </ul>
+              <ul data-lang="en">
+                <li><strong>3 Stage Surfaces</strong>: Toggle between <em>Rice Paper</em>, <em>Alpha Checkerboard</em>, and <em>Night Stage</em>.</li>
+                <li><strong>Onion Skin</strong>: Overlay <code class="guide-inline-code">-45ms</code> and <code class="guide-inline-code">-90ms</code> trailing silhouettes.</li>
+                <li><strong>5-Frame Filmstrip</strong>: Jump directly to <em>Windup, Release, Apex, Hit-Stop, or Settle</em>.</li>
+              </ul>
+            </article>
+
+            <article class="guide-card">
+              <span class="guide-card-num">STEP 03 · 調墨匯出</span>
+              <h3>色階、種子與四種產出</h3>
+              <ul data-lang="zh">
+                <li>任選 <strong>4 款礦物墨色</strong>、調整 <strong>宣紙紋理（0–3）</strong> 與 <strong>固定種子（Seed）</strong>。</li>
+                <li><strong>PNG 圖集 + JSON Atlas</strong>：適合 Phaser、Godot、Unity、PixiJS、Aseprite。</li>
+                <li><strong>單檔 JS（.mjs）</strong>：零外部依賴，適合 HTML5 Canvas、React、Vue。</li>
+              </ul>
+              <ul data-lang="en">
+                <li>Choose from <strong>4 mineral palettes</strong>, adjust <strong>paper grain (0–3)</strong>, and lock a <strong>32-bit seed</strong>.</li>
+                <li><strong>PNG Sheet + JSON Atlas</strong>: Ready for Phaser, Godot, Unity, PixiJS, and Aseprite.</li>
+                <li><strong>Single-File JS (.mjs)</strong>: Zero-dependency ES module for Canvas, React, and Vue.</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <!-- ═══════════ SECTION 2: WEB & FRONTEND ═══════════ -->
+        <section id="sec-web" class="guide-section">
+          <header class="guide-section-head">
+            <p class="eyebrow"><span class="chapter-mark">貳</span> <span>WEB &amp; FRONTEND / 網頁與前端框架串接</span></p>
+            <h2>零依賴單檔 JS 模組（<code class="guide-inline-code">.mjs</code>）。</h2>
+            <p data-lang="zh">在工作台點選「複製單檔 JS」或「單檔 JS ↓」，即可取得完全獨立、無須安裝任何套件的 ES Module。每個模組皆匯出 <code class="guide-inline-code">meta</code>、<code class="guide-inline-code">act</code> 與 <code class="guide-inline-code">create({ seed, palette })</code>。</p>
+            <p data-lang="en">Click <em>Copy Single-File JS</em> or <em>Download Single-File JS</em> in the studio to get a self-contained ES module exporting <code class="guide-inline-code">meta</code>, <code class="guide-inline-code">act</code>, and <code class="guide-inline-code">create({ seed, palette })</code> with zero external dependencies.</p>
+          </header>
+
+          <div class="guide-code-block">
+            <div class="guide-code-head">
+              <span>1. HTML5 Canvas 即時播放 / Vanilla Canvas Live Playback</span>
+              <button type="button" class="guide-copy-btn">複製程式碼 / Copy</button>
+            </div>
+            <pre><code>import { create, meta } from './sword-qi-slash.mjs';
+
+const canvas = document.querySelector('#ink-canvas');
+canvas.width = meta.w;
+canvas.height = meta.h;
+const ctx = canvas.getContext('2d');
+
+const fx = create({ seed: 42, palette: 'zhusha' });
+const pixels = new ImageData(meta.w, meta.h);
+
+let lastTime;
+function tick(now) {
+  if (lastTime !== undefined) {
+    const dt = Math.min((now - lastTime) / 1000, 0.05);
+    fx.step(meta.loop ? dt : Math.min(dt, meta.duration - fx.t));
+  }
+  lastTime = now;
+  ctx.putImageData(fx.draw(pixels), 0, 0);
+
+  if (meta.loop || fx.t &lt; meta.duration) {
+    requestAnimationFrame(tick);
+  }
+}
+requestAnimationFrame(tick);</code></pre>
+          </div>
+
+          <div class="guide-code-block">
+            <div class="guide-code-head">
+              <span>2. React 元件封裝 / React Component (InkEffect.jsx)</span>
+              <button type="button" class="guide-copy-btn">複製程式碼 / Copy</button>
+            </div>
+            <pre><code>import { useEffect, useRef } from 'react';
+import { create, meta } from './sword-qi-slash.mjs';
+
+export default function InkEffect({ seed = 42, palette = 'songyan' }) {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = canvasRef.current.getContext('2d');
+    const fx = create({ seed, palette });
+    const pixels = new ImageData(meta.w, meta.h);
+    let last, rafId;
+
+    function render(now) {
+      if (last !== undefined) {
+        const dt = Math.min((now - last) / 1000, 0.05);
+        fx.step(meta.loop ? dt : Math.min(dt, meta.duration - fx.t));
+      }
+      last = now;
+      ctx.putImageData(fx.draw(pixels), 0, 0);
+      if (meta.loop || fx.t &lt; meta.duration) rafId = requestAnimationFrame(render);
+    }
+    rafId = requestAnimationFrame(render);
+    return () => cancelAnimationFrame(rafId);
+  }, [seed, palette]);
+
+  return &lt;canvas ref={canvasRef} width={meta.w} height={meta.h} /&gt;;
+}</code></pre>
+          </div>
+
+          <div class="guide-code-block">
+            <div class="guide-code-head">
+              <span>3. Vue 3 元件封裝 / Vue 3 Component (InkEffect.vue)</span>
+              <button type="button" class="guide-copy-btn">複製程式碼 / Copy</button>
+            </div>
+            <pre><code>&lt;script setup&gt;
+import { ref, watchPostEffect } from 'vue';
+import { create, meta } from './sword-qi-slash.mjs';
+
+const props = defineProps({
+  seed: { type: Number, default: 42 },
+  palette: { type: String, default: 'songyan' },
+});
+const canvasRef = ref(null);
+
+watchPostEffect((onCleanup) => {
+  const canvas = canvasRef.value;
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const fx = create({ seed: props.seed, palette: props.palette });
+  const pixels = new ImageData(meta.w, meta.h);
+  let last, rafId;
+
+  function render(now) {
+    if (last !== undefined) {
+      const dt = Math.min((now - last) / 1000, 0.05);
+      fx.step(meta.loop ? dt : Math.min(dt, meta.duration - fx.t));
+    }
+    last = now;
+    ctx.putImageData(fx.draw(pixels), 0, 0);
+    if (meta.loop || fx.t &lt; meta.duration) rafId = requestAnimationFrame(render);
+  }
+  rafId = requestAnimationFrame(render);
+  onCleanup(() => cancelAnimationFrame(rafId));
+});
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;canvas ref="canvasRef" :width="meta.w" :height="meta.h" /&gt;
+&lt;/template&gt;</code></pre>
+          </div>
+        </section>
+
+        <!-- ═══════════ SECTION 3: GAME ENGINES ═══════════ -->
+        <section id="sec-engine" class="guide-section">
+          <header class="guide-section-head">
+            <p class="eyebrow"><span class="chapter-mark">叁</span> <span>GAME ENGINES / 遊戲引擎圖集串接</span></p>
+            <h2>PNG 序列圖集 + JSON Atlas。</h2>
+            <p data-lang="zh">匯出的透明 PNG 圖集與 JSON Atlas 相容於 Phaser 3、Godot 4、PixiJS、Unity 與 Aseprite，且在 <code class="guide-inline-code">meta.inkfx</code> 內附精確的原點座標（<code class="guide-inline-code">origin</code>）與命中頓幀（<code class="guide-inline-code">hits</code>）。</p>
+            <p data-lang="en">Exported straight-alpha PNG sprite sheets and JSON atlases work out of the box with Phaser 3, Godot 4, PixiJS, Unity, and Aseprite, carrying origin coordinates and hit-stop timings inside <code class="guide-inline-code">meta.inkfx</code>.</p>
+          </header>
+
+          <div class="guide-code-block">
+            <div class="guide-code-head">
+              <span>Phaser 3 — 載入圖集並對齊出招原點 / Load Atlas &amp; Align Origin</span>
+              <button type="button" class="guide-copy-btn">複製程式碼 / Copy</button>
+            </div>
+            <pre><code>// preload()
+this.load.atlas(
+  'sword-qi',
+  'assets/sword-qi-slash-zhusha-seed42.png',
+  'assets/sword-qi-slash-zhusha-seed42.json'
+);
+
+// create()
+const texture = this.textures.get('sword-qi');
+const ink = texture.customData.meta.inkfx;
+const frames = texture
+  .getFrameNames()
+  .sort()
+  .map((frame) => ({ key: 'sword-qi', frame }));
+
+this.anims.create({
+  key: ink.id,
+  frames,
+  frameRate: ink.fps,
+  repeat: ink.loop ? -1 : 0,
+});
+
+const sprite = this.add.sprite(player.x, player.y, 'sword-qi', frames[0].frame);
+sprite.setOrigin(ink.origin.x / sprite.width, ink.origin.y / sprite.height);
+sprite.play(ink.id);</code></pre>
+          </div>
+
+          <div class="guide-code-block">
+            <div class="guide-code-head">
+              <span>Godot 4 — 使用隨附載入器建立 AnimatedSprite2D / Godot 4 Atlas Loader</span>
+              <button type="button" class="guide-copy-btn">複製程式碼 / Copy</button>
+            </div>
+            <pre><code>const InkFXAtlas = preload("res://inkfx_atlas.gd")
+
+func _ready() -&gt; void:
+    var frames := InkFXAtlas.load_frames("res://fx/sword-qi-slash-zhusha-seed42.json")
+    var meta: Dictionary = frames.get_meta(&amp;"inkfx")
+    $AnimatedSprite2D.sprite_frames = frames
+    $AnimatedSprite2D.centered = false
+    $AnimatedSprite2D.offset = -Vector2(meta["origin"]["x"], meta["origin"]["y"])
+    $AnimatedSprite2D.play(meta["id"])</code></pre>
+          </div>
+
+          <div class="guide-table-wrap">
+            <table class="guide-table">
+              <thead>
+                <tr>
+                  <th>引擎 / 工具</th>
+                  <th>匯入與設定方式 / Integration Steps</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>PixiJS</strong></td>
+                  <td>
+                    <span data-lang="zh">將 PNG 材質與 JSON 傳入 <code>new PIXI.Spritesheet(texture, atlasJson)</code>，呼叫 <code>await spritesheet.parse()</code> 後即可用 <code>PIXI.AnimatedSprite</code> 播放。</span>
+                    <span data-lang="en">Pass the PNG texture and JSON into <code>new PIXI.Spritesheet(texture, atlasJson)</code>, call <code>await spritesheet.parse()</code>, and play via <code>PIXI.AnimatedSprite</code>.</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Unity</strong></td>
+                  <td>
+                    <span data-lang="zh">將 PNG 設為 <code>Sprite (2D and UI)</code>、<code>Sprite Mode: Multiple</code>，於 Sprite Editor 選擇 <strong>Grid By Cell Size</strong>，輸入 JSON 第一格的 <code>sourceSize.w / h</code>（如 <code>224 × 224</code>）自動切片。</span>
+                    <span data-lang="en">Set Texture Type to <code>Sprite (2D and UI)</code> and <code>Sprite Mode: Multiple</code>, then slice in Sprite Editor using <strong>Grid By Cell Size</strong> with <code>sourceSize.w / h</code>.</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Aseprite</strong></td>
+                  <td>
+                    <span data-lang="zh">選擇 <strong>File → Import Sprite Sheet</strong>，排列設為橫向列優先（By Rows），填入單格寬高即可逐格檢視或二次編輯。</span>
+                    <span data-lang="en">Use <strong>File → Import Sprite Sheet</strong> in row-major order with the native frame width and height.</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ═══════════ SECTION 4: TIMING & PALETTES ═══════════ -->
+        <section id="sec-timing" class="guide-section">
+          <header class="guide-section-head">
+            <p class="eyebrow"><span class="chapter-mark">肆</span> <span>TIMING &amp; PALETTES / 招式時間軸、頓幀與四色礦物色階</span></p>
+            <h2>內建打擊節奏與礦物墨韻。</h2>
+            <p data-lang="zh">每一式特效皆內建結構化的動作時間點（<code class="guide-inline-code">meta</code> 與 <code class="guide-inline-code">act</code>），匯出的圖集本身已烘焙命中頓幀定格畫面，播放時無須對特效重複暫停，可直接用 <code class="guide-inline-code">freeze</code> 與 <code class="guide-inline-code">shakeAmp</code> 同步控制受擊角色與鏡頭震動。</p>
+            <p data-lang="en">Every effect exports structured timing metadata (<code class="guide-inline-code">meta</code> &amp; <code class="guide-inline-code">act</code>). Exported sprite sheets already bake in hit-stop freeze frames—use <code class="guide-inline-code">freeze</code> and <code class="guide-inline-code">shakeAmp</code> directly to lock target characters and drive camera shake.</p>
+          </header>
+
+          <div class="guide-table-wrap">
+            <table class="guide-table">
+              <thead>
+                <tr>
+                  <th>欄位 / Field</th>
+                  <th>型別</th>
+                  <th>說明與遊戲邏輯搭配 / Gameplay Usage</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>meta.w</code>, <code>meta.h</code></td>
+                  <td><code>number</code></td>
+                  <td>畫布原生像素尺寸（招式為 <code>224 × 224</code>，部分全幅轉場為 <code>256 × 192</code>） / Native canvas pixel size</td>
+                </tr>
+                <tr>
+                  <td><code>meta.ox</code>, <code>meta.oy</code></td>
+                  <td><code>number</code></td>
+                  <td>招式在畫布內的局部原點座標（用於對齊角色刀柄、掌心或陣眼） / Local origin inside the canvas</td>
+                </tr>
+                <tr>
+                  <td><code>meta.duration</code></td>
+                  <td><code>number</code></td>
+                  <td>總顯示時長（秒），包含起勢、命中頓幀與收勢 / Total display duration in seconds</td>
+                </tr>
+                <tr>
+                  <td><code>act.windup</code></td>
+                  <td><code>number</code></td>
+                  <td>起勢蓄墨秒數；顯示時間 <code>t === act.windup</code> 即為出招瞬間 / Windup telegraph seconds</td>
+                </tr>
+                <tr>
+                  <td><code>act.hits[i].t</code></td>
+                  <td><code>number</code></td>
+                  <td>相對出招瞬間的命中秒數（顯示時間軸位置為 <code>act.windup + hit.t</code>） / Impact-relative hit timestamp</td>
+                </tr>
+                <tr>
+                  <td><code>act.hits[i].freeze</code></td>
+                  <td><code>number</code></td>
+                  <td>命中頓幀秒數（Hit-Stop），可用於同步鎖定受擊目標硬直 / Hit-stop duration in seconds</td>
+                </tr>
+                <tr>
+                  <td><code>act.hits[i].shakeAmp</code></td>
+                  <td><code>number</code></td>
+                  <td>建議鏡頭震動幅度（像素） / Recommended camera-shake amplitude in pixels</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="guide-table-wrap">
+            <table class="guide-table">
+              <thead>
+                <tr>
+                  <th>色階代號 / Palette ID</th>
+                  <th>名稱 / Name</th>
+                  <th>六階濃淡與點睛色票 / Tonal Stops &amp; Accent</th>
+                  <th>視覺定位 / Visual Character</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>songyan</code></td>
+                  <td><strong>松煙古墨</strong> / Pine Soot</td>
+                  <td>
+                    <span class="guide-palette-strip">
+                      <span style="background:#f4efe6"></span><span style="background:#d6d0c4"></span><span style="background:#a9a294"></span><span style="background:#716e63"></span><span style="background:#383a33"></span><span style="background:#151e1b"></span><span style="background:#c83228"></span>
+                    </span>
+                  </td>
+                  <td>經典六階水墨配丹砂點睛，百搭刀劍與山水 / Classic six-stop sumi ink with cinnabar accent</td>
+                </tr>
+                <tr>
+                  <td><code>zhusha</code></td>
+                  <td><strong>朱砂血墨</strong> / Cinnabar Blood Ink</td>
+                  <td>
+                    <span class="guide-palette-strip">
+                      <span style="background:#f6ece0"></span><span style="background:#dfc9b9"></span><span style="background:#bc9684"></span><span style="background:#8b5c51"></span><span style="background:#52312d"></span><span style="background:#241e1e"></span><span style="background:#c83228"></span>
+                    </span>
+                  </td>
+                  <td>赭紅墨調配朱砂點睛，適合暴擊、符陣與必殺技 / Fierce vermilion strokes for crits &amp; talismans</td>
+                </tr>
+                <tr>
+                  <td><code>shiqing</code></td>
+                  <td><strong>石青竹翠</strong> / Azurite &amp; Bamboo</td>
+                  <td>
+                    <span class="guide-palette-strip">
+                      <span style="background:#edf0e4"></span><span style="background:#c3d0c3"></span><span style="background:#93b0a4"></span><span style="background:#587f78"></span><span style="background:#315650"></span><span style="background:#172d2b"></span><span style="background:#2c6e7f"></span>
+                    </span>
+                  </td>
+                  <td>石青與竹翠交織，適合寒冰劍氣、水紋與山嵐 / Cool azurite &amp; bamboo jade for frost &amp; water</td>
+                </tr>
+                <tr>
+                  <td><code>nijin</code></td>
+                  <td><strong>泥金佛光</strong> / Burnished Gold</td>
+                  <td>
+                    <span class="guide-palette-strip">
+                      <span style="background:#f3ead4"></span><span style="background:#d4c4a1"></span><span style="background:#b29a6a"></span><span style="background:#7e704e"></span><span style="background:#49432e"></span><span style="background:#20241f"></span><span style="background:#d4af37"></span>
+                    </span>
+                  </td>
+                  <td>溫潤鎏金配泥金點睛，適合境界突破、金印與聖光 / Luminous gold leaf for breakthroughs &amp; seals</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ═══════════ SECTION 5: CUSTOM AUTHORING ═══════════ -->
+        <section id="sec-custom" class="guide-section">
+          <header class="guide-section-head">
+            <p class="eyebrow"><span class="chapter-mark">伍</span> <span>CUSTOM BRUSHWORK / 進階：自訂筆觸與新招式創作</span></p>
+            <h2>以程式碼運筆：120Hz 飛白與濕墨擴散。</h2>
+            <p data-lang="zh">若想直接呼叫底層筆觸 API 創作新招式，可從輕量入口 <code class="guide-inline-code">src/runtime.js</code> 匯入 <code class="guide-inline-code">createEffect</code>、<code class="guide-inline-code">stamp</code>、<code class="guide-inline-code">stroke</code> 與 <code class="guide-inline-code">arc</code>。當 <code class="guide-inline-code">pigment + wetness &gt; paperGrain[i] * dryFactor</code> 時墨跡才會落紙，調高 <code class="guide-inline-code">dryFactor</code> 即可畫出自然蒼勁的飛白。</p>
+            <p data-lang="en">Import <code class="guide-inline-code">createEffect</code>, <code class="guide-inline-code">stamp</code>, <code class="guide-inline-code">stroke</code>, and <code class="guide-inline-code">arc</code> from <code class="guide-inline-code">src/runtime.js</code> to author custom effects. Ink deposits where <code class="guide-inline-code">pigment + wetness &gt; paperGrain[i] * dryFactor</code>, carving natural flying-white bristles.</p>
+          </header>
+
+          <div class="guide-code-block">
+            <div class="guide-code-head">
+              <span>自訂一式飛白斬擊 / Custom Sword Slash Effect</span>
+              <button type="button" class="guide-copy-btn">複製程式碼 / Copy</button>
+            </div>
+            <pre><code>import { createEffect, arc, stamp, mulberry32 } from './src/runtime.js';
+
+export const meta = {
+  id: 'custom-slash', name: '自訂一字斬', category: 'sword',
+  duration: 1.1, loop: false, w: 224, h: 224, ox: 112, oy: 112,
+};
+
+export const act = {
+  windup: 0.25,
+  poses: [[-0.25, 'WINDUP', 'easeOut'], [0.0, 'STRIKE', 'snap'], [0.2, 'RECOVER', 'easeOut']],
+  hits: [{ t: 0.03, freeze: 0.12, shakeAmp: 3, inkSplash: 18 }],
+};
+
+export function create({ seed = 1, palette = 'songyan' } = {}) {
+  const rand = mulberry32(seed);
+  const jitter = (rand() - 0.5) * 0.15;
+
+  return createEffect(meta, act, (frame, actionTime, prevActionTime) => {
+    // 1. 起勢蓄墨 (Windup: actionTime &lt; 0)
+    if (actionTime &lt; 0) {
+      stamp(frame, frame.ox - 48, frame.oy + 12, 4, { pigment: 0.35, wetness: 0.4, dryFactor: 1.1 });
+      return;
+    }
+    // 2. 出鋒斬擊瞬間 (Strike release at actionTime === 0)
+    if (prevActionTime &lt;= 0 &amp;&amp; actionTime &gt;= 0) {
+      arc(frame, {
+          start: -2.6 + jitter, end: -0.3 + jitter, radius: 72,
+          width: 12, pigment: 0.92, wetness: 0.55, dryFactor: 1.45,
+      });
+      // 點綴朱砂火星 (Cinnabar sparks with tint: 1)
+      for (let i = 0; i &lt; 6; i++) {
+        stamp(frame, frame.ox + 20 + i * 9, frame.oy - 18 - i * 4, 2.5, {
+          pigment: 0.85, wetness: 0.2, tint: 1,
+        });
+      }
+    }
+  }, { seed, palette });
+}</code></pre>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <footer class="footer shell">
+    <a class="brand" href="./"><span class="brand-seal" aria-hidden="true">墨</span><span>inkfx<span class="brand-dot">.</span></span></a>
+    <p>程序化水墨特效 <span class="en">/ INK IN MOTION</span></p>
+    <a href="./">回到線上展廳 ↗</a>
+    <a href="../docs/AUTHORING.md">Markdown 原檔 ↗</a>
+    <div class="footer-line" aria-hidden="true"></div>
+    <p class="footer-copy">© 2026 InkFX — Deterministic procedural ink effects on virtual rice paper</p>
+  </footer>
+
+  <script type="module">
+    const langBtns = document.querySelectorAll('[data-set-lang]');
+    for (const btn of langBtns) {
+      btn.addEventListener('click', () => {
+        const mode = btn.getAttribute('data-set-lang');
+        document.body.setAttribute('data-guide-lang', mode);
+        for (const b of langBtns) {
+          const active = b === btn;
+          b.classList.toggle('active', active);
+          b.setAttribute('aria-pressed', active);
+        }
+      });
+    }
+
+    for (const btn of document.querySelectorAll('.guide-copy-btn')) {
+      btn.addEventListener('click', async () => {
+        const code = btn.closest('.guide-code-block')?.querySelector('code')?.textContent ?? '';
+        const original = btn.textContent;
+        try {
+          await navigator.clipboard.writeText(code);
+          btn.textContent = '已複製 ✓ / Copied';
+        } catch {
+          btn.textContent = '複製失敗';
+        }
+        setTimeout(() => { btn.textContent = original; }, 1400);
+      });
+    }
+  </script>
+</body>
+</html>

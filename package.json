@@ -1,0 +1,27 @@
+{
+  "name": "inkfx",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Deterministic procedural ink and wuxia effects on virtual rice paper.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test",
+    "check": "node tools/check.mjs",
+    "render": "node tools/render.mjs",
+    "build:css": "tailwindcss -i gallery/tailwind.css -o gallery/style.css --minify",
+    "watch:css": "tailwindcss -i gallery/tailwind.css -o gallery/style.css --watch",
+    "build": "npm run build:css && node tools/build-standalone.mjs",
+    "gallery": "npm run build:css && node tools/build-standalone.mjs && node gallery/serve.mjs",
+    "export": "node tools/export-sheet.mjs",
+    "review": "node tools/review.mjs"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.5",
+    "esbuild": "0.25.12",
+    "tailwindcss": "^4.3.5"
+  },
+  "license": "Apache-2.0"
+}

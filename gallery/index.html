@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f5f1e8">
+  <meta name="description" content="以宣紙、松煙和朱砂入畫。觀賞、調校並下載 132 式即時水墨特效。墨起，意隨。">
+  <title>InkFX 墨譜 — 墨起，意隨。</title>
+  <link rel="icon" href="./favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="./favicon.png" sizes="32x32">
+  <link rel="apple-touch-icon" href="./logo.png">
+  <link rel="preload" href="./fonts/ink-display.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./opening.js"></script>
+  <script type="module" src="./gallery.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#collection">跳至特效藏譜</a>
+  <div class="progress-line" aria-hidden="true"></div>
+
+  <!-- ═══════════ TOPBAR ═══════════ -->
+  <header class="topbar" id="topbar">
+    <a class="brand" href="./" aria-label="InkFX 墨譜首頁">
+      <span class="brand-seal" aria-hidden="true">墨</span>
+      <span>inkfx<span class="brand-dot">.</span></span>
+    </a>
+    <nav class="topbar-nav" aria-label="主導覽">
+      <a href="#collection">藏譜</a>
+      <a href="#anatomy">墨法</a>
+      <a href="#workbench">工作台</a>
+    </nav>
+    <a class="docs-link" href="./guide.html">使用指南 <span class="arrow" aria-hidden="true">↗</span></a>
+  </header>
+
+  <main id="main">
+
+    <!-- ═══════════ SECTION: OPENING / HERO ═══════════ -->
+    <section id="opening" class="opening" aria-labelledby="opening-title">
+
+      <!-- Full-bleed canvas backdrop (interactive after overture) -->
+      <div class="opening-canvas-wrap" id="opening-canvas-wrap">
+        <canvas id="opening-canvas" width="1920" height="1080" role="img" aria-label="即時水墨開場，墨霧中一道劍氣劃過紙面，可於紙面滑動揮劍留墨"></canvas>
+      </div>
+
+      <!-- Floating text overlay -->
+      <div class="opening-overlay">
+        <div class="opening-content">
+          <p class="opening-eyebrow">
+            <span class="chapter-mark">序</span>
+            <span>墨譜 <span class="eyebrow-divider">/</span> <span class="en">INK IN MOTION</span></span>
+          </p>
+          <h1 id="opening-title">墨起<span class="punct">，</span><br>意隨<span class="punct">。</span></h1>
+          <p class="lede">從一滴墨，到一式劍。<br>試演、調墨，帶走你喜歡的水墨。</p>
+          <div class="opening-actions">
+            <a class="primary-action" href="#workbench" id="opening-try"><span>試演第一式</span> <span aria-hidden="true">↗</span></a>
+            <a class="text-action" href="#collection">看全<span id="explore-count">132</span>式 <span aria-hidden="true">↓</span></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seal & coordinates -->
+      <span class="opening-seal" aria-hidden="true">劍<br>意</span>
+      <span class="opening-coord" aria-hidden="true">01 / 132</span>
+
+      <!-- Bottom transport & metrics -->
+      <div class="opening-stage shell">
+        <div class="opening-transport">
+          <div class="opening-transport-left">
+            <span class="ink-dot" aria-hidden="true"></span>
+            <span class="opening-caption-name">劍氣斬 <span class="en">/ SWORD QI</span></span>
+            <span id="opening-phase" class="opening-phase" aria-hidden="true">餘墨</span>
+            <span id="opening-brush-hint" class="opening-brush-hint" aria-hidden="true">· 滑動紙面可揮毫試劍</span>
+          </div>
+          <button type="button" id="opening-play" aria-label="重播開場">
+            <span id="opening-icon" aria-hidden="true">↻</span>
+            <span id="opening-play-label">重播</span>
+          </button>
+        </div>
+        <div class="opening-metrics" role="group" aria-label="展覽規模">
+          <span><strong id="catalog-count">132</strong> 式水墨</span>
+          <span><strong>06</strong> 類手法</span>
+          <span><strong>04</strong> 礦物色階</span>
+          <span><strong>120</strong> Hz 模擬</span>
+          <a class="scroll-cue" href="#collection" aria-label="向下瀏覽藏譜">
+            <span class="en">SCROLL TO EXPLORE</span>
+            <span class="arrow" aria-hidden="true">↓</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ SECTION: COLLECTION ═══════════ -->
+    <section id="collection" class="collection chapter" aria-labelledby="collection-title">
+      <div class="shell">
+        <header class="chapter-heading reveal">
+          <div>
+            <p class="eyebrow">
+              <span class="chapter-mark">壹</span>
+              <span>藏譜 <span class="eyebrow-divider">/</span> <span class="en">THE COLLECTION</span></span>
+            </p>
+            <h2 id="collection-title">一式一景。</h2>
+          </div>
+          <p>從刀劍、符陣到光影轉場，<span id="collection-count">132</span> 式水墨各有一種用法。懸停可讀出招節奏，點選展品即入工作台精調每一幀。</p>
+        </header>
+
+        <div class="catalog-controls reveal reveal-delay-1">
+          <div id="category-tabs" class="category-tabs" role="group" aria-label="特效分類"></div>
+          <div class="catalog-tools">
+            <div id="catalog-palettes" class="catalog-palettes" role="group" aria-label="快速切換墨色"></div>
+            <div class="view-switch" role="group" aria-label="檢視模式">
+              <button type="button" id="view-curated" class="view-btn active" data-layout="curated" aria-pressed="true">策展</button>
+              <button type="button" id="view-compact" class="view-btn" data-layout="compact" aria-pressed="false">圖鑑</button>
+            </div>
+            <label class="catalog-search" for="catalog-search">
+              <span class="search-icon" aria-hidden="true">⌕</span>
+              <span class="sr-only">搜尋特效名稱或代號</span>
+              <input id="catalog-search" type="search" placeholder="搜尋名稱或代號" autocomplete="off">
+            </label>
+          </div>
+          <label class="catalog-select" for="category-filter">
+            <span class="sr-only">特效分類</span>
+            <select id="category-filter"><option value="all">全部</option></select>
+          </label>
+        </div>
+        <div class="catalog-meta">
+          <output id="visible-count" aria-live="polite">132 式</output>
+          <span class="en">LIVE CANVAS / 01—132 · RHYTHM ON HOVER</span>
+        </div>
+        <p id="catalog-empty" class="catalog-empty" hidden>這個分類沒有符合的特效。<button type="button" id="catalog-reset" class="text-action">清除篩選 ↗</button></p>
+        <div id="fx-grid" class="fx-grid reveal reveal-delay-2" data-layout="curated"></div>
+        <div class="catalog-more" id="catalog-more" hidden>
+          <button class="secondary-action" type="button" id="catalog-more-button">再展 12 式 <span aria-hidden="true">↓</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ SECTION: ANATOMY INTERLUDE (DARK ROOM) ═══════════ -->
+    <section id="anatomy" class="anatomy chapter" aria-labelledby="anatomy-title">
+      <div class="shell">
+        <header class="chapter-heading anatomy-heading reveal">
+          <div>
+            <p class="eyebrow">
+              <span class="chapter-mark">間</span>
+              <span>墨法解構 <span class="eyebrow-divider">/</span> <span class="en">ANATOMY OF A STROKE</span></span>
+            </p>
+            <h2 id="anatomy-title">一念起，三折成招。</h2>
+          </div>
+          <p>每一式皆以 120Hz 固定步進演算。從起勢聚墨、破空頓幀到餘韻入紙，下方即時拆解「<strong id="anatomy-effect-name">劍氣斬</strong>」的三階筆觸與四款礦物色階。</p>
+        </header>
+
+        <div class="anatomy-stages reveal reveal-delay-1" role="group" aria-label="三階筆觸拆解">
+          <article class="anatomy-card" data-stage="windup">
+            <header class="anatomy-card-head">
+              <span class="anatomy-step">壹 · 起勢蓄墨 <span class="en">/ WINDUP</span></span>
+              <span id="anatomy-windup-time" class="en">0.20s · F024</span>
+            </header>
+            <div class="anatomy-canvas-wrap">
+              <canvas id="anatomy-windup" width="224" height="224" aria-label="起勢蓄墨階段切片"></canvas>
+            </div>
+            <p class="anatomy-desc">筆鋒初落，墨氣向中心凝聚，為出招建立清晰的視覺預備動作。</p>
+          </article>
+
+          <article class="anatomy-card anatomy-card-featured" data-stage="impact">
+            <header class="anatomy-card-head">
+              <span class="anatomy-step">貳 · 破空頓幀 <span class="en">/ IMPACT &amp; HIT-STOP</span></span>
+              <span id="anatomy-impact-time" class="en">0.52s · F062</span>
+            </header>
+            <div class="anatomy-canvas-wrap">
+              <canvas id="anatomy-impact" width="224" height="224" aria-label="破空頓幀階段切片"></canvas>
+              <span class="anatomy-seal" aria-hidden="true">破</span>
+            </div>
+            <p class="anatomy-desc">濃墨破陣、朱砂點睛，配合關鍵命中頓幀（Freeze）定格張力巔峰。</p>
+          </article>
+
+          <article class="anatomy-card" data-stage="settle">
+            <header class="anatomy-card-head">
+              <span class="anatomy-step">叁 · 餘墨歸紙 <span class="en">/ SETTLE</span></span>
+              <span id="anatomy-settle-time" class="en">0.98s · F118</span>
+            </header>
+            <div class="anatomy-canvas-wrap">
+              <canvas id="anatomy-settle" width="224" height="224" aria-label="餘墨歸紙階段切片"></canvas>
+            </div>
+            <p class="anatomy-desc">飛白消散、濕墨滲入宣紙纖維，留白處餘韻悠長，不留生硬殘尾。</p>
+          </article>
+        </div>
+
+        <div class="anatomy-pigments-bar reveal reveal-delay-2">
+          <div class="anatomy-pigments-intro">
+            <span class="en">MINERAL PIGMENTS / 04 PALETTES</span>
+            <p>四款東方礦物色階，點選即可全站同步換墨</p>
+          </div>
+          <div id="anatomy-palettes" class="anatomy-palettes" role="group" aria-label="四色礦物墨韻"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ SECTION: WORKBENCH ═══════════ -->
+    <section id="workbench" class="chapter studio" aria-labelledby="workbench-title">
+      <div class="shell">
+        <header class="chapter-heading reveal">
+          <div>
+            <p class="eyebrow">
+              <span class="chapter-mark">貳</span>
+              <span>工作台 <span class="eyebrow-divider">/</span> <span class="en">THE INK STUDIO</span></span>
+            </p>
+            <h2 id="workbench-title" tabindex="-1">調一式，成一景。</h2>
+          </div>
+          <div class="studio-intro">
+            <p>切換宣紙、透明或玄夜底色，開啟殘影與關鍵幀底片看清筆觸，再把這一式帶進你的遊戲或作品。</p>
+            <a class="text-action" href="#collection">回藏譜 <span aria-hidden="true">↑</span></a>
+          </div>
+        </header>
+        <div class="workbench reveal reveal-delay-1">
+          <div class="preview-column">
+            <header class="preview-top">
+              <div>
+                <span id="category" class="en">劍式 / SWORD</span>
+                <h3 id="effect-title">劍氣斬</h3>
+              </div>
+              <div class="stage-toolbar">
+                <div class="surface-switch" role="group" aria-label="畫布底色">
+                  <button type="button" class="surface-btn active" data-surface="paper" aria-pressed="true">宣紙</button>
+                  <button type="button" class="surface-btn" data-surface="alpha" aria-pressed="false">透明</button>
+                  <button type="button" class="surface-btn" data-surface="dark" aria-pressed="false">玄夜</button>
+                </div>
+                <button type="button" id="onion-toggle" class="surface-btn onion-btn" aria-pressed="false" title="疊加前序殘影">殘影</button>
+                <span id="dimensions" class="en">224 × 224</span>
+              </div>
+            </header>
+            <div class="stage" id="stage" data-surface="paper">
+              <canvas id="canvas" width="224" height="224" role="img" aria-label="水墨特效試演"></canvas>
+              <span class="stage-id">FIG. <span id="figure">01</span></span>
+              <span class="paper-label" id="surface-label">宣紙 <span class="en">/ RICE PAPER</span></span>
+            </div>
+            <div id="filmstrip" class="filmstrip" role="group" aria-label="關鍵幀底片列"></div>
+            <div class="transport">
+              <button id="play" type="button" class="play-button" aria-label="播放特效"><span aria-hidden="true">▶</span> 播放</button>
+              <input id="timeline" aria-label="動畫時間軸" type="range" min="0" max="1.3" step="0.001" value="0.64">
+              <output id="time">0.640 / 1.300s</output>
+              <div class="frame-controls" role="group" aria-label="逐幀檢視">
+                <button id="prev-frame" type="button" class="icon-button" aria-label="上一幀">‹</button>
+                <button id="next-frame" type="button" class="icon-button" aria-label="下一幀">›</button>
+                <button id="replay" type="button" class="icon-button" aria-label="重播特效">↻</button>
+              </div>
+            </div>
+          </div>
+
+          <aside class="settings" aria-label="特效參數與匯出">
+            <div class="settings-head">
+              <p class="eyebrow">調墨 <span class="eyebrow-divider">/</span> <span class="en">MATERIAL</span></p>
+              <details class="effect-picker" id="effect-picker"><summary>換招</summary><div class="effect-picker-content"><p>選擇特效 <span id="catalog-edition">一三二式</span></p><nav id="effects" aria-label="選擇特效"></nav></div></details>
+            </div>
+            <div class="palette-control">
+              <span>礦物墨色</span>
+              <select id="toolbar-palette" aria-label="礦物墨色" hidden></select>
+            </div>
+            <div id="palettes" class="palettes" role="group" aria-label="礦物色盤"></div>
+            <div class="material-grid">
+              <label class="grain-control" for="grain"><span>宣紙紋理 <output id="grain-value">1.0</output></span><input id="grain" type="range" min="0" max="3" step="0.1" value="1"></label>
+              <div class="seed-control"><label for="seed">種子</label><div class="seed-row"><input id="seed" type="number" min="0" max="4294967295" step="1" value="1"><button type="button" id="next-seed" aria-label="使用下一個種子">↗</button></div></div>
+            </div>
+            <div class="toggles">
+              <label><input id="act-toggle" type="checkbox"> 木人樁演出</label>
+              <label><input id="slow-toggle" type="checkbox"> 0.25× 慢動作</label>
+            </div>
+            <dl class="rhythm">
+              <div><dt>起勢</dt><dd id="windup">0.40s</dd></div>
+              <div><dt>頓幀</dt><dd id="freeze">0.15s</dd></div>
+              <div><dt>姿勢</dt><dd id="pose">settle</dd></div>
+            </dl>
+            <div class="asset-actions">
+              <a id="sheet-link" class="primary-action" download><span>下載 PNG 圖集</span> <span aria-hidden="true">↓</span></a>
+              <button id="copy-source" type="button" class="secondary-action">複製單檔 JS <span aria-hidden="true">↗</span></button>
+            </div>
+            <div class="asset-links">
+              <a id="atlas-link" download>JSON 圖集 ↓</a>
+              <a id="source-link">單檔 JS ↓</a>
+              <button id="copy-path" type="button">複製路徑</button>
+              <button id="download" type="button">存目前一幀</button>
+            </div>
+            <details class="component-guide"><summary>React / Vue 範例</summary><pre id="component-examples"></pre></details>
+            <p id="status" class="status" role="status">選定參數後即可匯出。</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <footer class="footer shell">
+    <a class="brand" href="#opening"><span class="brand-seal" aria-hidden="true">墨</span><span>inkfx<span class="brand-dot">.</span></span></a>
+    <p>程序化水墨特效 <span class="en">/ INK IN MOTION</span></p>
+    <a href="./guide.html">使用指南 ↗</a>
+    <a href="../examples/demo.mp4">示範影片 ↗</a>
+    <a href="#opening">回到卷首 ↑</a>
+    <div class="footer-line" aria-hidden="true"></div>
+    <p class="footer-copy">© 2026 InkFX — Deterministic procedural ink effects on virtual rice paper</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,77 @@
+name: Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "gallery/**"
+      - "src/**"
+      - "docs/**"
+      - "examples/**"
+      - "README.md"
+      - "tools/build-standalone.mjs"
+      - "tools/cli.mjs"
+      - "package*.json"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - name: Require private repository
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test "$(gh api 'repos/${{ github.repository }}' --jq .private)" = true
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Ensure gallery is public
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$(gh api 'repos/${{ github.repository }}/pages' --jq .public)" != true ]; then
+            echo '::error title=Pages visibility::A repository administrator must enable public site access in Settings > Pages. The workflow token cannot change this setting. Keep the repository private.'
+            exit 1
+          fi
+          test "$(gh api 'repos/${{ github.repository }}/pages' --jq .public)" = true
+      - run: npm ci
+      - name: Stage browser assets and standalone modules
+        run: |
+          npm run build:css
+          mkdir -p _site
+          cp -R gallery src docs examples _site/
+          rm _site/gallery/serve.mjs _site/src/core/{run,png,overlay}.js
+          node tools/build-standalone.mjs _site/gallery/standalone
+          cat > _site/index.html <<'HTML'
+          <!doctype html>
+          <html lang="en">
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <meta http-equiv="refresh" content="0; url=./gallery/">
+          <title>inkfx gallery</title>
+          <a href="./gallery/">Open the inkfx gallery</a>
+          </html>
+          HTML
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+      - name: Deploy public gallery from private repository
+        id: deployment
+        uses: actions/deploy-pages@v5

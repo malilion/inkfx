@@ -1,0 +1,264 @@
+{
+  "schemaVersion": 1,
+  "meta": {
+    "id": "draw-cut",
+    "name": "一字拔刀",
+    "category": "sword",
+    "duration": 1.2,
+    "loop": false,
+    "mode": "pure",
+    "w": 224,
+    "h": 224,
+    "ox": 112,
+    "oy": 112
+  },
+  "seed": 42,
+  "palette": "songyan",
+  "fps": 30,
+  "dt": 0.03333333333333333,
+  "simulationHz": 120,
+  "hash": "ec54b53d2915c6b4de86285b15bb7ad7aceeb82c41ceba92c2afbb3074757ba0",
+  "frameCount": 37,
+  "sheet": {
+    "w": 1040,
+    "h": 664,
+    "cellW": 252,
+    "cellH": 290,
+    "headerH": 68,
+    "columns": 4,
+    "selected": [
+      0,
+      5,
+      10,
+      15,
+      21,
+      26,
+      31,
+      36
+    ]
+  },
+  "frames": [
+    {
+      "index": 0,
+      "time": 0,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 1,
+      "time": 0.03333333333333333,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 2,
+      "time": 0.06666666666666667,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 3,
+      "time": 0.1,
+      "fillRatio": 0,
+      "edgeRatio": 0
+    },
+    {
+      "index": 4,
+      "time": 0.13333333333333333,
+      "fillRatio": 0.02784199617346939,
+      "edgeRatio": 0
+    },
+    {
+      "index": 5,
+      "time": 0.16666666666666666,
+      "fillRatio": 0.03539540816326531,
+      "edgeRatio": 0
+    },
+    {
+      "index": 6,
+      "time": 0.2,
+      "fillRatio": 0.03539540816326531,
+      "edgeRatio": 0
+    },
+    {
+      "index": 7,
+      "time": 0.23333333333333334,
+      "fillRatio": 0.03539540816326531,
+      "edgeRatio": 0
+    },
+    {
+      "index": 8,
+      "time": 0.26666666666666666,
+      "fillRatio": 0.03539540816326531,
+      "edgeRatio": 0
+    },
+    {
+      "index": 9,
+      "time": 0.3,
+      "fillRatio": 0.03539540816326531,
+      "edgeRatio": 0
+    },
+    {
+      "index": 10,
+      "time": 0.3333333333333333,
+      "fillRatio": 0.04103555484693878,
+      "edgeRatio": 0
+    },
+    {
+      "index": 11,
+      "time": 0.36666666666666664,
+      "fillRatio": 0.04137436224489796,
+      "edgeRatio": 0
+    },
+    {
+      "index": 12,
+      "time": 0.4,
+      "fillRatio": 0.04137436224489796,
+      "edgeRatio": 0
+    },
+    {
+      "index": 13,
+      "time": 0.43333333333333335,
+      "fillRatio": 0.04137436224489796,
+      "edgeRatio": 0
+    },
+    {
+      "index": 14,
+      "time": 0.4666666666666667,
+      "fillRatio": 0.04137436224489796,
+      "edgeRatio": 0
+    },
+    {
+      "index": 15,
+      "time": 0.5,
+      "fillRatio": 0.04137436224489796,
+      "edgeRatio": 0
+    },
+    {
+      "index": 16,
+      "time": 0.5333333333333333,
+      "fillRatio": 0.04137436224489796,
+      "edgeRatio": 0
+    },
+    {
+      "index": 17,
+      "time": 0.5666666666666667,
+      "fillRatio": 0.04137436224489796,
+      "edgeRatio": 0
+    },
+    {
+      "index": 18,
+      "time": 0.6,
+      "fillRatio": 0.04137436224489796,
+      "edgeRatio": 0
+    },
+    {
+      "index": 19,
+      "time": 0.6333333333333333,
+      "fillRatio": 0.04137436224489796,
+      "edgeRatio": 0
+    },
+    {
+      "index": 20,
+      "time": 0.6666666666666666,
+      "fillRatio": 0.04137436224489796,
+      "edgeRatio": 0
+    },
+    {
+      "index": 21,
+      "time": 0.7,
+      "fillRatio": 0.04137436224489796,
+      "edgeRatio": 0
+    },
+    {
+      "index": 22,
+      "time": 0.7333333333333333,
+      "fillRatio": 0.04087611607142857,
+      "edgeRatio": 0
+    },
+    {
+      "index": 23,
+      "time": 0.7666666666666666,
+      "fillRatio": 0.03968032525510204,
+      "edgeRatio": 0
+    },
+    {
+      "index": 24,
+      "time": 0.8,
+      "fillRatio": 0.038942920918367346,
+      "edgeRatio": 0
+    },
+    {
+      "index": 25,
+      "time": 0.8333333333333334,
+      "fillRatio": 0.03812579719387755,
+      "edgeRatio": 0
+    },
+    {
+      "index": 26,
+      "time": 0.8666666666666667,
+      "fillRatio": 0.037806919642857144,
+      "edgeRatio": 0
+    },
+    {
+      "index": 27,
+      "time": 0.9,
+      "fillRatio": 0.037806919642857144,
+      "edgeRatio": 0
+    },
+    {
+      "index": 28,
+      "time": 0.9333333333333333,
+      "fillRatio": 0.037767059948979595,
+      "edgeRatio": 0
+    },
+    {
+      "index": 29,
+      "time": 0.9666666666666667,
+      "fillRatio": 0.03772720025510204,
+      "edgeRatio": 0
+    },
+    {
+      "index": 30,
+      "time": 1,
+      "fillRatio": 0.03770727040816327,
+      "edgeRatio": 0
+    },
+    {
+      "index": 31,
+      "time": 1.0333333333333332,
+      "fillRatio": 0.03768734056122449,
+      "edgeRatio": 0
+    },
+    {
+      "index": 32,
+      "time": 1.0666666666666667,
+      "fillRatio": 0.03754783163265306,
+      "edgeRatio": 0
+    },
+    {
+      "index": 33,
+      "time": 1.1,
+      "fillRatio": 0.037428252551020405,
+      "edgeRatio": 0
+    },
+    {
+      "index": 34,
+      "time": 1.1333333333333333,
+      "fillRatio": 0.037109375,
+      "edgeRatio": 0
+    },
+    {
+      "index": 35,
+      "time": 1.1666666666666667,
+      "fillRatio": 0.036431760204081634,
+      "edgeRatio": 0
+    },
+    {
+      "index": 36,
+      "time": 1.2,
+      "fillRatio": 0.035435267857142856,
+      "edgeRatio": 0
+    }
+  ]
+}

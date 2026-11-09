@@ -1,0 +1,1279 @@
+{
+  "frames": {
+    "lotus-pond-0000": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0001": {
+      "frame": {
+        "x": 224,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0002": {
+      "frame": {
+        "x": 448,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0003": {
+      "frame": {
+        "x": 672,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0004": {
+      "frame": {
+        "x": 896,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0005": {
+      "frame": {
+        "x": 1120,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0006": {
+      "frame": {
+        "x": 0,
+        "y": 224,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0007": {
+      "frame": {
+        "x": 224,
+        "y": 224,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0008": {
+      "frame": {
+        "x": 448,
+        "y": 224,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0009": {
+      "frame": {
+        "x": 672,
+        "y": 224,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0010": {
+      "frame": {
+        "x": 896,
+        "y": 224,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0011": {
+      "frame": {
+        "x": 1120,
+        "y": 224,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0012": {
+      "frame": {
+        "x": 0,
+        "y": 448,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0013": {
+      "frame": {
+        "x": 224,
+        "y": 448,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0014": {
+      "frame": {
+        "x": 448,
+        "y": 448,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0015": {
+      "frame": {
+        "x": 672,
+        "y": 448,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0016": {
+      "frame": {
+        "x": 896,
+        "y": 448,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0017": {
+      "frame": {
+        "x": 1120,
+        "y": 448,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0018": {
+      "frame": {
+        "x": 0,
+        "y": 672,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0019": {
+      "frame": {
+        "x": 224,
+        "y": 672,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0020": {
+      "frame": {
+        "x": 448,
+        "y": 672,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0021": {
+      "frame": {
+        "x": 672,
+        "y": 672,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0022": {
+      "frame": {
+        "x": 896,
+        "y": 672,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0023": {
+      "frame": {
+        "x": 1120,
+        "y": 672,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0024": {
+      "frame": {
+        "x": 0,
+        "y": 896,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0025": {
+      "frame": {
+        "x": 224,
+        "y": 896,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0026": {
+      "frame": {
+        "x": 448,
+        "y": 896,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0027": {
+      "frame": {
+        "x": 672,
+        "y": 896,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0028": {
+      "frame": {
+        "x": 896,
+        "y": 896,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0029": {
+      "frame": {
+        "x": 1120,
+        "y": 896,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0030": {
+      "frame": {
+        "x": 0,
+        "y": 1120,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0031": {
+      "frame": {
+        "x": 224,
+        "y": 1120,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0032": {
+      "frame": {
+        "x": 448,
+        "y": 1120,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0033": {
+      "frame": {
+        "x": 672,
+        "y": 1120,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0034": {
+      "frame": {
+        "x": 896,
+        "y": 1120,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0035": {
+      "frame": {
+        "x": 1120,
+        "y": 1120,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0036": {
+      "frame": {
+        "x": 0,
+        "y": 1344,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0037": {
+      "frame": {
+        "x": 224,
+        "y": 1344,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0038": {
+      "frame": {
+        "x": 448,
+        "y": 1344,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0039": {
+      "frame": {
+        "x": 672,
+        "y": 1344,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0040": {
+      "frame": {
+        "x": 896,
+        "y": 1344,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0041": {
+      "frame": {
+        "x": 1120,
+        "y": 1344,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0042": {
+      "frame": {
+        "x": 0,
+        "y": 1568,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0043": {
+      "frame": {
+        "x": 224,
+        "y": 1568,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0044": {
+      "frame": {
+        "x": 448,
+        "y": 1568,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0045": {
+      "frame": {
+        "x": 672,
+        "y": 1568,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0046": {
+      "frame": {
+        "x": 896,
+        "y": 1568,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0047": {
+      "frame": {
+        "x": 1120,
+        "y": 1568,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0048": {
+      "frame": {
+        "x": 0,
+        "y": 1792,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0049": {
+      "frame": {
+        "x": 224,
+        "y": 1792,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0050": {
+      "frame": {
+        "x": 448,
+        "y": 1792,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0051": {
+      "frame": {
+        "x": 672,
+        "y": 1792,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0052": {
+      "frame": {
+        "x": 896,
+        "y": 1792,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0053": {
+      "frame": {
+        "x": 1120,
+        "y": 1792,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0054": {
+      "frame": {
+        "x": 0,
+        "y": 2016,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0055": {
+      "frame": {
+        "x": 224,
+        "y": 2016,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0056": {
+      "frame": {
+        "x": 448,
+        "y": 2016,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    },
+    "lotus-pond-0057": {
+      "frame": {
+        "x": 672,
+        "y": 2016,
+        "w": 224,
+        "h": 224
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 224
+      },
+      "sourceSize": {
+        "w": 224,
+        "h": 224
+      },
+      "duration": 41.37931034482759
+    }
+  },
+  "meta": {
+    "app": "inkfx",
+    "version": "1",
+    "image": "sheet.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 1344,
+      "h": 2240
+    },
+    "scale": "1",
+    "frameTags": [
+      {
+        "name": "lotus-pond",
+        "from": 0,
+        "to": 57,
+        "direction": "forward"
+      }
+    ],
+    "inkfx": {
+      "id": "lotus-pond",
+      "seed": 1,
+      "palette": "songyan",
+      "paper": true,
+      "grain": 1,
+      "fps": 24.166666666666668,
+      "duration": 2.4,
+      "loop": true,
+      "origin": {
+        "x": 112,
+        "y": 112
+      },
+      "simulationHz": 120,
+      "act": {
+        "windup": 0,
+        "poses": [
+          [
+            0,
+            "gather",
+            "easeOut"
+          ],
+          [
+            0,
+            "release",
+            "snap"
+          ],
+          [
+            0.2,
+            "settle",
+            "easeOut"
+          ]
+        ],
+        "hits": [],
+        "recovery": 0.55,
+        "timeOrigin": "impact-relative"
+      }
+    }
+  }
+}

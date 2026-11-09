@@ -1,0 +1,264 @@
+{
+  "schemaVersion": 1,
+  "meta": {
+    "id": "cloud-curtain",
+    "name": "雲幕合攏",
+    "category": "transitions",
+    "duration": 1.2,
+    "loop": false,
+    "mode": "pure",
+    "w": 224,
+    "h": 224,
+    "ox": 112,
+    "oy": 112
+  },
+  "seed": 42,
+  "palette": "songyan",
+  "fps": 30,
+  "dt": 0.03333333333333333,
+  "simulationHz": 120,
+  "hash": "ba5e8ce5aae7c39b9e272893acf5616ccd328a8da048c0818160377e266e7126",
+  "frameCount": 37,
+  "sheet": {
+    "w": 1040,
+    "h": 664,
+    "cellW": 252,
+    "cellH": 290,
+    "headerH": 68,
+    "columns": 4,
+    "selected": [
+      0,
+      5,
+      10,
+      15,
+      21,
+      26,
+      31,
+      36
+    ]
+  },
+  "frames": [
+    {
+      "index": 0,
+      "time": 0,
+      "fillRatio": 0.009088010204081632,
+      "edgeRatio": 0.2623318385650224
+    },
+    {
+      "index": 1,
+      "time": 0.03333333333333333,
+      "fillRatio": 0.009088010204081632,
+      "edgeRatio": 0.2623318385650224
+    },
+    {
+      "index": 2,
+      "time": 0.06666666666666667,
+      "fillRatio": 0.009088010204081632,
+      "edgeRatio": 0.2623318385650224
+    },
+    {
+      "index": 3,
+      "time": 0.1,
+      "fillRatio": 0.009088010204081632,
+      "edgeRatio": 0.2623318385650224
+    },
+    {
+      "index": 4,
+      "time": 0.13333333333333333,
+      "fillRatio": 0.02379623724489796,
+      "edgeRatio": 0.29596412556053814
+    },
+    {
+      "index": 5,
+      "time": 0.16666666666666666,
+      "fillRatio": 0.05955038265306122,
+      "edgeRatio": 0.38789237668161436
+    },
+    {
+      "index": 6,
+      "time": 0.2,
+      "fillRatio": 0.10794005102040816,
+      "edgeRatio": 0.5403587443946188
+    },
+    {
+      "index": 7,
+      "time": 0.23333333333333334,
+      "fillRatio": 0.15672831632653061,
+      "edgeRatio": 0.5672645739910314
+    },
+    {
+      "index": 8,
+      "time": 0.26666666666666666,
+      "fillRatio": 0.20950255102040816,
+      "edgeRatio": 0.5919282511210763
+    },
+    {
+      "index": 9,
+      "time": 0.3,
+      "fillRatio": 0.26259566326530615,
+      "edgeRatio": 0.6188340807174888
+    },
+    {
+      "index": 10,
+      "time": 0.3333333333333333,
+      "fillRatio": 0.31544961734693877,
+      "edgeRatio": 0.6457399103139013
+    },
+    {
+      "index": 11,
+      "time": 0.36666666666666664,
+      "fillRatio": 0.36850286989795916,
+      "edgeRatio": 0.672645739910314
+    },
+    {
+      "index": 12,
+      "time": 0.4,
+      "fillRatio": 0.4215561224489796,
+      "edgeRatio": 0.6995515695067265
+    },
+    {
+      "index": 13,
+      "time": 0.43333333333333335,
+      "fillRatio": 0.47464923469387754,
+      "edgeRatio": 0.726457399103139
+    },
+    {
+      "index": 14,
+      "time": 0.4666666666666667,
+      "fillRatio": 0.5278619260204082,
+      "edgeRatio": 0.7533632286995515
+    },
+    {
+      "index": 15,
+      "time": 0.5,
+      "fillRatio": 0.5808753188775511,
+      "edgeRatio": 0.7780269058295964
+    },
+    {
+      "index": 16,
+      "time": 0.5333333333333333,
+      "fillRatio": 0.6293447066326531,
+      "edgeRatio": 0.8026905829596412
+    },
+    {
+      "index": 17,
+      "time": 0.5666666666666667,
+      "fillRatio": 0.6823580994897959,
+      "edgeRatio": 0.8295964125560538
+    },
+    {
+      "index": 18,
+      "time": 0.6,
+      "fillRatio": 0.7355707908163265,
+      "edgeRatio": 0.8565022421524664
+    },
+    {
+      "index": 19,
+      "time": 0.6333333333333333,
+      "fillRatio": 0.7883450255102041,
+      "edgeRatio": 0.8834080717488789
+    },
+    {
+      "index": 20,
+      "time": 0.6666666666666666,
+      "fillRatio": 0.8414779974489796,
+      "edgeRatio": 0.9103139013452914
+    },
+    {
+      "index": 21,
+      "time": 0.7,
+      "fillRatio": 0.8944515306122449,
+      "edgeRatio": 0.9372197309417041
+    },
+    {
+      "index": 22,
+      "time": 0.7333333333333333,
+      "fillRatio": 0.9477040816326531,
+      "edgeRatio": 0.9641255605381166
+    },
+    {
+      "index": 23,
+      "time": 0.7666666666666666,
+      "fillRatio": 0.9772002551020408,
+      "edgeRatio": 0.9820627802690582
+    },
+    {
+      "index": 24,
+      "time": 0.8,
+      "fillRatio": 0.9948580994897959,
+      "edgeRatio": 0.9955156950672646
+    },
+    {
+      "index": 25,
+      "time": 0.8333333333333334,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    },
+    {
+      "index": 26,
+      "time": 0.8666666666666667,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    },
+    {
+      "index": 27,
+      "time": 0.9,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    },
+    {
+      "index": 28,
+      "time": 0.9333333333333333,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    },
+    {
+      "index": 29,
+      "time": 0.9666666666666667,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    },
+    {
+      "index": 30,
+      "time": 1,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    },
+    {
+      "index": 31,
+      "time": 1.0333333333333332,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    },
+    {
+      "index": 32,
+      "time": 1.0666666666666667,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    },
+    {
+      "index": 33,
+      "time": 1.1,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    },
+    {
+      "index": 34,
+      "time": 1.1333333333333333,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    },
+    {
+      "index": 35,
+      "time": 1.1666666666666667,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    },
+    {
+      "index": 36,
+      "time": 1.2,
+      "fillRatio": 1,
+      "edgeRatio": 1
+    }
+  ]
+}
