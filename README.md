@@ -4,7 +4,7 @@
 <h1 align="center">InkFX</h1>
 <p align="center"><b>Ink in Motion · 墨起，意隨。</b></p>
 
-![JavaScript (ES Modules)](https://img.shields.io/badge/JavaScript-ES_Modules-F7DF1E?style=flat&logo=javascript) ![Node.js >=20](https://img.shields.io/badge/Node.js-%3E%3D20-339933?style=flat&logo=nodedotjs) ![HTML5 Canvas](https://img.shields.io/badge/HTML5-Canvas-E34F26?style=flat&logo=html5) ![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?style=flat&logo=tailwindcss) ![esbuild](https://img.shields.io/badge/esbuild-FFCF00?style=flat&logo=esbuild) ![GitHub Actions](https://img.shields.io/badge/License-Apache--2.0-blue?style=flat)]
+![JavaScript (ES Modules)](https://img.shields.io/badge/JavaScript-ES_Modules-F7DF1E?style=flat&logo=javascript) ![Node.js >=20](https://img.shields.io/badge/Node.js-%3E%3D20-339933?style=flat&logo=nodedotjs) ![HTML5 Canvas](https://img.shields.io/badge/HTML5-Canvas-E34F26?style=flat&logo=html5) ![Tailwind CSS v4](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?style=flat&logo=tailwindcss) ![esbuild](https://img.shields.io/badge/esbuild-FFCF00?style=flat&logo=esbuild) ![GitHub Actions](https://img.shields.io/badge/License-Apache--2.0-blue?style=flat)
 
 **InkFX** is a procedural ink and wuxia effects library for games and interactive websites, with 132 effects and four palettes. Seeded rendering reproduces each stroke; the gallery previews and exports PNG sprite sheets, JSON atlases, and standalone ES modules.
 
