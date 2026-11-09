@@ -46,6 +46,10 @@ function notify(text, state = '') {
   $('status').dataset.state = state;
 }
 
+function escapeHTML(str) {
+  return String(str ?? '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", '&#39;');
+}
+
 function feedback(button, message) {
   const original = button.dataset.originalLabel ?? button.textContent;
   button.dataset.originalLabel = original;
@@ -405,7 +409,7 @@ const observer = typeof IntersectionObserver === 'function' ? new IntersectionOb
 
 effects.forEach((entry, index) => {
   const button = document.createElement('button'); button.className = 'effect';
-  button.innerHTML = `<span class="effect-index">${String(index + 1).padStart(2, '0')}</span><span><strong>${entry.meta.name}</strong><small>${entry.meta.id}</small></span><span class="effect-arrow">↗</span>`;
+  button.innerHTML = `<span class="effect-index">${String(index + 1).padStart(2, '0')}</span><span><strong>${escapeHTML(entry.meta.name)}</strong><small>${escapeHTML(entry.meta.id)}</small></span><span class="effect-arrow">↗</span>`;
   button.addEventListener('click', () => {
     selectEffect(index);
     $('effect-picker').removeAttribute('open');
@@ -473,7 +477,7 @@ function setPalette(id) {
 for (const [id, entry] of Object.entries(palettes)) {
   const button = document.createElement('button'); button.className = `palette ${id === palette ? 'active' : ''}`; button.dataset.palette = id;
   button.setAttribute('aria-pressed', id === palette);
-  button.innerHTML = `<span class="swatch" style="background:linear-gradient(135deg,${entry.stops[5]} 55%,${entry.accent} 55%)"></span><span class="palette-name">${entry.name}</span><small>${id}</small>`;
+  button.innerHTML = `<span class="swatch" style="background:linear-gradient(135deg,${entry.stops[5]} 55%,${entry.accent} 55%)"></span><span class="palette-name">${escapeHTML(entry.name)}</span><small>${escapeHTML(id)}</small>`;
   button.addEventListener('click', () => setPalette(id)); $('palettes').append(button);
   const option = document.createElement('option'); option.value = id; option.textContent = entry.name; $('toolbar-palette').append(option);
 
@@ -487,7 +491,7 @@ for (const [id, entry] of Object.entries(palettes)) {
     dot.setAttribute('aria-label', `切換至${entry.name}`);
     dot.setAttribute('aria-pressed', id === palette);
     dot.title = entry.name;
-    dot.innerHTML = `<span class="swatch" style="background:linear-gradient(135deg,${entry.stops[5]} 55%,${entry.accent} 55%)"></span><span class="dot-label">${entry.name.slice(0, 2)}</span>`;
+    dot.innerHTML = `<span class="swatch" style="background:linear-gradient(135deg,${entry.stops[5]} 55%,${entry.accent} 55%)"></span><span class="dot-label">${escapeHTML(entry.name.slice(0, 2))}</span>`;
     dot.addEventListener('click', () => setPalette(id));
     catalogPaletteButtons.push(dot);
     catPal.append(dot);
@@ -502,7 +506,7 @@ for (const [id, entry] of Object.entries(palettes)) {
     cardBtn.dataset.palette = id;
     cardBtn.setAttribute('aria-pressed', id === palette);
     const stopsHtml = entry.stops.map(hex => `<span style="background:${hex}"></span>`).join('');
-    cardBtn.innerHTML = `<div class="pigment-head"><strong>${entry.name}</strong><span class="en">${id.toUpperCase()}</span></div><p class="pigment-sub">${paletteSubtitles[id] ?? ''}</p><div class="pigment-stops" aria-hidden="true">${stopsHtml}<i class="pigment-accent" style="background:${entry.accent}"></i></div>`;
+    cardBtn.innerHTML = `<div class="pigment-head"><strong>${escapeHTML(entry.name)}</strong><span class="en">${escapeHTML(id.toUpperCase())}</span></div><p class="pigment-sub">${escapeHTML(paletteSubtitles[id] ?? '')}</p><div class="pigment-stops" aria-hidden="true">${stopsHtml}<i class="pigment-accent" style="background:${entry.accent}"></i></div>`;
     cardBtn.addEventListener('click', () => setPalette(id));
     anatomyPaletteButtons.push(cardBtn);
     anatPal.append(cardBtn);
@@ -511,7 +515,7 @@ for (const [id, entry] of Object.entries(palettes)) {
 $('toolbar-palette').value = palette;
 $('toolbar-palette').addEventListener('change', event => setPalette(event.target.value));
 $('grain').addEventListener('input', event => {
-  grain = Number(event.target.value);
+  grain = Math.max(0, Math.min(3, Number(event.target.value) || 0));
   $('grain-value').textContent = grain.toFixed(1);
   display();
   for (const card of visible) if (card.instance) paint(card.context, card.entry, card.instance);

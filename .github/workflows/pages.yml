@@ -38,19 +38,21 @@ jobs:
       - name: Require private repository
         env:
           GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
         run: |
-          test "$(gh api 'repos/${{ github.repository }}' --jq .private)" = true
+          test "$(gh api "repos/${REPO}" --jq .private)" = true
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Ensure gallery is public
         env:
           GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
         run: |
-          if [ "$(gh api 'repos/${{ github.repository }}/pages' --jq .public)" != true ]; then
+          if [ "$(gh api "repos/${REPO}/pages" --jq .public)" != true ]; then
             echo '::error title=Pages visibility::A repository administrator must enable public site access in Settings > Pages. The workflow token cannot change this setting. Keep the repository private.'
             exit 1
           fi
-          test "$(gh api 'repos/${{ github.repository }}/pages' --jq .public)" = true
+          test "$(gh api "repos/${REPO}/pages" --jq .public)" = true
       - run: npm ci
       - name: Stage browser assets and standalone modules
         run: |
