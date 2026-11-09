@@ -21,6 +21,10 @@
 </p>
 
 <p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="License: Apache 2.0"></a>
+</p>
+
+<p align="center">
   <a href="https://malilion.github.io/inkfx/"><strong>Enter the Live Exhibition ↗</strong></a>
   &nbsp;·&nbsp;
   <a href="docs/AUTHORING.md"><strong>User Guide ↗</strong></a>
@@ -82,3 +86,12 @@ Once you dial in your palette, paper grain, and seed in the studio, take the eff
 - **Zero-Dependency Single-File JS (`<effect-id>.mjs`)**: Copy or download a self-contained ES module that renders directly to HTML5 Canvas, **React**, or **Vue** with no build step or external packages required.
 
 ![Six featured ink studies](examples/new-studies.png)
+
+---
+
+## License
+
+Copyright 2026 Malilion.
+
+Licensed under the [Apache License, Version 2.0](LICENSE). See [NOTICE](NOTICE) for attribution, including the bundled **Noto Serif TC** font under SIL Open Font License 1.1 (`gallery/fonts/OFL.txt`).
+

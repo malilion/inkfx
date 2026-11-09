@@ -21,6 +21,10 @@
 </p>
 
 <p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" alt="授權：Apache 2.0"></a>
+</p>
+
+<p align="center">
   <a href="https://malilion.github.io/inkfx/"><strong>進入線上展廳 ↗</strong></a>
   &nbsp;·&nbsp;
   <a href="docs/AUTHORING.md"><strong>使用與串接指南 ↗</strong></a>
@@ -82,3 +86,12 @@
 - **零依賴單檔 JS 模組（`<effect-id>.mjs`）**：一鍵複製或下載獨立 ES Module，無須安裝任何套件即可直接放入網頁、Canvas 或 **React / Vue** 元件中即時渲染。
 
 ![六式精選水墨新作](examples/new-studies.png)
+
+---
+
+## 授權
+
+Copyright 2026 Malilion.
+
+本專案採 [Apache License, Version 2.0](LICENSE) 授權。第三方歸屬見 [NOTICE](NOTICE)，其中打包的 **Noto Serif TC** 字型採 SIL Open Font License 1.1（`gallery/fonts/OFL.txt`）。
+
