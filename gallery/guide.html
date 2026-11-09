@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';">
   <meta name="theme-color" content="#f5f1e8">
   <meta name="description" content="InkFX 墨譜使用與串接指南：線上工作台操作、單檔 JS 模組（Canvas / React / Vue）與 PNG 圖集 + JSON Atlas（Phaser / Godot / PixiJS / Unity）完整說明。">
   <title>使用與串接指南 — InkFX 墨譜</title>
@@ -528,33 +529,6 @@ export function create({ seed = 1, palette = 'songyan' } = {}) {
     <p class="footer-copy">© 2026 InkFX — Deterministic procedural ink effects on virtual rice paper</p>
   </footer>
 
-  <script type="module">
-    const langBtns = document.querySelectorAll('[data-set-lang]');
-    for (const btn of langBtns) {
-      btn.addEventListener('click', () => {
-        const mode = btn.getAttribute('data-set-lang');
-        document.body.setAttribute('data-guide-lang', mode);
-        for (const b of langBtns) {
-          const active = b === btn;
-          b.classList.toggle('active', active);
-          b.setAttribute('aria-pressed', active);
-        }
-      });
-    }
-
-    for (const btn of document.querySelectorAll('.guide-copy-btn')) {
-      btn.addEventListener('click', async () => {
-        const code = btn.closest('.guide-code-block')?.querySelector('code')?.textContent ?? '';
-        const original = btn.textContent;
-        try {
-          await navigator.clipboard.writeText(code);
-          btn.textContent = '已複製 ✓ / Copied';
-        } catch {
-          btn.textContent = '複製失敗';
-        }
-        setTimeout(() => { btn.textContent = original; }, 1400);
-      });
-    }
-  </script>
+  <script type="module" src="./guide.js"></script>
 </body>
 </html>

@@ -48,6 +48,7 @@ test('gallery server security hardening and traversal defenses', async () => {
   assert.equal(valid.headers['x-frame-options'], 'SAMEORIGIN');
   assert.equal(valid.headers['referrer-policy'], 'strict-origin-when-cross-origin');
   assert.ok(valid.headers['permissions-policy']?.includes('camera=()'));
+  assert.ok(valid.headers['content-security-policy']?.includes("default-src 'self'"));
   assert.ok(valid.body.includes('<!doctype html>'));
 
   // 6. HEAD requests must return 200 without body
@@ -62,9 +63,20 @@ test('gallery server security hardening and traversal defenses', async () => {
   // 8. Security meta tags in HTML
   assert.ok(valid.body.includes('<meta name="referrer" content="strict-origin-when-cross-origin">'), 'index.html must have referrer policy meta');
   assert.ok(valid.body.includes('<meta http-equiv="X-Content-Type-Options" content="nosniff">'), 'index.html must have X-Content-Type-Options meta');
+  assert.ok(valid.body.includes('<meta http-equiv="Content-Security-Policy" content="default-src \'self\''), 'index.html must have CSP meta');
 
   const guide = await dispatch('GET', '/gallery/guide.html');
   assert.equal(guide.statusCode, 200);
   assert.ok(guide.body.includes('<meta name="referrer" content="strict-origin-when-cross-origin">'), 'guide.html must have referrer policy meta');
   assert.ok(guide.body.includes('<meta http-equiv="X-Content-Type-Options" content="nosniff">'), 'guide.html must have X-Content-Type-Options meta');
+  assert.ok(guide.body.includes('<meta http-equiv="Content-Security-Policy" content="default-src \'self\''), 'guide.html must have CSP meta');
+
+  // 9. Guide JS is loaded as external module without inline script execution
+  assert.ok(guide.body.includes('<script type="module" src="./guide.js"></script>'));
+  assert.ok(!guide.body.includes('<script type="module">const langBtns'));
+
+  const guideJs = await dispatch('GET', '/gallery/guide.js');
+  assert.equal(guideJs.statusCode, 200);
+  assert.equal(guideJs.headers['content-type'], 'text/javascript; charset=utf-8');
+  assert.ok(guideJs.body.includes('data-set-lang'));
 });
