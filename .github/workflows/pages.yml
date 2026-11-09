@@ -54,6 +54,7 @@ jobs:
       - run: npm ci
       - name: Stage browser assets and standalone modules
         run: |
+          npm run build:css
           mkdir -p _site
           cp -R gallery src docs examples _site/
           rm _site/gallery/serve.mjs _site/src/core/{run,png,overlay}.js

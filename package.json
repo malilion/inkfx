@@ -11,11 +11,16 @@
     "test": "node --test",
     "check": "node tools/check.mjs",
     "render": "node tools/render.mjs",
-    "gallery": "node tools/build-standalone.mjs && node gallery/serve.mjs",
+    "build:css": "tailwindcss -i gallery/tailwind.css -o gallery/style.css --minify",
+    "watch:css": "tailwindcss -i gallery/tailwind.css -o gallery/style.css --watch",
+    "build": "npm run build:css && node tools/build-standalone.mjs",
+    "gallery": "npm run build:css && node tools/build-standalone.mjs && node gallery/serve.mjs",
     "export": "node tools/export-sheet.mjs",
     "review": "node tools/review.mjs"
   },
   "devDependencies": {
-    "esbuild": "0.25.12"
+    "@tailwindcss/cli": "^4.3.5",
+    "esbuild": "0.25.12",
+    "tailwindcss": "^4.3.5"
   }
 }
