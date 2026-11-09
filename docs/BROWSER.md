@@ -41,4 +41,4 @@ The report samples 120 animation-frame intervals per viewport at 1440×1000 desk
 
 The `browser` job in `.github/workflows/ci.yml` uses Node 22 and the Chrome installed on the GitHub runner. It starts its own gallery/browser processes, waits for real HTTP readiness, runs this harness, stops only those processes, and uploads screenshots/report/downloads as `browser-validation`. Renderer tests and full catalog checks still run separately on Node 20 and 22.
 
-Public Pages acceptance is separate. Local browser success does not establish site visibility, account-plan eligibility, or a successful remote deployment; see [PAGES](PAGES.md).
+Public Pages acceptance is separate. Local browser success does not establish site visibility, account-plan eligibility, or a successful remote deployment. Pages setup notes for this private repo live in the internal archive `malilion/inkfx-internal` (not shipped in this tree).

@@ -29,4 +29,4 @@ Never overwrite committed examples during exploration: always set `--out artifac
 
 Use `node tools/export-sheet.mjs <id> --seed 42 --palette zhusha --out artifacts/export/<id>` for transparent PNG and JSON, or `--background paper` for baked paper. Verify actual output and timing, not file existence alone.
 
-The optional `tools/skill-kit.mjs` bridge requires a separately available fx-skill-kit checkout. Local CHK-01–04 do not enforce its performance or domain budgets. Do not claim 60fps, bundle budgets, engine integration, public hosting, or publication without measured evidence. See `docs/prd-gap.md` for the current release status.
+The optional `tools/skill-kit.mjs` bridge requires a separately available fx-skill-kit checkout. Local CHK-01–04 do not enforce its performance or domain budgets. Do not claim 60fps, bundle budgets, engine integration, public hosting, or publication without measured evidence. Release-gap notes live in the internal archive `malilion/inkfx-internal` (not shipped in this tree); do not invent status from memory.
