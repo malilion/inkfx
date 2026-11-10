@@ -75,3 +75,8 @@ npm run export -- sword-qi-slash --seed 42 --palette zhusha --out artifacts/expo
 Copyright 2026 Malilion.
 
 Licensed under [Apache-2.0](LICENSE). See [NOTICE](NOTICE) for attribution; the bundled **Noto Serif TC** font uses the [SIL Open Font License 1.1 (OFL-1.1)](gallery/fonts/OFL.txt).
+
+---
+
+<!-- malilion-ecosystem-footer -->
+<p align="center"><sub>🦁 Part of the <a href="https://github.com/malilion">MaliLion</a> ecosystem · <a href="https://malilion.com">malilion.com</a> · <a href="https://github.com/malilion?tab=repositories">More projects</a></sub></p>

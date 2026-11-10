@@ -75,3 +75,8 @@ npm run export -- sword-qi-slash --seed 42 --palette zhusha --out artifacts/expo
 Copyright 2026 Malilion.
 
 本專案採 [Apache-2.0](LICENSE) 授權。第三方歸屬見 [NOTICE](NOTICE)；隨附的 **Noto Serif TC** 字型採 [SIL Open Font License 1.1 (OFL-1.1)](gallery/fonts/OFL.txt)。
+
+---
+
+<!-- malilion-ecosystem-footer -->
+<p align="center"><sub>🦁 碼力獅 <a href="https://github.com/malilion">MaliLion</a> 生態系的一員 · <a href="https://malilion.com">malilion.com</a> · <a href="https://github.com/malilion?tab=repositories">更多作品</a></sub></p>
