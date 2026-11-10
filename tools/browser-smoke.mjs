@@ -139,15 +139,16 @@ export async function browserSmoke({ port = 9223, url = 'http://127.0.0.1:8080/g
       const source = await navigator.clipboard.readText();
       const response = await fetch(document.querySelector('#source-link').href);
       if (!response.ok || source !== await response.text()) return false;
-      const url = URL.createObjectURL(new Blob([source], { type: 'text/javascript' }));
-      try {
-        const { create, meta, act } = await import(url);
+      // Import the same-origin source link (verified identical to the clipboard above):
+      // the gallery's strict CSP (script-src 'self') forbids blob: module imports.
+      {
+        const { create, meta, act } = await import(document.querySelector('#source-link').href);
         const instance = create({ seed: 42, palette: 'shiqing' });
         instance.step(act.windup + .24);
         const pixels = new ImageData(meta.w, meta.h);
         const rendered = instance.draw(pixels);
         return rendered === pixels && meta.id === 'sword-qi-slash' && pixels.data.some((n, i) => i % 4 === 3 && n > 0);
-      } finally { URL.revokeObjectURL(url); }
+      }
     })()`), true, 'clipboard produces a standalone module with visible output');
     const frameTime = await evaluate(`(() => {
       document.querySelector('#next-frame').click();
@@ -170,8 +171,10 @@ export async function browserSmoke({ port = 9223, url = 'http://127.0.0.1:8080/g
         assert.equal(bytes.subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
         pngSize = { w: bytes.readUInt32BE(16), h: bytes.readUInt32BE(20) };
         const decoded = await evaluate(`(async () => {
-          const png = await fetch(document.querySelector('#sheet-link').href);
-          const bitmap = await createImageBitmap(await png.blob());
+          // Decode the downloaded bytes directly: strict CSP (connect-src 'self') blocks fetching blob: links.
+          const raw = atob(${JSON.stringify(bytes.toString('base64'))});
+          const png = new Blob([Uint8Array.from(raw, c => c.charCodeAt(0))], { type: 'image/png' });
+          const bitmap = await createImageBitmap(png);
           const canvas = document.createElement('canvas');
           canvas.width = bitmap.width;
           canvas.height = bitmap.height;
